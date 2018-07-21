@@ -76,26 +76,39 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                       0,                     //copy number
                       checkOverlaps);        //overlaps checking
 
+  //parameters for the hexagon
+  G4double waferThickness = 0.3 * mm;
+  G4double waferSideLength = 1.2 * cm;
 
-  //lets make one big hexagon made out of silicon
-  double waferThickness = 0.3 * mm;
-  double waferXY = 12 * cm;
+
+
+  G4double full_waferX = sqrt(3.) * waferSideLength;
+  G4double full_waferY = (2.) * waferSideLength;  
   G4Box* solidFullWafer = new G4Box("fullWafer",                       //its name
-       0.5*waferXY, 0.5*waferXY, 0.5*waferThickness);     //its size
+       0.5*full_waferX, 0.5*full_waferY, 0.5*waferThickness);     //its size
 
 
+  G4double deltaXDash = waferSideLength;
+  G4double deltaYDash = sqrt(3)/4 * waferSideLength;
   G4Box* solidCutWafer = new G4Box("fullWafer",                       //its name
-       0.25*waferXY, 0.25*waferXY, 1.*waferThickness);     //its size                   
+       0.5*deltaXDash, 0.5*(deltaYDash), 1.*waferThickness);     //its size                   
 
 
-  G4RotationMatrix* rot = new G4RotationMatrix;
-  rot->rotateZ(45*deg);
+  G4double DeltaTheta[4] = {60.*deg, 120.*deg, 240.*deg, 300.*deg};
+  G4double DeltaTheta_rot[4] = {30.*deg,150.*deg,210*deg,330*deg};
+  G4double Delta = sqrt(3)/2 * waferSideLength + deltaYDash/2;
   
+  G4RotationMatrix* rot = new G4RotationMatrix;
+  rot->rotateZ(DeltaTheta_rot[0]);
   std::vector<G4SubtractionSolid*> subtracted;
-  subtracted.push_back(new G4SubtractionSolid("waferWithHole", solidFullWafer, solidCutWafer, rot, G4ThreeVector(0.5*waferXY,0.5*waferXY,0.)));
-
-  for (int i=0; i<3; i++) subtracted.push_back(new G4SubtractionSolid("waferWithHole", subtracted[i], solidCutWafer, rot, G4ThreeVector(i!=1 ? -0.5*waferXY: 0.5*waferXY ,i < 2 ? -0.5*waferXY: 0.5*waferXY, 0.)));
-
+  subtracted.push_back(new G4SubtractionSolid("waferWithHole", solidFullWafer, solidCutWafer, rot, G4ThreeVector(cos(DeltaTheta[0])*Delta, sin(DeltaTheta[0])*Delta, 0.)));
+  
+  for (int i=1; i<4; i++) {
+    rot->rotateZ(-DeltaTheta_rot[i-1]);
+    rot->rotateZ(DeltaTheta_rot[i]);
+    subtracted.push_back(new G4SubtractionSolid("waferWithHole", subtracted[i-1], solidCutWafer, rot, G4ThreeVector(cos(DeltaTheta[i])*Delta, sin(DeltaTheta[i])*Delta, 0.)));  
+  }
+  
 
   G4Material* fullWafer_mat = nist->FindOrBuildMaterial("G4_Si");
   G4LogicalVolume* logicFullWafer =  new G4LogicalVolume(subtracted[3],          //its solid
@@ -113,9 +126,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
                       checkOverlaps);        //overlaps checking
   
   fScoringVolume = logicWorld;
-  //
-  //always return the physical World
-  //
+  
+
+
+  
   return physWorld;
 }
 

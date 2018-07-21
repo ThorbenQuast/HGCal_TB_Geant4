@@ -132,7 +132,7 @@
 /vis/geometry/set/colour Envelope 0 0 0 1 .3
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
-/vis/viewer/set/viewpointThetaPhi 120 150
+/vis/viewer/set/viewpointThetaPhi 0 90
 #
 # Re-establish auto refreshing and verbosity:
 /vis/viewer/set/autoRefresh true
