@@ -28,7 +28,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
     = particleTable->FindParticle(particleName="e-");
   fParticleGun->SetParticleDefinition(particle);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticleEnergy(20.*GeV);
+  fParticleGun->SetParticleEnergy(2.4*GeV);
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -70,7 +70,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
      "MyCode0002",JustWarning,msg);
   }
 
-  G4double size = 0.1; 
+  G4double size = 0.0; 
   G4double x0 = size * world_sizeXYZ * (G4UniformRand()-0.5);
   G4double y0 = size * world_sizeXYZ * (G4UniformRand()-0.5);
   G4double z0 = -0.5 * world_sizeXYZ;

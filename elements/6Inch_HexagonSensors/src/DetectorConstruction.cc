@@ -15,6 +15,7 @@
 #include "G4Trd.hh"
 #include "G4LogicalVolume.hh"
 
+#include "SiliconPixelSD.hh"
 
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
@@ -63,18 +64,6 @@ G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double 
 }
 
 
-
-G4PVPlacement* HexagonSensor(G4LogicalVolume* logicMother, G4String name, G4double cellThickness, G4double cellSideLength, G4Material* material, G4ThreeVector placement) {
-
-  return new G4PVPlacement(0,                     //no rotation
-                      placement,       //at (0,0,0)
-                      HexagonLogical(name, cellThickness, cellSideLength, material),            //its logical volume
-                      name,               //its name
-                      logicMother,                     //its mother  volume
-                      false,                 //no boolean operation
-                      0,                     //copy number
-                      true);        //overlaps checking  
-}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -130,11 +119,12 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
   //parameters for the hexagon
   G4double waferThickness = 0.3 * mm;
-  G4double cellSideLength = 1.2 * cm;
+  G4double cellSideLength = 0.6 * cm;
   double alpha = 60./180. * M_PI;
   double dx = 2*sin(alpha)*cellSideLength;
   double dy = cellSideLength*(2.+2*cos(alpha));
   
+
   G4double full_waferX = 11*dx;
   G4double full_waferY = 7*dy;
   G4Material* wafer_mat = nist->FindOrBuildMaterial("G4_AIR");
@@ -147,24 +137,60 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
   G4Material* cell_mat = nist->FindOrBuildMaterial("G4_Si");
+  
+  G4LogicalVolume* hexagonLogical = HexagonLogical("cell0", waferThickness, cellSideLength, cell_mat);
+  new G4PVPlacement(0,                     //no rotation
+                      G4ThreeVector(0, 0., 0.),       //at (0,0,0)
+                      hexagonLogical,            //its logical volume
+                      "cell0",               //its name
+                      waferLogical,                     //its mother  volume
+                      false,                 //no boolean operation
+                      0,                     //copy number
+                      true);        //overlaps checking  
+  logical_volumes.push_back(hexagonLogical);
+  
 
+  //sensor setup
   int index = 1;
-  
-  int nRows[11] = {7, 6, 7, 6, 5, 6, 5, 4, 5, 4, 3};
-  
+  int nRows[11] = {7, 6, 7, 6, 5, 6, 5, 4, 5, 4, 3};  
   for (int nC=0; nC<11; nC++) {
     for (int middle_index=0; middle_index<nRows[nC]; middle_index++){
-      HexagonSensor(waferLogical, ("cell_"+std::to_string(index++)).c_str(), waferThickness, cellSideLength, cell_mat, G4ThreeVector(nC*dx/2, dy*(middle_index-nRows[nC]/2.+0.5), 0.));
-      if (nC>0) HexagonSensor(waferLogical, ("cell_"+std::to_string(index++)).c_str(), waferThickness, cellSideLength, cell_mat, G4ThreeVector(-nC*dx/2, dy*(middle_index-nRows[nC]/2.+0.5), 0.));      
+      hexagonLogical = HexagonLogical("cell_"+std::to_string(index), waferThickness, cellSideLength, cell_mat);
+      new G4PVPlacement(0,                     //no rotation
+                          G4ThreeVector(nC*dx/2, dy*(middle_index-nRows[nC]/2.+0.5), 0.),       
+                          hexagonLogical,            //its logical volume
+                          "cell_"+std::to_string(index++),               //its name
+                          waferLogical,                     //its mother  volume
+                          false,                 //no boolean operation
+                          0,                     //copy number
+                          true);        //overlaps checking  
+      logical_volumes.push_back(hexagonLogical);
+
+      
+      
+
+      if (nC<=0) continue;
+      hexagonLogical = HexagonLogical("cell_"+std::to_string(index), waferThickness, cellSideLength, cell_mat);
+      new G4PVPlacement(0,                     //no rotation
+                          G4ThreeVector(-nC*dx/2, dy*(middle_index-nRows[nC]/2.+0.5), 0.),       
+                          hexagonLogical,            //its logical volume
+                          "cell_"+std::to_string(index++),               //its name
+                          waferLogical,                     //its mother  volume
+                          false,                 //no boolean operation
+                          0,                     //copy number
+                          true);        //overlaps checking  
+      logical_volumes.push_back(hexagonLogical);
+
+      
     }
   }
+  
 
   G4VisAttributes* visAttributes = new G4VisAttributes(G4Colour(0.0,1.0,0.0));
-  visAttributes->SetVisibility(false);
+  visAttributes->SetVisibility(true);
   waferLogical->SetVisAttributes(visAttributes);
   
   
-
   //place the wafer
   new G4PVPlacement(0,                     //no rotation
       G4ThreeVector(0,0,0),       //at (0,0,0)
@@ -176,12 +202,49 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
       true);        //overlaps checking  
 
 
+
+  //some absorber upstream
+  G4Box* solidAbsorber =    
+    new G4Box("Absorber",                       //its name
+       0.5*world_sizeXYZ, 0.5*world_sizeXYZ, 0.05*world_sizeXYZ);     //its size
+      
+  G4Material* Absorber_mat = nist->FindOrBuildMaterial("G4_Pb");
+  G4LogicalVolume* logicAbsorber =                         
+    new G4LogicalVolume(solidAbsorber,          //its solid
+                        Absorber_mat,           //its material
+                        "Absorber");            //its name
+
+  visAttributes = new G4VisAttributes(G4Colour(1.0,0.0,0.0));
+  visAttributes->SetVisibility(true);
+  logicAbsorber->SetVisAttributes(visAttributes);
+
+  new G4PVPlacement(0,                     //no rotation
+                      G4ThreeVector(0., 0., -0.1*world_sizeXYZ), 
+                      logicAbsorber,            //its logical volume
+                      "Absorber",               //its name
+                      logicWorld,                     //its mother  volume
+                      false,                 //no boolean operation
+                      0,                     //copy number
+                      checkOverlaps);        //overlaps checking
+
+
   fScoringVolume = logicWorld;
   
-
-
   
   return physWorld;
+}
+
+
+void DetectorConstruction::ConstructSDandField(){
+  G4SDManager* sdman = G4SDManager::GetSDMpointer();
+  
+  for (size_t i=0; i<logical_volumes.size(); i++) {
+
+    SiliconPixelSD* sensitive = new SiliconPixelSD(("/"+logical_volumes[i]->GetName()+"_sensitive").c_str());
+    sdman->AddNewDetector(sensitive);
+    logical_volumes[i]->SetSensitiveDetector(sensitive);
+    
+  }
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

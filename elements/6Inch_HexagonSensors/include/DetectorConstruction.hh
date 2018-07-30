@@ -3,6 +3,8 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.hh"
+#include "G4LogicalVolume.hh"
+#include <vector>
 
 class G4VPhysicalVolume;
 class G4LogicalVolume;
@@ -16,11 +18,16 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     virtual ~DetectorConstruction();
 
     virtual G4VPhysicalVolume* Construct();
+    virtual void ConstructSDandField();
     
     G4LogicalVolume* GetScoringVolume() const { return fScoringVolume; }
 
+
   protected:
     G4LogicalVolume*  fScoringVolume;
+
+   private: 
+   	std::vector<G4LogicalVolume*> logical_volumes;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
