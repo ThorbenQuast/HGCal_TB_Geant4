@@ -51,17 +51,17 @@
 #/vis/scene/add/hits
 #
 # To draw only gammas:
-#/vis/filtering/trajectories/create/particleFilter particleFilter-0
-#/vis/filtering/trajectories/particleFilter-0/add gamma
+/vis/filtering/trajectories/create/particleFilter particleFilter-0
+/vis/filtering/trajectories/particleFilter-0/add gamma
 #
 # To invert the above, drawing all particles except gammas,
 # keep the above two lines but also add:
-#/vis/filtering/trajectories/particleFilter-0/invert true
+/vis/filtering/trajectories/particleFilter-0/invert true
 #
 #Momentum selection for the drawing
 /vis/filtering/trajectories/create/attributeFilter
 /vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
-/vis/filtering/trajectories/attributeFilter-0/addInterval 1. keV 1000 GeV
+/vis/filtering/trajectories/attributeFilter-0/addInterval 10. MeV 1000 GeV
 #/vis/modeling/trajectories/create/drawByAttribute
 #/vis/modeling/trajectories/drawByAttribute-0/setAttribute IMag 
 #/vis/modeling/trajectories/drawByAttribute-0/addInterval interval1 1 keV 10 keV 
