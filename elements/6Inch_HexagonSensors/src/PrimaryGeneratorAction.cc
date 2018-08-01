@@ -11,24 +11,21 @@
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
 
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PrimaryGeneratorAction::PrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction(),
   fParticleGun(0), 
-  fEnvelopeBox(0)
+  fEnvelopeBox(0),
+  fMomentum(10*GeV),
+  fparticleDef("e+")
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
 
-  // default particle kinematic
-  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  G4String particleName;
-  G4ParticleDefinition* particle
-    = particleTable->FindParticle(particleName="e-");
-  fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticleEnergy(2.4*GeV);
+
+  DefineCommands();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -36,6 +33,33 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 PrimaryGeneratorAction::~PrimaryGeneratorAction()
 {
   delete fParticleGun;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void PrimaryGeneratorAction::DefineCommands() {
+  fMessenger 
+    = new G4GenericMessenger(this, 
+                             "/6InchSensor/generator/", 
+                             "Primary generator control");
+
+
+  // momentum command
+  auto& momentumCmd
+    = fMessenger->DeclarePropertyWithUnit("momentum", "GeV", fMomentum, 
+        "Mean momentum of primaries.");
+  momentumCmd.SetParameterName("p", true);
+  momentumCmd.SetRange("p>=0.");                                
+  momentumCmd.SetDefaultValue("1.");
+
+
+  // randomizePrimary command
+  auto& particleComd
+    = fMessenger->DeclareProperty("particle", fparticleDef);
+  G4String guidance
+    = "Select primary particle type.";   
+  particleComd.SetGuidance(guidance);
+  particleComd.SetParameterName("type", true);
+  particleComd.SetDefaultValue("e+");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -70,12 +94,20 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
      "MyCode0002",JustWarning,msg);
   }
 
-  G4double size = 0.0; 
-  G4double x0 = size * world_sizeXYZ * (G4UniformRand()-0.5);
-  G4double y0 = size * world_sizeXYZ * (G4UniformRand()-0.5);
-  G4double z0 = -0.5 * world_sizeXYZ;
+
+  // default particle kinematic
+  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  G4String particleName;
+  G4ParticleDefinition* particle
+    = particleTable->FindParticle(particleName=fparticleDef);
+  fParticleGun->SetParticleDefinition(particle);
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleEnergy(fMomentum);  
   
-  fParticleGun->SetParticlePosition(G4ThreeVector(x0,y0,z0));
+  G4double z0 = -0.5 * world_sizeXYZ;
+  fParticleGun->SetParticlePosition(G4ThreeVector(0,0,z0));
+
+
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
