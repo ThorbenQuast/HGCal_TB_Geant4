@@ -26,8 +26,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
   protected:
     G4LogicalVolume*  fScoringVolume;
 
-   private: 
-   	std::vector<G4LogicalVolume*> logical_volumes;
+
+  private:
+    G4LogicalVolume* hexagonLogical;
+
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
