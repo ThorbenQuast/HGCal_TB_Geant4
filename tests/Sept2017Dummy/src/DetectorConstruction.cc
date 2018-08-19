@@ -183,18 +183,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     std::string mat_string = "";
     switch (material_index[i]) {
       case 1:
-        mat_string = "G4_W";visAttributes = new G4VisAttributes(true, G4Colour().Brown()); break;
+        mat_string = "G4_W";visAttributes = new G4VisAttributes(true, G4Colour(G4Colour().Brown().GetRed(), G4Colour().Brown().GetGreen(), G4Colour().Brown().GetBlue(), 0.1)); break;
       case 2:
-        mat_string = "G4_Pb";visAttributes = new G4VisAttributes(true, G4Colour().Gray()); break;
+        mat_string = "G4_Pb";visAttributes = new G4VisAttributes(true, G4Colour(G4Colour().Gray().GetRed(), G4Colour().Gray().GetGreen(), G4Colour().Gray().GetBlue(), 0.1)); break;
       case 3:
-        mat_string = "G4_Cu";visAttributes = new G4VisAttributes(true, G4Colour().Brown()); break;
+        mat_string = "G4_Cu";visAttributes = new G4VisAttributes(true, G4Colour(G4Colour().Brown().GetRed(), G4Colour().Brown().GetGreen(), G4Colour().Brown().GetBlue(), 0.1)); break;
       case 4:
-        mat_string = "G4_Fe";visAttributes = new G4VisAttributes(true, G4Colour().White()); break;
+        mat_string = "G4_Fe";visAttributes = new G4VisAttributes(true, G4Colour(G4Colour().Grey().GetRed(), G4Colour().Grey().GetGreen(), G4Colour().Grey().GetBlue(), 0.15)); break;
       case 5:
-        mat_string = "G4_Si";visAttributes = new G4VisAttributes(true, G4Colour().Green()); break;
+        mat_string = "G4_Si";visAttributes = new G4VisAttributes(true, G4Colour(G4Colour().Green().GetRed(), G4Colour().Green().GetGreen(), G4Colour().Green().GetBlue(), 1.0)); break;
       case 0:
       default:
-        mat_string = "G4_AIR";visAttributes = new G4VisAttributes(false, G4Colour().Grey()); break;
+        mat_string = "G4_AIR";visAttributes = new G4VisAttributes(false, G4Colour(G4Colour().Grey().GetRed(), G4Colour().Grey().GetGreen(), G4Colour().Grey().GetBlue(), 0.01)); break;
     }
     G4Material* env_mat = nist->FindOrBuildMaterial(mat_string.c_str());
 

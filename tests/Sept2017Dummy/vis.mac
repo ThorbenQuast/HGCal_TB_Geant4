@@ -47,6 +47,9 @@
 /vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
 # (if too many tracks cause core dump => /tracking/storeTrajectory 0)
 #
+#make the background white
+/vis/viewer/set/background 1 1 1 1.0
+#
 # Draw hits at end of event:
 #/vis/scene/add/hits
 #
@@ -61,16 +64,16 @@
 #Momentum selection for the drawing
 /vis/filtering/trajectories/create/attributeFilter
 /vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
-/vis/filtering/trajectories/attributeFilter-0/addInterval 1. MeV 1000 GeV
+/vis/filtering/trajectories/attributeFilter-0/addInterval 10. MeV 1000 GeV
 /vis/modeling/trajectories/create/drawByAttribute
 /vis/modeling/trajectories/drawByAttribute-0/setAttribute IMag 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval1 1 MeV 10 MeV 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval2 10 MeV 100 MeV 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval1 10 MeV 50 MeV 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval2 50 MeV 100 MeV 
 /vis/modeling/trajectories/drawByAttribute-0/addInterval interval3 100 MeV 200 MeV 
 /vis/modeling/trajectories/drawByAttribute-0/addInterval interval4 200.0 MeV 500 MeV 
 /vis/modeling/trajectories/drawByAttribute-0/addInterval interval5 500 MeV 1. GeV 
 /vis/modeling/trajectories/drawByAttribute-0/addInterval interval6 1.0 GeV 10000 GeV
-/vis/modeling/trajectories/drawByAttribute-0/interval1/setLineColourRGBA 0.1 0.1 0.1 0.3 
+/vis/modeling/trajectories/drawByAttribute-0/interval1/setLineColourRGBA 0.1 0.1 0.1 0.0 
 /vis/modeling/trajectories/drawByAttribute-0/interval2/setLineColourRGBA 1 0.3 0 1
 /vis/modeling/trajectories/drawByAttribute-0/interval3/setLineColourRGBA 1 1 0 1 
 /vis/modeling/trajectories/drawByAttribute-0/interval4/setLineColourRGBA 0 1 0 1 
@@ -93,17 +96,17 @@
 # Name
 /vis/set/textColour blue
 /vis/set/textLayout 
-/vis/scene/add/text2D -0.9 -.9 24 ! ! 90 GeV e-
+#/vis/scene/add/text2D -0.9 -.9 24 ! ! 90 GeV e-
 /vis/set/textColour grey
 /vis/set/textLayout right
-/vis/scene/add/text2D 0.9 -.9 24 ! ! CMS HGCal EE, September 2017 TB
+#/vis/scene/add/text2D 0.9 -.9 24 ! ! CMS HGCal EE, September 2017 TB
 /vis/set/textLayout
 /vis/set/textColour red
-/vis/scene/add/text2D -0.9 .85 28 ! ! CMS Private
+#/vis/scene/add/text2D -0.9 .85 28 ! ! CMS Private
 # or, if your system does not support right-adjustment
 #/vis/scene/add/text2D 0 -.9 24 ! ! exampleB1
-/vis/set/textLayout    # Revert to normal (left adjusted) layout
-/vis/set/textColour    # Revert to default text colour (blue)
+#/vis/set/textLayout    # Revert to normal (left adjusted) layout
+#/vis/set/textColour    # Revert to default text colour (blue)
 #
 # Axes, scale, etc.
 #/vis/scene/add/scale   # Simple scale line
@@ -132,7 +135,7 @@
 /vis/geometry/set/colour Envelope 0 0 0 1 .3
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
-/vis/viewer/set/viewpointThetaPhi 120 150
+/vis/viewer/set/viewpointThetaPhi 89 179
 #
 # Re-establish auto refreshing and verbosity:
 /vis/viewer/set/autoRefresh true
