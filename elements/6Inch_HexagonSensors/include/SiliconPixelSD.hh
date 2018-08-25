@@ -8,10 +8,11 @@ class SiliconPixelSD : public G4VSensitiveDetector {
 		SiliconPixelSD(G4String name);
 		~SiliconPixelSD();
 		SiliconPixelHitCollection* hitCollection;
-	public:
 		G4bool ProcessHits(G4Step *step, G4TouchableHistory *ROhist);
 
 		void Initialize(G4HCofThisEvent* HCE);
 		void EndOfEvent(G4HCofThisEvent* HCE);
+	private:
+		std::map<int, SiliconPixelHit*> tmp_hits;
 
 };	
