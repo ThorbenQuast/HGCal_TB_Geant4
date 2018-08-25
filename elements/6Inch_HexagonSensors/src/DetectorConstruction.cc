@@ -95,7 +95,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //     
   // World
   //
-  G4double world_sizeXYZ = 20*cm;
+  G4double world_sizeXYZ = 50*cm;
   
   G4Box* solidWorld =    
     new G4Box("World",                       //its name
@@ -232,7 +232,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 void DetectorConstruction::ConstructSDandField(){
   G4SDManager* sdman = G4SDManager::GetSDMpointer();
 
-  SiliconPixelSD* sensitive = new SiliconPixelSD(("/"+hexagonLogical->GetName()+"_sensitive").c_str());
+  SiliconPixelSD* sensitive = new SiliconPixelSD((hexagonLogical->GetName()+"_sensitive").c_str());
   sdman->AddNewDetector(sensitive);
   hexagonLogical->SetSensitiveDetector(sensitive);
     
