@@ -62,20 +62,23 @@
 /vis/filtering/trajectories/create/attributeFilter
 /vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
 /vis/filtering/trajectories/attributeFilter-0/addInterval 10. MeV 1000 GeV
-#/vis/modeling/trajectories/create/drawByAttribute
-#/vis/modeling/trajectories/drawByAttribute-0/setAttribute IMag 
-#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval1 1 keV 10 keV 
-#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval2 10 keV 100 keV 
-#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval3 100 keV 200 keV 
-#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval4 200.0 keV 500 keV 
-#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval5 500 keV 0.9 MeV 
-#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval6 0.9 MeV 10000 MeV
-#/vis/modeling/trajectories/drawByAttribute-0/interval1/setLineColourRGBA 0.1 0.1 0.1 0.3 
-#/vis/modeling/trajectories/drawByAttribute-0/interval2/setLineColourRGBA 1 0.3 0 1
-#/vis/modeling/trajectories/drawByAttribute-0/interval3/setLineColourRGBA 1 1 0 1 
-#/vis/modeling/trajectories/drawByAttribute-0/interval4/setLineColourRGBA 0 1 0 1 
-#/vis/modeling/trajectories/drawByAttribute-0/interval5/setLineColourRGBA 1 0 0 1  
-#/vis/modeling/trajectories/drawByAttribute-0/interval6/setLineColourRGBA 0 0 1 1 
+/vis/modeling/trajectories/create/drawByAttribute
+/vis/modeling/trajectories/drawByAttribute-0/setAttribute IMag 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval1 1 MeV 10 MeV 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval2 10 MeV 100 MeV 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval3 100 MeV 200 MeV 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval4 200.0 MeV 500 MeV 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval5 500 MeV 0.9 GeV 
+/vis/modeling/trajectories/drawByAttribute-0/addInterval interval6 0.9 GeV 10000 GeV
+/vis/modeling/trajectories/drawByAttribute-0/interval1/setLineColourRGBA 0.1 0.1 0.1 0.3 
+/vis/modeling/trajectories/drawByAttribute-0/interval2/setLineColourRGBA 1 0.3 0 1
+/vis/modeling/trajectories/drawByAttribute-0/interval3/setLineColourRGBA 1 1 0 1 
+/vis/modeling/trajectories/drawByAttribute-0/interval4/setLineColourRGBA 0 1 0 1 
+/vis/modeling/trajectories/drawByAttribute-0/interval5/setLineColourRGBA 1 0 0 1  
+/vis/modeling/trajectories/drawByAttribute-0/interval6/setLineColourRGBA 0 0 1 1 
+
+#make the background white
+/vis/viewer/set/background 1 1 1 1.0
 
 #
 # Many other options are available with /vis/modeling and /vis/filtering.
