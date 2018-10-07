@@ -100,12 +100,11 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4ParticleDefinition* particle
     = particleTable->FindParticle(particleName=fparticleDef);
   fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0. ,1.));
   fParticleGun->SetParticleEnergy(fMomentum);  
   
   G4double z0 = -0.5 * world_sizeXYZ;
-  fParticleGun->SetParticlePosition(G4ThreeVector(0,0,z0));
-
+  fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., 1.*CLHEP::cm),G4RandGauss::shoot(0., 1.*CLHEP::cm),z0)); //11cm spread
 
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
