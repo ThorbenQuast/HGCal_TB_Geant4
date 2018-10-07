@@ -29,7 +29,7 @@ class SiliconPixelHit : public G4VHit {
 		G4double GetEdep() const {return eDep;}
 		G4double GetEdepNonIonizing() const {return edep_nonIonizing;}
 		G4double GetTOA() const {return timeOfArrival;}
-		
+
 	private:
 		G4String vol_name;
 		G4int copy_no_cell; 

@@ -186,7 +186,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     new G4Box("Absorber",                       //its name
        0.3*world_sizeXYZ, 0.3*world_sizeXYZ, 0.03*world_sizeXYZ);     //its size
       
-  G4Material* Absorber_mat = nist->FindOrBuildMaterial("G4_Pb");
+  G4Material* Absorber_mat = nist->FindOrBuildMaterial("G4_Fe");
   G4LogicalVolume* logicAbsorber =                         
     new G4LogicalVolume(solidAbsorber,          //its solid
                         Absorber_mat,           //its material

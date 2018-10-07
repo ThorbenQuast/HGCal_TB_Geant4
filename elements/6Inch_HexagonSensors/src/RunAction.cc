@@ -14,44 +14,74 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-RunAction::RunAction()
-: G4UserRunAction(),
-  fEdep(0.),
-  fEdep2(0.)
-{ 
-  // add new units for dose
-  // 
-  const G4double milligray = 1.e-3*gray;
-  const G4double microgray = 1.e-6*gray;
-  const G4double nanogray  = 1.e-9*gray;  
-  const G4double picogray  = 1.e-12*gray;
-   
-  new G4UnitDefinition("milligray", "milliGy" , "Dose", milligray);
-  new G4UnitDefinition("microgray", "microGy" , "Dose", microgray);
-  new G4UnitDefinition("nanogray" , "nanoGy"  , "Dose", nanogray);
-  new G4UnitDefinition("picogray" , "picoGy"  , "Dose", picogray); 
+RunAction::RunAction(EventAction* eventAction)
+  : G4UserRunAction(),
+    fEventAction(eventAction),
+    fOutputFileDir("sim_6InchSensor")
+{
 
-  // Register accumulable to the accumulable manager
-  G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
-  accumulableManager->RegisterAccumulable(fEdep);
-  accumulableManager->RegisterAccumulable(fEdep2); 
+  fMessenger
+    = new G4GenericMessenger(this,
+                             "/6InchSensor/output/",
+                             "Output control");
+
+  // randomizePrimary command
+  auto& fileNameCommand
+    = fMessenger->DeclareProperty("file", fOutputFileDir);
+  G4String guidance
+    = "Define output file location.";
+  fileNameCommand.SetGuidance(guidance);
+  fileNameCommand.SetParameterName("filename", true);
+  fileNameCommand.SetDefaultValue("sim_6InchSensor");
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 RunAction::~RunAction()
-{}
+{
+  delete G4AnalysisManager::Instance();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void RunAction::BeginOfRunAction(const G4Run*)
-{ 
-  // inform the runManager to save random number seed
-  G4RunManager::GetRunManager()->SetRandomNumberStore(false);
+void RunAction::BeginOfRunAction(const G4Run*) {
+  // Create analysis manager
+  // The choice of analysis technology is done via selectin of a namespacels
+  auto analysisManager = G4AnalysisManager::Instance();
+  G4cout << "Using " << analysisManager->GetType() << G4endl;
 
-  // reset accumulables to their initial values
-  G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
-  accumulableManager->Reset();
+  // Default settings
+  analysisManager->SetNtupleMerging(true);
+  // Note: merging ntuples is available only with Root output
+  analysisManager->SetVerboseLevel(1);
+  std::cout << "Output file is: " << fOutputFileDir << std::endl;
+  analysisManager->SetFileName(fOutputFileDir);
+
+  // Book histograms, ntuple
+  //
+
+  // Creating ntuple
+  //
+
+  if ( fEventAction ) {
+    analysisManager->CreateNtuple("SiHits", "SiHits");
+    analysisManager->CreateNtupleIColumn("eventID");    // column Id = 0
+    analysisManager->CreateNtupleDColumn("beamX_cm");    // column Id = 1
+    analysisManager->CreateNtupleDColumn("beamY_cm");    // column Id = 2
+    analysisManager->CreateNtupleDColumn("beamZ_cm");    // column Id = 3
+    analysisManager->CreateNtupleIColumn("ID", fEventAction->hits_ID);    // column Id = 4
+    analysisManager->CreateNtupleDColumn("x_cm", fEventAction->hits_x);    // column Id = 5
+    analysisManager->CreateNtupleDColumn("y_cm", fEventAction->hits_y);    // column Id = 6
+    analysisManager->CreateNtupleDColumn("z_cm", fEventAction->hits_z);    // column Id = 7
+    analysisManager->CreateNtupleDColumn("Edep_keV", fEventAction->hits_Edep);    // column Id = 8
+    analysisManager->CreateNtupleDColumn("EdepNonIonizing_keV", fEventAction->hits_EdepNonIonising);    // column Id = 9
+    analysisManager->CreateNtupleDColumn("TOA_ns", fEventAction->hits_TOA);    // column Id = 10
+    analysisManager->FinishNtuple();
+  }
+
+  // Open the output file
+  analysisManager->OpenFile();
 
 }
 
@@ -59,76 +89,11 @@ void RunAction::BeginOfRunAction(const G4Run*)
 
 void RunAction::EndOfRunAction(const G4Run* run)
 {
-  G4int nofEvents = run->GetNumberOfEvent();
-  if (nofEvents == 0) return;
-
-  // Merge accumulables 
-  G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
-  accumulableManager->Merge();
-
-  // Compute dose = total energy deposit in a run and its variance
-  //
-  G4double edep  = fEdep.GetValue();
-  G4double edep2 = fEdep2.GetValue();
-  
-  G4double rms = edep2 - edep*edep/nofEvents;
-  if (rms > 0.) rms = std::sqrt(rms); else rms = 0.;  
-
-  const DetectorConstruction* detectorConstruction
-   = static_cast<const DetectorConstruction*>
-     (G4RunManager::GetRunManager()->GetUserDetectorConstruction());
-  G4double mass = detectorConstruction->GetScoringVolume()->GetMass();
-  G4double dose = edep/mass;
-  G4double rmsDose = rms/mass;
-
-  // Run conditions
-  //  note: There is no primary generator action object for "master"
-  //        run manager for multi-threaded mode.
-  const PrimaryGeneratorAction* generatorAction
-   = static_cast<const PrimaryGeneratorAction*>
-     (G4RunManager::GetRunManager()->GetUserPrimaryGeneratorAction());
-  G4String runCondition;
-  if (generatorAction)
-  {
-    const G4ParticleGun* particleGun = generatorAction->GetParticleGun();
-    runCondition += particleGun->GetParticleDefinition()->GetParticleName();
-    runCondition += " of ";
-    G4double particleEnergy = particleGun->GetParticleEnergy();
-    runCondition += G4BestUnit(particleEnergy,"Energy");
-  }
-        
-  // Print
-  //  
-  if (IsMaster()) {
-    G4cout
-     << G4endl
-     << "--------------------End of Global Run-----------------------";
-  }
-  else {
-    G4cout
-     << G4endl
-     << "--------------------End of Local Run------------------------";
-  }
-  
-  G4cout
-     << G4endl
-     << " The run consists of " << nofEvents << " "<< runCondition
-     << G4endl
-     << " Cumulated dose per run, in scoring volume : " 
-     << G4BestUnit(dose,"Dose") << " rms = " << G4BestUnit(rmsDose,"Dose")
-     << G4endl
-     << "------------------------------------------------------------"
-     << G4endl
-     << G4endl;
+  auto analysisManager = G4AnalysisManager::Instance();
+  analysisManager->Write();
+  analysisManager->CloseFile();
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void RunAction::AddEdep(G4double edep)
-{
-  fEdep  += edep;
-  fEdep2 += edep*edep;
-}
 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

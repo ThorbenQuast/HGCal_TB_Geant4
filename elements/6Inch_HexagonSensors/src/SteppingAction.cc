@@ -52,10 +52,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep)
 
   // check if we are in scoring volume
   if (volume != fScoringVolume) return;
-
-  // collect energy deposited in this step
-  G4double edepStep = aStep->GetTotalEnergyDeposit();
-  fEventAction->AddEdep(edepStep);  
+  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

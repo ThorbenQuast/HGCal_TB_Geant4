@@ -49,10 +49,9 @@ void PrimaryGeneratorAction::DefineCommands() {
         "Mean momentum of primaries.");
   momentumCmd.SetParameterName("p", true);
   momentumCmd.SetRange("p>=0.");                                
-  momentumCmd.SetDefaultValue("1.");
+  momentumCmd.SetDefaultValue("10.");
 
 
-  // randomizePrimary command
   auto& particleComd
     = fMessenger->DeclareProperty("particle", fparticleDef);
   G4String guidance
