@@ -34,8 +34,8 @@ G4bool SiliconPixelSD::ProcessHits(G4Step *step, G4TouchableHistory *ROhist) {
 	if (tmp_hits.find(tmp_ID) == tmp_hits.end()) {		//make new hit
 		G4String vol_name = touchable->GetVolume(0)->GetName();
 		tmp_hits[tmp_ID] = new SiliconPixelHit(vol_name, copy_no_sensor, copy_no_cell);
-		G4double hit_x = touchable->GetVolume(0)->GetTranslation().x()/CLHEP::cm;
-		G4double hit_y = touchable->GetVolume(0)->GetTranslation().y()/CLHEP::cm;
+		G4double hit_x = (touchable->GetVolume(1)->GetTranslation().x()+touchable->GetVolume(0)->GetTranslation().x())/CLHEP::cm;
+		G4double hit_y = (touchable->GetVolume(1)->GetTranslation().x()+touchable->GetVolume(0)->GetTranslation().y())/CLHEP::cm;
 		G4double hit_z = touchable->GetVolume(1)->GetTranslation().z()/CLHEP::cm;
 		tmp_hits[tmp_ID]->SetPosition(hit_x, hit_y, hit_z);		//in mm
 	}
