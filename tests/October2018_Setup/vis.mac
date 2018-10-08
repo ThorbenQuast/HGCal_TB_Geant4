@@ -33,6 +33,7 @@
 # Specify view angle:
 /vis/viewer/set/viewpointVector -1 0 0
 /vis/viewer/set/lightsVector -1 0 0
+
 #
 # Specify style (surface, wireframe, auxiliary edges,...)
 /vis/viewer/set/style wireframe
@@ -62,71 +63,29 @@
 /vis/filtering/trajectories/create/attributeFilter
 /vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
 /vis/filtering/trajectories/attributeFilter-0/addInterval 10. MeV 1000 GeV
-/vis/modeling/trajectories/create/drawByAttribute
-/vis/modeling/trajectories/drawByAttribute-0/setAttribute IMag 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval1 1 MeV 10 MeV 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval2 10 MeV 100 MeV 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval3 100 MeV 200 MeV 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval4 200.0 MeV 500 MeV 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval5 500 MeV 0.9 GeV 
-/vis/modeling/trajectories/drawByAttribute-0/addInterval interval6 0.9 GeV 10000 GeV
-/vis/modeling/trajectories/drawByAttribute-0/interval1/setLineColourRGBA 0.1 0.1 0.1 0.3 
-/vis/modeling/trajectories/drawByAttribute-0/interval2/setLineColourRGBA 1 0.3 0 1
-/vis/modeling/trajectories/drawByAttribute-0/interval3/setLineColourRGBA 1 1 0 1 
-/vis/modeling/trajectories/drawByAttribute-0/interval4/setLineColourRGBA 0 1 0 1 
-/vis/modeling/trajectories/drawByAttribute-0/interval5/setLineColourRGBA 1 0 0 1  
-/vis/modeling/trajectories/drawByAttribute-0/interval6/setLineColourRGBA 0 0 1 1 
+#/vis/modeling/trajectories/create/drawByAttribute
+#/vis/modeling/trajectories/drawByAttribute-0/setAttribute IMag 
+#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval1 1 MeV 10 MeV 
+#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval2 10 MeV 100 MeV 
+#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval3 100 MeV 200 MeV 
+#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval4 200.0 MeV 500 MeV 
+#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval5 500 MeV 0.9 GeV 
+#/vis/modeling/trajectories/drawByAttribute-0/addInterval interval6 0.9 GeV 10000 GeV
+#/vis/modeling/trajectories/drawByAttribute-0/interval1/setLineColourRGBA 0.1 0.1 0.1 0.3 
+#/vis/modeling/trajectories/drawByAttribute-0/interval2/setLineColourRGBA 1 0.3 0 1
+#/vis/modeling/trajectories/drawByAttribute-0/interval3/setLineColourRGBA 1 1 0 1 
+#/vis/modeling/trajectories/drawByAttribute-0/interval4/setLineColourRGBA 0 1 0 1 
+#/vis/modeling/trajectories/drawByAttribute-0/interval5/setLineColourRGBA 1 0 0 1  
+#/vis/modeling/trajectories/drawByAttribute-0/interval6/setLineColourRGBA 0 0 1 1 
 
 #make the background white
 /vis/viewer/set/background 1 1 1 1.0
 
 #
-# Many other options are available with /vis/modeling and /vis/filtering.
-# For example, to select colour by particle ID:
-#/vis/modeling/trajectories/create/drawByParticleID
-#/vis/modeling/trajectories/drawByParticleID-0/default/setDrawStepPts true
-# To select or override default colours (note: e+ is blue by default):
-#/vis/modeling/trajectories/list
-#/vis/modeling/trajectories/drawByParticleID-0/set e+ yellow
-#
 # To superimpose all of the events from a given run:
-/vis/scene/endOfEventAction accumulate
+#/vis/scene/endOfEventAction accumulate
 #
-# Decorations
-# Name
-#/vis/set/textColour blue
-#/vis/set/textLayout 
-#/vis/scene/add/text2D -0.9 -.9 24 ! ! 90 GeV e-
-#/vis/set/textColour grey
-#/vis/set/textLayout right
-#/vis/scene/add/text2D 0.9 -.9 24 ! ! CMS HGCal EE, September 2017 TB
-#/vis/set/textLayout
-#/vis/set/textColour red
-#/vis/scene/add/text2D -0.9 .85 28 ! ! CMS Private
-# or, if your system does not support right-adjustment
-#/vis/scene/add/text2D 0 -.9 24 ! ! exampleB1
-#/vis/set/textLayout    # Revert to normal (left adjusted) layout
-#/vis/set/textColour    # Revert to default text colour (blue)
-#
-# Axes, scale, etc.
-#/vis/scene/add/scale   # Simple scale line
-#/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
-#/vis/scene/add/eventID # Drawn at end of event
-#/vis/scene/add/date    # Date stamp
-#/vis/scene/add/logo2D  # Simple logo
-#/vis/scene/add/logo    # 3D logo
-#
-# Frame
-#/vis/set/colour red
-#/vis/set/lineWidth 2
-#/vis/scene/add/frame   # Simple frame around the view
-#/vis/set/colour        # Revert to default colour (white)
-#/vis/set/lineWidth     # Revert to default line width (1.)
-#
-# Attach text to one edge of Shape1, with a small, fixed offset
-#/vis/scene/add/text 0 6 -4 cm 18 4 4 Shape1
-# Attach text to one corner of Shape2, with a small, fixed offset
-#/vis/scene/add/text 6 7 10 cm 18 4 4 Shape2
+
 #
 # To get nice view
 # Make the "World" box invisible
@@ -135,7 +94,9 @@
 /vis/geometry/set/colour Envelope 0 0 0 1 .3
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
-/vis/viewer/set/viewpointThetaPhi 0 90
+/vis/viewer/set/viewpointThetaPhi 95 80
+/vis/viewer/set/targetPoint 0 0 10.3 m
+/vis/viewer/zoom 10
 #
 # Re-establish auto refreshing and verbosity:
 /vis/viewer/set/autoRefresh true
