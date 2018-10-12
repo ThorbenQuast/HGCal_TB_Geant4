@@ -104,7 +104,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   fParticleGun->SetParticleEnergy(fMomentum);  
   
   G4double z0 = -worldDZ;
-  fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., 1.*CLHEP::cm),G4RandGauss::shoot(0., 1.*CLHEP::cm), z0)); //11cm spread
+  fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., .5*CLHEP::cm),G4RandGauss::shoot(0., .5*CLHEP::cm), z0)); //0.5cm spread
 
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
