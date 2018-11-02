@@ -77,6 +77,10 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn("Edep_keV", fEventAction->hits_Edep);    // column Id = 8
     analysisManager->CreateNtupleDColumn("EdepNonIonizing_keV", fEventAction->hits_EdepNonIonising);    // column Id = 9
     analysisManager->CreateNtupleDColumn("TOA_ns", fEventAction->hits_TOA);    // column Id = 10
+    
+    analysisManager->CreateNtupleDColumn("signalSum_MeV");    // column Id = 11
+    analysisManager->CreateNtupleDColumn("COGZ_cm");    // column Id = 12
+    analysisManager->CreateNtupleIColumn("NHits");    // column Id = 13
     analysisManager->FinishNtuple();
   }
 
