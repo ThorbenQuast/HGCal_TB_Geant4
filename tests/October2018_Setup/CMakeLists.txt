@@ -45,6 +45,7 @@ target_link_libraries(October2018_Setup ${Geant4_LIBRARIES})
 #
 set(EXAMPLEB1_SCRIPTS
   init_vis.mac
+  run.mac
   vis.mac
   )
 

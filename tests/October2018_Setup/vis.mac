@@ -28,6 +28,7 @@
 /vis/verbose errors
 #
 # Draw geometry:
+/HGCalOctober2018/setup/config 22
 /vis/drawVolume
 #
 # Specify view angle:
