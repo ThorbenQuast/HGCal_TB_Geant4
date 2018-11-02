@@ -62,7 +62,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 			hits_TOA.push_back(hit->GetTOA());
 			
 			Nhits++;
-			esum += hit->GetEdep()/CLHEP::MeV;
+			esum += hit->GetEdep()*CLHEP::keV/CLHEP::MeV;
 			cogz += hit->GetZ()*hit->GetEdep();
 		}
 	}
