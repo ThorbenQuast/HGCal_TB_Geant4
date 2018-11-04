@@ -66,6 +66,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* DWC_logical;
     G4LogicalVolume* DWC_gas_logical;
 
+    G4double absPbEE_pre_config101;
+    G4double absPbEE_post_config101;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

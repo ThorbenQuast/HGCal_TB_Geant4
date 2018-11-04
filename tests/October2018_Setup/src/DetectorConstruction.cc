@@ -71,7 +71,10 @@ DetectorConstruction::DetectorConstruction()
   : G4VUserDetectorConstruction(),
     fScoringVolume(0),
     _configuration(-1)
-{ DefineCommands(); }
+{ 
+  absPbEE_pre_config101 = 3 * mm;
+  absPbEE_post_config101 = 3 * mm;
+  DefineCommands(); }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -338,20 +341,21 @@ void DetectorConstruction::ConstructHGCal() {
 
 
   std::vector<std::pair<std::string, G4double> > dz_map;
+
   G4double z0 = -beamLineLength / 2.;
 
-  dz_map.push_back(std::make_pair("DWC", 0.0 * m));
-  dz_map.push_back(std::make_pair("DWC", 2.0 * m));
-  dz_map.push_back(std::make_pair("DWC", 0.3 * m));
-  dz_map.push_back(std::make_pair("Scintillator", 1.5 * m));
-  dz_map.push_back(std::make_pair("DWC", 0.3 * m));
-  dz_map.push_back(std::make_pair("DWC", 15. * m));
-  dz_map.push_back(std::make_pair("DWC", 7. * m));
-
-  dz_map.push_back(std::make_pair("Scintillator", 0.3 * m));
-  dz_map.push_back(std::make_pair("Scintillator", 2.0 * m));
-
   if (_configuration == 22) {
+    dz_map.push_back(std::make_pair("DWC", 0.0 * m));
+    dz_map.push_back(std::make_pair("DWC", 2.0 * m));
+    dz_map.push_back(std::make_pair("DWC", 0.3 * m));
+    dz_map.push_back(std::make_pair("Scintillator", 1.5 * m));
+    dz_map.push_back(std::make_pair("DWC", 0.3 * m));
+    dz_map.push_back(std::make_pair("DWC", 15. * m));
+    dz_map.push_back(std::make_pair("DWC", 7. * m));
+
+    dz_map.push_back(std::make_pair("Scintillator", 0.3 * m));
+    dz_map.push_back(std::make_pair("Scintillator", 2.0 * m));
+    
     dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
 
     //EE1
@@ -643,6 +647,30 @@ void DetectorConstruction::ConstructHGCal() {
   }
 
 
+  if (_configuration == 101) {
+    G4double dzPbEE = 0.1 * mm;
+    //EE1
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 5 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
+    
+    dz_map.push_back(std::make_pair("PCB", absPbEE_pre_config101));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+    
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", absPbEE_post_config101));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
+  }
+
+
 
   /*
     case "DAISY_WAFER"
@@ -723,9 +751,31 @@ void DetectorConstruction::DefineCommands()
   // Define /B5/detector command directory using generic messenger class
   fMessenger = new G4GenericMessenger(this,
                                       "/HGCalOctober2018/setup/",
-                                      "Configuration index");
+                                      "Configuration specifications");
 
-  // armAngle command
+
+  absPbEE_pre_config101 = 3 * mm;
+  absPbEE_post_config101 = 3 * mm;
+
+
+  //commands specific to configuration 101
+  auto& absPbEE_pre_config101Cmd
+      = fMessenger->DeclarePropertyWithUnit("absPbEE_pre_config101", "mm", absPbEE_pre_config101,
+              "Distance between upstream Pb absorber and cassette.");
+  absPbEE_pre_config101Cmd.SetParameterName("absPbEE_pre_config101", true);
+  absPbEE_pre_config101Cmd.SetRange("absPbEE_pre_config101>=0");
+  absPbEE_pre_config101Cmd.SetDefaultValue("3");  
+
+  auto& absPbEE_post_config101Cmd
+      = fMessenger->DeclarePropertyWithUnit("absPbEE_post_config101", "mm", absPbEE_post_config101,
+              "Distance between downstream Pb absorber and cassette.");
+  absPbEE_post_config101Cmd.SetParameterName("absPbEE_post_config101", true);
+  absPbEE_post_config101Cmd.SetRange("absPbEE_post_config101>=0");
+  absPbEE_post_config101Cmd.SetDefaultValue("3");  
+
+
+
+  // configuration command 
   auto& configeCmd
     = fMessenger->DeclareMethod("config", 
                                         &DetectorConstruction::SelectConfiguration,
