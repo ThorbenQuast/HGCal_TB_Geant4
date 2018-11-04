@@ -35,6 +35,9 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4GenericMessenger* fMessenger;
     G4double fMomentum;
     G4String fparticleDef;
+
+    G4double sigmaBeamX;
+    G4double sigmaBeamY;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
