@@ -3,8 +3,9 @@
 SiliconPixelSD::SiliconPixelSD(G4String name) : G4VSensitiveDetector("SiliconPixelHitCollection") {
 	G4cout<<"creating a sensitive detector with name: "<<name<<G4endl;
 	collectionName.insert("SiliconPixelHitCollection");
-
 }
+
+		
 
 SiliconPixelSD::~SiliconPixelSD()
 {}
@@ -37,7 +38,7 @@ G4bool SiliconPixelSD::ProcessHits(G4Step *step, G4TouchableHistory *ROhist) {
 		G4double hit_x = (touchable->GetVolume(1)->GetTranslation().x()+touchable->GetVolume(0)->GetTranslation().x())/CLHEP::cm;
 		G4double hit_y = (touchable->GetVolume(1)->GetTranslation().x()+touchable->GetVolume(0)->GetTranslation().y())/CLHEP::cm;
 		G4double hit_z = touchable->GetVolume(1)->GetTranslation().z()/CLHEP::cm;
-		tmp_hits[tmp_ID]->SetPosition(hit_x, hit_y, hit_z);		//in mm
+		tmp_hits[tmp_ID]->SetPosition(hit_x, hit_y, hit_z);		//in cm
 	}
 
 	
@@ -46,9 +47,12 @@ G4bool SiliconPixelSD::ProcessHits(G4Step *step, G4TouchableHistory *ROhist) {
 
 	G4double timedep = step->GetPostStepPoint()->GetGlobalTime()/CLHEP::ns;
 
-	tmp_hits[tmp_ID]->AddEdep(edep);
-	tmp_hits[tmp_ID]->AddEdepNonIonizing(edep_nonIonizing);
-	tmp_hits[tmp_ID]->UpdateTimeOfArrival(edep, timedep);
+	tmp_hits[tmp_ID]->AddEdep(edep, timedep);
+	tmp_hits[tmp_ID]->AddEdepNonIonizing(edep_nonIonizing, timedep);
 
 	return true;
 }
+
+
+
+

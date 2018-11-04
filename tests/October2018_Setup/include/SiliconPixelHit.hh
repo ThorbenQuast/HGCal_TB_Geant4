@@ -1,6 +1,8 @@
 #include "G4VHit.hh"
 #include "G4Allocator.hh"
 #include "G4THitsCollection.hh"
+#include <vector>
+#include <cstdlib>
 
 class SiliconPixelHit : public G4VHit {
 	public:
@@ -8,13 +10,11 @@ class SiliconPixelHit : public G4VHit {
 		~SiliconPixelHit() {};
 		void Print() {};
 		G4int ID() {return 1000*copy_no_sensor+copy_no_cell;}
-		void AddEdep(const double e) {eDep += e; }
-		void AddEdepNonIonizing(const double e) {edep_nonIonizing += e; }
-		void UpdateTimeOfArrival(const double e, const double t) {
-			if (e<=0.) return;		//4 MIP cut
-			if (this->timeOfArrival==-1) timeOfArrival = t;
-			else if (this->timeOfArrival > t) this->timeOfArrival = t;
-		}
+		void AddEdep(const G4double e, const G4double t) {if (e>0) eDep.push_back(std::make_pair(e, t)); }
+		void AddEdepNonIonizing(const G4double e, const G4double t) {if (e>0) edep_nonIonizing.push_back(std::make_pair(e, t)); }
+		
+		void Digitise(const G4double timeWindow, const G4double toaThreshold);
+
 
 		void SetPosition(G4double x, G4double y, G4double z) {
 			this->pos_x = x;
@@ -26,9 +26,11 @@ class SiliconPixelHit : public G4VHit {
 		G4double GetY() {return this->pos_y;}
 		G4double GetZ() {return this->pos_z;}
 
-		G4double GetEdep() const {return eDep;}
-		G4double GetEdepNonIonizing() const {return edep_nonIonizing;}
-		G4double GetTOA() const {return timeOfArrival;}
+		
+		bool isValidHit() const {return _isValidHit;}
+		G4double GetEdep() const {return eDep_digi;}
+		G4double GetEdepNonIonizing() const {return edep_nonIonizing_digi;}
+		G4double GetTOA() const {return timeOfArrival_digi;}
 
 	private:
 		G4String vol_name;
@@ -38,9 +40,14 @@ class SiliconPixelHit : public G4VHit {
 		G4double pos_y;		//positions in mm
 		G4double pos_z;		//positions in mm
 
-		G4double eDep;
-		G4double edep_nonIonizing;
-		G4double timeOfArrival;
+		std::vector<std::pair<G4double, G4double> > eDep;
+		std::vector<std::pair<G4double, G4double> > edep_nonIonizing;
+
+		//processed values
+		bool _isValidHit;
+		G4double eDep_digi;
+		G4double edep_nonIonizing_digi;
+		G4double timeOfArrival_digi;
 };
 
 typedef G4THitsCollection<SiliconPixelHit> SiliconPixelHitCollection;
