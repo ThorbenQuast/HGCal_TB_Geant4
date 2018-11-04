@@ -650,7 +650,7 @@ void DetectorConstruction::ConstructHGCal() {
   if (_configuration == 101) {
     G4double dzPbEE = 0.1 * mm;
     //EE1
-    dz_map.push_back(std::make_pair("Pb_absorber_EE", 5 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", beamLineLength/2 + 13.3 * m));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
