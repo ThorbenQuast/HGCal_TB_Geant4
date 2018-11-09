@@ -26,6 +26,7 @@ public:
     std::vector<G4double>     hits_Edep;
     std::vector<G4double>     hits_EdepNonIonising;
     std::vector<G4double>     hits_TOA;
+    std::vector<G4int>        hits_type;
 private:
     void DefineCommands();
     G4GenericMessenger* fMessenger;

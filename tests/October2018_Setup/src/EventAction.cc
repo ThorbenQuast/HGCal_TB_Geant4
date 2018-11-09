@@ -6,6 +6,7 @@
 #include "G4SDManager.hh"
 #include "G4RunManager.hh"
 #include "SiliconPixelHit.hh"
+#include "SiPMHit.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -33,6 +34,7 @@ void EventAction::BeginOfEventAction(const G4Event* EventAction)
 	hits_Edep.clear();
 	hits_EdepNonIonising.clear();
 	hits_TOA.clear();
+	hits_type.clear();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -49,10 +51,14 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
 	auto hce = event->GetHCofThisEvent();
 	auto sdManager = G4SDManager::GetSDMpointer();
-	G4int collId = sdManager->GetCollectionID("SiliconPixelHitCollection");
+	G4int collId;
+
+
+	//HGCAL EE + FH
+	collId = sdManager->GetCollectionID("SiliconPixelHitCollection");
 	auto hc = hce->GetHC(collId);
 	if ( ! hc ) return;
-	double esum = 0; double cogz = 0; int Nhits = 0;
+	double esum_HGCAL = 0; double cogz_HGCAL = 0; int Nhits_HGCAL = 0;
 	for (unsigned int i = 0; i < hc->GetSize(); ++i) {
 		auto hit = static_cast<SiliconPixelHit*>(hc->GetHit(i));
 		hit->Digitise(hitTimeCut / CLHEP::ns, toaThreshold / CLHEP::keV );
@@ -65,21 +71,51 @@ void EventAction::EndOfEventAction(const G4Event* event)
 			hits_Edep.push_back(hit->GetEdep());
 			hits_EdepNonIonising.push_back(hit->GetEdepNonIonizing());
 			hits_TOA.push_back(hit->GetTOA());
+			hits_type.push_back(0);
 
-			Nhits++;
-			esum += hit->GetEdep() * CLHEP::keV / CLHEP::MeV;
-			cogz += hit->GetZ() * hit->GetEdep();
+			Nhits_HGCAL++;
+			esum_HGCAL += hit->GetEdep() * CLHEP::keV / CLHEP::MeV;
+			cogz_HGCAL += hit->GetZ() * hit->GetEdep();
 		}
 	}
-	if (esum > 0) cogz /= esum;
+	if (esum_HGCAL > 0) cogz_HGCAL /= esum_HGCAL;
 
-	analysisManager->FillNtupleDColumn(11, esum);
-	analysisManager->FillNtupleDColumn(12, cogz / CLHEP::cm);
-	analysisManager->FillNtupleIColumn(13, Nhits);
+	analysisManager->FillNtupleDColumn(12, esum_HGCAL);
+	analysisManager->FillNtupleDColumn(13, cogz_HGCAL / CLHEP::cm);
+	analysisManager->FillNtupleIColumn(14, Nhits_HGCAL);
 
-	analysisManager->CreateNtupleDColumn("signalSum_MeV");    // column Id = 11
-	analysisManager->CreateNtupleDColumn("COGZ_cm");    // column Id = 12
-	analysisManager->CreateNtupleIColumn("NHits");    // column Id = 13
+
+	//AHCAL 
+	collId = sdManager->GetCollectionID("SiPMHitCollection");
+	hc = hce->GetHC(collId);
+	if ( ! hc ) return;
+	double esum_AHCAL = 0; double cogz_AHCAL = 0; int Nhits_AHCAL = 0;
+	for (unsigned int i = 0; i < hc->GetSize(); ++i) {
+		auto hit = static_cast<SiPMHit*>(hc->GetHit(i));
+		hit->Digitise(-1, 0 );
+
+		if (hit->isValidHit()) {
+			hits_ID.push_back(hit->ID());
+			hits_x.push_back(hit->GetX());
+			hits_y.push_back(hit->GetY());
+			hits_z.push_back(hit->GetZ());
+			hits_Edep.push_back(hit->GetEdep());
+			hits_EdepNonIonising.push_back(hit->GetEdepNonIonizing());
+			hits_TOA.push_back(hit->GetTOA());
+			hits_type.push_back(1);
+
+			Nhits_AHCAL++;
+			esum_AHCAL += hit->GetEdep() * CLHEP::keV / CLHEP::MeV;
+			cogz_AHCAL += hit->GetZ() * hit->GetEdep();
+		}
+	}
+	if (esum_AHCAL > 0) cogz_AHCAL /= esum_AHCAL;
+
+	analysisManager->FillNtupleDColumn(15, esum_AHCAL);
+	analysisManager->FillNtupleDColumn(16, cogz_AHCAL / CLHEP::cm);
+	analysisManager->FillNtupleIColumn(17, Nhits_AHCAL);
+
+
 
 	analysisManager->AddNtupleRow();
 }

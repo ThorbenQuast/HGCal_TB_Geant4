@@ -16,6 +16,7 @@
 #include "G4LogicalVolume.hh"
 
 #include "SiliconPixelSD.hh"
+#include "SiPMSD.hh"
 
 #include "G4PVPlacement.hh"
 #include "G4SystemOfUnits.hh"
@@ -300,10 +301,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   thickness_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_thickness;
   logical_volume_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_logical;
   int copy_counter = 0;
-  for (float _dx = -12.5; _dx <= 12.5; _dx = _dx + 1.) for (float _dy = -12.5; _dy <= 12.5; _dy = _dy + 1.) {
-      std::cout << _dx << "  " << _dy << std::endl;
+  for (float _dx = -12.5; _dx <= 12.5; _dx = _dx + 1.) for (float _dy = -12.5; _dy <= 12.5; _dy = _dy + 1.)
       new G4PVPlacement(0, G4ThreeVector(_dx * AHCAL_SiPM_xy, _dy * AHCAL_SiPM_xy, 0), AHCAL_SiPM_logical, "AHCAL_SiPM", AHCAL_SiPM_2x2HUB_logical, false, copy_counter++, true);
-    }
+
 
 
 
@@ -788,7 +788,7 @@ void DetectorConstruction::ConstructHGCal() {
     G4double dz = dz_map[item_index].second;
     z0 += dz;
 
-    std::cout << "Placing " << item_type << " at position z [mm]=" << z0 / mm - 12590 << std::endl;
+    //std::cout << "Placing " << item_type << " at position z [mm]=" << z0 / mm - 12590 << std::endl;
     if (item_type.find("_DAISY") != std::string::npos) {
       item_type.resize(item_type.find("_DAISY"));
       if (copy_counter_map.find(item_type) == copy_counter_map.end()) copy_counter_map[item_type] = 0;
@@ -815,10 +815,13 @@ void DetectorConstruction::ConstructHGCal() {
 void DetectorConstruction::ConstructSDandField() {
   G4SDManager* sdman = G4SDManager::GetSDMpointer();
 
-  SiliconPixelSD* sensitive = new SiliconPixelSD((Si_pixel_logical->GetName() + "_sensitive").c_str());
-  sdman->AddNewDetector(sensitive);
-  Si_pixel_logical->SetSensitiveDetector(sensitive);
+  SiliconPixelSD* sensitiveSilicon = new SiliconPixelSD((Si_pixel_logical->GetName() + "_sensitive").c_str());
+  sdman->AddNewDetector(sensitiveSilicon);
+  Si_pixel_logical->SetSensitiveDetector(sensitiveSilicon);
 
+  SiPMSD* sensitiveSiPM = new SiPMSD((AHCAL_SiPM_logical->GetName() + "_sensitive").c_str());
+  sdman->AddNewDetector(sensitiveSiPM);
+  AHCAL_SiPM_logical->SetSensitiveDetector(sensitiveSiPM);
 
 }
 
