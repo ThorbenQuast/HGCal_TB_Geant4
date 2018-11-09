@@ -48,6 +48,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     double alpha;
     G4double Si_wafer_sideLength;
 
+    G4double AHCAL_SiPM_xy;
+
     std::map<std::string, G4double> thickness_map;
     std::map<std::string, G4LogicalVolume*> logical_volume_map;
 
@@ -62,6 +64,11 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* Cu_absorber_EE_logical;
     G4LogicalVolume* Cu_absorber_FH_logical;
     G4LogicalVolume* Fe_absorber_FH_logical;
+    G4LogicalVolume* AHCAL_SiPM_logical;
+    G4LogicalVolume* AHCAL_SiPM_2x2HUB_logical;
+    G4LogicalVolume* Al_absorber_AHCAL_logical;
+    G4LogicalVolume* PCB_AHCAL_logical;
+    G4LogicalVolume* Fe_absorber_AHCAL_logical;
     G4LogicalVolume* scintillator_logical;
     G4LogicalVolume* DWC_logical;
     G4LogicalVolume* DWC_gas_logical;

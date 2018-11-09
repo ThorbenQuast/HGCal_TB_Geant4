@@ -71,10 +71,11 @@ DetectorConstruction::DetectorConstruction()
   : G4VUserDetectorConstruction(),
     fScoringVolume(0),
     _configuration(-1)
-{ 
+{
   absPbEE_pre_config101 = 3 * mm;
   absPbEE_post_config101 = 3 * mm;
-  DefineCommands(); }
+  DefineCommands();
+}
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -104,7 +105,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* mat_W = nist->FindOrBuildMaterial("G4_W");
   G4Material* mat_Si = nist->FindOrBuildMaterial("G4_Si");
   G4Material* mat_KAPTON = nist->FindOrBuildMaterial("G4_KAPTON");
-  G4Material* mat_PCB = nist->FindOrBuildMaterial("G4_PLEXIGLASS");
+  G4Material* mat_PCB = nist->FindOrBuildMaterial("G4_C");
+
+  //AHCAL SiPMs
+  G4double a = 1.01 * g / mole;
+  G4Element* elH = new G4Element("Hydrogen", "H2", 1., a);
+  a = 12.01 * g / mole;
+  G4Element* elC = new G4Element("Carbon", "C", 6., a);
+  G4double density = 1.032 * g / cm3;
+  G4Material* mat_Polystyrene = new G4Material("Polystyrene", density, 2);
+  mat_Polystyrene->AddElement(elC, 19);
+  mat_Polystyrene->AddElement(elH, 21);
+
   //CuW alloy: 60% Cu, 40% W in mass
   G4double Cu_frac_in_CuW = 0.6;
   G4Material* mat_CuW = new G4Material("CuW", mat_Cu->GetDensity()*Cu_frac_in_CuW + mat_W->GetDensity() * (1 - Cu_frac_in_CuW), 2);
@@ -113,7 +125,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
   /***** Definition of the world = beam line *****/
-  beamLineLength = 32 * m;
+  beamLineLength = 36 * m;
   beamLineXY = 9 * m;
 
   // World = Beam line
@@ -266,6 +278,67 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   logical_volume_map["Fe_absorber_FH"] = Fe_absorber_FH_logical;
 
 
+  /***** Definition of AHCAL elements *****/
+  G4double AHCAL_SiPM_thickness = 5.4 * mm;
+  AHCAL_SiPM_xy = 3 * cm;
+  G4Box* AHCAL_SiPM_solid = new G4Box("AHCAL_SiPM", 0.5 * AHCAL_SiPM_xy, 0.5 * AHCAL_SiPM_xy, 0.5 * AHCAL_SiPM_thickness);
+  AHCAL_SiPM_logical = new G4LogicalVolume(AHCAL_SiPM_solid, mat_Polystyrene, "AHCAL_SiPM");
+  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 1.0));
+  visAttributes->SetVisibility(true);
+  AHCAL_SiPM_logical->SetVisAttributes(visAttributes);
+  thickness_map["AHCAL_SiPM"] = AHCAL_SiPM_thickness;
+  logical_volume_map["AHCAL_SiPM"] = AHCAL_SiPM_logical;
+
+
+  G4double AHCAL_SiPM_2x2HUB_xy = 2 * 12 * AHCAL_SiPM_xy + 0.01 * mm;
+  G4double AHCAL_SiPM_2x2HUB_thickness = AHCAL_SiPM_thickness + 0.01 * mm;
+  G4Box* AHCAL_SiPM_2x2HUB_solid = new G4Box("AHCAL_SiPM_2x2HUB", 0.5 * AHCAL_SiPM_2x2HUB_xy, 0.5 * AHCAL_SiPM_2x2HUB_xy, 0.5 * AHCAL_SiPM_2x2HUB_thickness);
+  AHCAL_SiPM_2x2HUB_logical = new G4LogicalVolume(AHCAL_SiPM_2x2HUB_solid, mat_AIR, "AHCAL_SiPM_2x2HUB");
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
+  visAttributes->SetVisibility(true);
+  AHCAL_SiPM_2x2HUB_logical->SetVisAttributes(visAttributes);
+  thickness_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_thickness;
+  logical_volume_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_logical;
+  int copy_counter = 0;
+  for (float _dx = -12.5; _dx <= 12.5; _dx = _dx + 1.) for (float _dy = -12.5; _dy <= 12.5; _dy = _dy + 1.) {
+      std::cout << _dx << "  " << _dy << std::endl;
+      new G4PVPlacement(0, G4ThreeVector(_dx * AHCAL_SiPM_xy, _dy * AHCAL_SiPM_xy, 0), AHCAL_SiPM_logical, "AHCAL_SiPM", AHCAL_SiPM_2x2HUB_logical, false, copy_counter++, true);
+    }
+
+
+
+  G4double Al_absorber_AHCAL_thickness = 1 * mm;
+  G4double Al_absorber_AHCAL_xy = 2 * 12 * AHCAL_SiPM_xy;
+  G4Box* Al_absorber_AHCAL_solid = new G4Box("Al_absorber_AHCAL", 0.5 * Al_absorber_AHCAL_xy, 0.5 * Al_absorber_AHCAL_xy, 0.5 * Al_absorber_AHCAL_thickness);
+  Al_absorber_AHCAL_logical = new G4LogicalVolume(Al_absorber_AHCAL_solid, mat_Al, "Al_absorber_AHCAL");
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
+  visAttributes->SetVisibility(true);
+  Al_absorber_AHCAL_logical->SetVisAttributes(visAttributes);
+  thickness_map["Al_absorber_AHCAL"] = Al_absorber_AHCAL_thickness;
+  logical_volume_map["Al_absorber_AHCAL"] = Al_absorber_AHCAL_logical;
+
+  G4double PCB_AHCAL_thickness = 1.2 * mm;
+  G4double PCB_AHCAL_xy = 2 * 12 * AHCAL_SiPM_xy;
+  G4Box* PCB_AHCAL_solid = new G4Box("PCB_AHCAL", 0.5 * PCB_AHCAL_xy, 0.5 * PCB_AHCAL_xy, 0.5 * PCB_AHCAL_thickness);
+  PCB_AHCAL_logical = new G4LogicalVolume(PCB_AHCAL_solid, mat_PCB, "PCB_AHCAL");
+  visAttributes = new G4VisAttributes(G4Colour(.0, 1., 0.0, 0.3));
+  visAttributes->SetVisibility(true);
+  PCB_AHCAL_logical->SetVisAttributes(visAttributes);
+  thickness_map["PCB_AHCAL"] = PCB_AHCAL_thickness;
+  logical_volume_map["PCB_AHCAL"] = PCB_AHCAL_logical;
+
+  G4double Fe_absorber_AHCAL_thickness = 17 * mm;
+  G4double Fe_absorber_AHCAL_x = 80.8 * cm;
+  G4double Fe_absorber_AHCAL_y = 65.7 * cm;
+  G4Box* Fe_absorber_AHCAL_solid = new G4Box("Fe_absorber_AHCAL", 0.5 * Fe_absorber_AHCAL_x, 0.5 * Fe_absorber_AHCAL_y, 0.5 * Fe_absorber_AHCAL_thickness);
+  Fe_absorber_AHCAL_logical = new G4LogicalVolume(Fe_absorber_AHCAL_solid, mat_Fe, "Fe_absorber_AHCAL");
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.1));
+  visAttributes->SetVisibility(true);
+  Fe_absorber_AHCAL_logical->SetVisAttributes(visAttributes);
+  thickness_map["Fe_absorber_AHCAL"] = Fe_absorber_AHCAL_thickness;
+  logical_volume_map["Fe_absorber_AHCAL"] = Fe_absorber_AHCAL_logical;
+
+
   /***** Definition of beam line elements *****/
   //scintillators
   G4double scintillator_thickness = 10 * mm;
@@ -355,7 +428,7 @@ void DetectorConstruction::ConstructHGCal() {
 
     dz_map.push_back(std::make_pair("Scintillator", 0.3 * m));
     dz_map.push_back(std::make_pair("Scintillator", 2.0 * m));
-    
+
     dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
 
     //EE1
@@ -644,18 +717,34 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
     dz_map.push_back(std::make_pair("Steel_case", 1.9 * cm));
+
+    //AHCAL
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 50.0 * cm));
+    for (int l = 0; l < 39; l++) {
+      dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.5 * cm));
+      dz_map.push_back(std::make_pair("AHCAL_SiPM_2x2HUB", 0.));
+      dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
+      dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
+    }
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 1.1 * cm));
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 1.1 * cm));
+    dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.5 * cm));
+    dz_map.push_back(std::make_pair("AHCAL_SiPM_2x2HUB", 0.));
+    dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
+
   }
 
 
   if (_configuration == 101) {
     G4double dzPbEE = 0.1 * mm;
     //EE1
-    dz_map.push_back(std::make_pair("Pb_absorber_EE", beamLineLength/2 + 13.3 * m));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", beamLineLength / 2 + 13.3 * m));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
-    
+
     dz_map.push_back(std::make_pair("PCB", absPbEE_pre_config101));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("Kapton_layer", 0.));
@@ -665,7 +754,7 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Kapton_layer", 0.));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
-    
+
     dz_map.push_back(std::make_pair("Pb_absorber_EE", absPbEE_post_config101));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
   }
@@ -719,8 +808,8 @@ void DetectorConstruction::ConstructHGCal() {
       new G4PVPlacement(0, G4ThreeVector(0., 0., z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true); //todo: index
       z0 += thickness_map[item_type];
     }
-  }
 
+  }
 }
 
 void DetectorConstruction::ConstructSDandField() {
@@ -760,26 +849,26 @@ void DetectorConstruction::DefineCommands()
 
   //commands specific to configuration 101
   auto& absPbEE_pre_config101Cmd
-      = fMessenger->DeclarePropertyWithUnit("absPbEE_pre_config101", "mm", absPbEE_pre_config101,
-              "Distance between upstream Pb absorber and cassette.");
+    = fMessenger->DeclarePropertyWithUnit("absPbEE_pre_config101", "mm", absPbEE_pre_config101,
+                                          "Distance between upstream Pb absorber and cassette.");
   absPbEE_pre_config101Cmd.SetParameterName("absPbEE_pre_config101", true);
   absPbEE_pre_config101Cmd.SetRange("absPbEE_pre_config101>=0");
-  absPbEE_pre_config101Cmd.SetDefaultValue("3");  
+  absPbEE_pre_config101Cmd.SetDefaultValue("3");
 
   auto& absPbEE_post_config101Cmd
-      = fMessenger->DeclarePropertyWithUnit("absPbEE_post_config101", "mm", absPbEE_post_config101,
-              "Distance between downstream Pb absorber and cassette.");
+    = fMessenger->DeclarePropertyWithUnit("absPbEE_post_config101", "mm", absPbEE_post_config101,
+                                          "Distance between downstream Pb absorber and cassette.");
   absPbEE_post_config101Cmd.SetParameterName("absPbEE_post_config101", true);
   absPbEE_post_config101Cmd.SetRange("absPbEE_post_config101>=0");
-  absPbEE_post_config101Cmd.SetDefaultValue("3");  
+  absPbEE_post_config101Cmd.SetDefaultValue("3");
 
 
 
-  // configuration command 
+  // configuration command
   auto& configeCmd
-    = fMessenger->DeclareMethod("config", 
-                                        &DetectorConstruction::SelectConfiguration,
-                                        "Select the configuration (22-24)");
+    = fMessenger->DeclareMethod("config",
+                                &DetectorConstruction::SelectConfiguration,
+                                "Select the configuration (22-24)");
   configeCmd.SetParameterName("config", true);
   configeCmd.SetDefaultValue("22");
 }
