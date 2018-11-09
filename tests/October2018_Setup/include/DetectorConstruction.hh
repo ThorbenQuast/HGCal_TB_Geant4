@@ -37,6 +37,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4GenericMessenger* fMessenger;
     void SelectConfiguration(G4int val);
     G4int _configuration;
+    G4int _useGoldPlatedKapton;
 
 
     G4double beamLineLength;
@@ -58,6 +59,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* Cu_baseplate_logical;
     G4LogicalVolume* PCB_baseplate_logical;
     G4LogicalVolume* Kapton_layer_logical;
+    G4LogicalVolume* Kapton_half_layer_logical;
+    G4LogicalVolume* Gold_half_layer_logical;
     G4LogicalVolume* Al_case_logical;
     G4LogicalVolume* Steel_case_logical;
     G4LogicalVolume* Pb_absorber_EE_logical;

@@ -28,6 +28,9 @@
 /vis/verbose errors
 #
 # Draw geometry:
+/HGCalOctober2018/setup/useGoldKapton 1
+/HGCalOctober2018/generator/momentum 150 GeV
+/HGCalOctober2018/generator/particle pi+
 /HGCalOctober2018/setup/config 22
 /vis/drawVolume
 #

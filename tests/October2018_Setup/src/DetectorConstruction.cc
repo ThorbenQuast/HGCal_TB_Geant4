@@ -75,6 +75,7 @@ DetectorConstruction::DetectorConstruction()
 {
   absPbEE_pre_config101 = 3 * mm;
   absPbEE_post_config101 = 3 * mm;
+  _useGoldPlatedKapton = 0;
   DefineCommands();
 }
 
@@ -106,6 +107,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* mat_W = nist->FindOrBuildMaterial("G4_W");
   G4Material* mat_Si = nist->FindOrBuildMaterial("G4_Si");
   G4Material* mat_KAPTON = nist->FindOrBuildMaterial("G4_KAPTON");
+  G4Material* mat_Au = nist->FindOrBuildMaterial("G4_Au");
   G4Material* mat_PCB = nist->FindOrBuildMaterial("G4_C");
 
   //AHCAL SiPMs
@@ -204,7 +206,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   logical_volume_map["PCB"] = PCB_baseplate_logical;
 
   //Kapton layer
-  G4double Kapton_layer_thickness = 1.2 * mm;
+  G4double Kapton_layer_thickness = 0.05 * mm;
   G4double Kapton_layer_sideLength = 11 * Si_pixel_sideLength;
   Kapton_layer_logical = HexagonLogical("Kapton_layer", Kapton_layer_thickness, Kapton_layer_sideLength, mat_KAPTON);
   visAttributes = new G4VisAttributes(G4Colour(.4, 0.4, 0.0, 0.3));
@@ -213,6 +215,25 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   thickness_map["Kapton_layer"] = Kapton_layer_thickness;
   logical_volume_map["Kapton_layer"] = Kapton_layer_logical;
 
+  //half Kapton layer
+  G4double Kapton_half_layer_thickness = 0.025 * mm;
+  G4double Kapton_half_layer_sideLength = 11 * Si_pixel_sideLength;
+  Kapton_half_layer_logical = HexagonLogical("Kapton_half_layer", Kapton_half_layer_thickness, Kapton_half_layer_sideLength, mat_KAPTON);
+  visAttributes = new G4VisAttributes(G4Colour(.4, 0.4, 0.0, 0.3));
+  visAttributes->SetVisibility(true);
+  Kapton_half_layer_logical->SetVisAttributes(visAttributes);
+  thickness_map["Kapton_half_layer"] = Kapton_half_layer_thickness;
+  logical_volume_map["Kapton_half_layer"] = Kapton_half_layer_logical;
+
+  //half Gold layer
+  G4double Gold_half_layer_thickness = 0.025 * mm;
+  G4double Gold_half_layer_sideLength = 11 * Si_pixel_sideLength;
+  Gold_half_layer_logical = HexagonLogical("Gold_half_layer", Gold_half_layer_thickness, Gold_half_layer_sideLength, mat_Au);
+  visAttributes = new G4VisAttributes(G4Colour(.4, 0.4, 0.0, 0.3));
+  visAttributes->SetVisibility(true);
+  Gold_half_layer_logical->SetVisAttributes(visAttributes);
+  thickness_map["Gold_half_layer"] = Gold_half_layer_thickness;
+  logical_volume_map["Gold_half_layer"] = Gold_half_layer_logical;
 
 
   /***** Definition of absorber plates *****/
@@ -435,11 +456,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 12 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.3 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -449,11 +477,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -461,11 +496,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.1 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -473,11 +515,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.2 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -485,11 +534,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.2 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -497,11 +553,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.2 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -509,11 +572,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -521,11 +591,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -533,11 +610,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -545,11 +629,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -557,11 +648,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
     dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -569,11 +667,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.4 * cm));
     dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -581,11 +686,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.4 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -593,11 +705,18 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.4 * cm));
     dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
     dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
     dz_map.push_back(std::make_pair("PCB", 0));
 
@@ -609,7 +728,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH6, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.3 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -618,7 +741,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH3, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.3 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -627,7 +754,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH2, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.8 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -636,7 +767,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH5, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.7 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -645,7 +780,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH8, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -654,7 +793,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH9, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.5 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -667,7 +810,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH7, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.3 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -676,7 +823,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH1, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 1.1 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -685,7 +836,11 @@ void DetectorConstruction::ConstructHGCal() {
     //FH2, orientation correct?
     dz_map.push_back(std::make_pair("PCB_DAISY", 0.9 * cm));
     dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    if (!_useGoldPlatedKapton)dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    else {
+      dz_map.push_back(std::make_pair("Gold_half_layer_DAISY", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer_DAISY", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -694,7 +849,10 @@ void DetectorConstruction::ConstructHGCal() {
     //FH10, orientation correct?
     dz_map.push_back(std::make_pair("PCB", 1.1 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+        if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -703,7 +861,10 @@ void DetectorConstruction::ConstructHGCal() {
     //FH11, orientation correct?
     dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+        if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -712,7 +873,10 @@ void DetectorConstruction::ConstructHGCal() {
     //FH12, orientation correct?
     dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+        if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+      dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
+      dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
+    }
     dz_map.push_back(std::make_pair("Cu_baseplate", 0.));
     dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
 
@@ -788,7 +952,7 @@ void DetectorConstruction::ConstructHGCal() {
     G4double dz = dz_map[item_index].second;
     z0 += dz;
 
-    //std::cout << "Placing " << item_type << " at position z [mm]=" << z0 / mm - 12590 << std::endl;
+    std::cout << "Placing " << item_type << " at position z [mm]=" << z0 / mm << std::endl;
     if (item_type.find("_DAISY") != std::string::npos) {
       item_type.resize(item_type.find("_DAISY"));
       if (copy_counter_map.find(item_type) == copy_counter_map.end()) copy_counter_map[item_type] = 0;
@@ -866,14 +1030,22 @@ void DetectorConstruction::DefineCommands()
   absPbEE_post_config101Cmd.SetDefaultValue("3");
 
 
+  // configuration command
+  auto& KaptonCmd
+    = fMessenger->DeclareProperty("useGoldKapton",
+                                _useGoldPlatedKapton,
+                                "Use gold plating for Kapton");
+  KaptonCmd.SetParameterName("useGoldKapton", true);
+  KaptonCmd.SetDefaultValue("0");
+
 
   // configuration command
-  auto& configeCmd
+  auto& configCmd
     = fMessenger->DeclareMethod("config",
                                 &DetectorConstruction::SelectConfiguration,
                                 "Select the configuration (22-24)");
-  configeCmd.SetParameterName("config", true);
-  configeCmd.SetDefaultValue("22");
+  configCmd.SetParameterName("config", true);
+  configCmd.SetDefaultValue("22");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
