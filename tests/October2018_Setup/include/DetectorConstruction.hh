@@ -73,6 +73,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* PCB_AHCAL_logical;
     G4LogicalVolume* Fe_absorber_AHCAL_logical;
     G4LogicalVolume* scintillator_logical;
+    G4LogicalVolume* MCP_logical;
     G4LogicalVolume* DWC_logical;
     G4LogicalVolume* DWC_gas_logical;
 

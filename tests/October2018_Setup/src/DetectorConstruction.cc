@@ -5,6 +5,7 @@
 #include "G4NistManager.hh"
 
 #include "G4Box.hh"
+#include "G4Tubs.hh"
 #include "G4SubtractionSolid.hh"
 #include "G4RotationMatrix.hh"
 #include "G4ThreeVector.hh"
@@ -109,6 +110,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* mat_KAPTON = nist->FindOrBuildMaterial("G4_KAPTON");
   G4Material* mat_Au = nist->FindOrBuildMaterial("G4_Au");
   G4Material* mat_PCB = nist->FindOrBuildMaterial("G4_C");
+  G4Material* mat_Quartz = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
 
   //AHCAL SiPMs
   G4double a = 1.01 * g / mole;
@@ -372,6 +374,17 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   thickness_map["Scintillator"] = scintillator_thickness;
   logical_volume_map["Scintillator"] = scintillator_logical;
 
+  //MCPs = quartz disks
+  G4double MCP_thickness = 10 * mm;
+  G4double MCP_radius = 2 * cm;
+  G4Tubs* MCP_solid = new G4Tubs("MCP", 0. ,MCP_radius, MCP_thickness, 0, 360*degree);
+  MCP_logical = new G4LogicalVolume(MCP_solid, mat_Quartz, "MCP");
+  visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.5));
+  visAttributes->SetVisibility(true);
+  MCP_logical->SetVisAttributes(visAttributes);
+  thickness_map["MCP"] = MCP_thickness;
+  logical_volume_map["MCP"] = MCP_logical;
+
 
   //DWC related material
   G4double DWC_thickness = 10 * mm;
@@ -438,7 +451,7 @@ void DetectorConstruction::ConstructHGCal() {
 
   G4double z0 = -beamLineLength / 2.;
 
-  if (_configuration == 22) {
+  if (_configuration == 22 || _configuration==221) {
     dz_map.push_back(std::make_pair("DWC", 0.0 * m));
     dz_map.push_back(std::make_pair("DWC", 2.0 * m));
     dz_map.push_back(std::make_pair("DWC", 0.3 * m));
@@ -450,7 +463,13 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Scintillator", 0.3 * m));
     dz_map.push_back(std::make_pair("Scintillator", 2.0 * m));
 
-    dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
+    if (_configuration==22) dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
+    else {
+     dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+     dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+     dz_map.push_back(std::make_pair("Al_case", 0.1 * m - 2*thickness_map["MCP"]));
+    }
+
 
     //EE1
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 12 * cm));
