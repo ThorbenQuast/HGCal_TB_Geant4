@@ -81,7 +81,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 	if (esum_HGCAL > 0) cogz_HGCAL /= esum_HGCAL;
 
 	analysisManager->FillNtupleDColumn(12, esum_HGCAL);
-	analysisManager->FillNtupleDColumn(13, cogz_HGCAL / CLHEP::cm);
+	analysisManager->FillNtupleDColumn(13, cogz_HGCAL);
 	analysisManager->FillNtupleIColumn(14, Nhits_HGCAL);
 
 
@@ -112,7 +112,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 	if (esum_AHCAL > 0) cogz_AHCAL /= esum_AHCAL;
 
 	analysisManager->FillNtupleDColumn(15, esum_AHCAL);
-	analysisManager->FillNtupleDColumn(16, cogz_AHCAL / CLHEP::cm);
+	analysisManager->FillNtupleDColumn(16, cogz_AHCAL);
 	analysisManager->FillNtupleIColumn(17, Nhits_AHCAL);
 
 
