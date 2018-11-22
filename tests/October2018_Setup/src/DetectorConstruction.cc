@@ -162,8 +162,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   visAttributes->SetVisibility(true);
   Si_pixel_logical->SetVisAttributes(visAttributes);
 
-  new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), Si_pixel_logical, "SiCell", Si_wafer_logical, false, 0, true);
-  int index = 1;
+  int index = 0;
   int nRows[11] = {7, 6, 7, 6, 5, 6, 5, 4, 5, 4, 3};
   for (int nC = 0; nC < 11; nC++) {
     for (int middle_index = 0; middle_index < nRows[nC]; middle_index++) {
@@ -325,7 +324,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   thickness_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_thickness;
   logical_volume_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_logical;
   int copy_counter = 0;
-  for (float _dx = -6.0; _dx <= 6.0; _dx = _dx + 1.) for (float _dy = -6.0; _dy <= 6.0; _dy = _dy + 1.)
+  for (float _dx = -11.5; _dx <= 11.5; _dx = _dx + 1.) for (float _dy = -11.5; _dy <= 11.5; _dy = _dy + 1.)
       new G4PVPlacement(0, G4ThreeVector(_dx * AHCAL_SiPM_xy, _dy * AHCAL_SiPM_xy, 0), AHCAL_SiPM_logical, "AHCAL_SiPM", AHCAL_SiPM_2x2HUB_logical, false, copy_counter++, true);
 
 
