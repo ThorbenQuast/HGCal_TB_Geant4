@@ -31,8 +31,8 @@
 
 
 G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double cellSideLength, G4Material* material) {
-  G4double full_cellX = sqrt(3.) * cellSideLength;
-  G4double full_cellY = (2.) * cellSideLength;
+  G4double full_cellX = (2.) * cellSideLength;
+  G4double full_cellY = sqrt(3.) * cellSideLength;
   G4Box* solidFullcell = new G4Box(name,                       //its name
                                    0.5 * full_cellX, 0.5 * full_cellY, 0.5 * cellThickness); //its size
 
@@ -44,8 +44,8 @@ G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double 
                                   0.5 * deltaXDash, 0.5 * (deltaYDash), 1.*cellThickness); //its size
 
 
-  G4double DeltaTheta[4] = {60.*deg, 120.*deg, 240.*deg, 300.*deg};
-  G4double DeltaTheta_rot[4] = {30.*deg, 150.*deg, 210 * deg, 330 * deg};
+  G4double DeltaTheta[4] = {30.*deg, 150.*deg, 210.*deg, 330.*deg};
+  G4double DeltaTheta_rot[4] = {60.*deg, 120.*deg, 240 * deg, 300 * deg};
   G4double Delta = sqrt(3) / 2 * cellSideLength + deltaYDash / 2;
 
   G4RotationMatrix* rot = new G4RotationMatrix;
@@ -58,7 +58,8 @@ G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double 
     rot->rotateZ(DeltaTheta_rot[i]);
     subtracted.push_back(new G4SubtractionSolid("cellSubtracted", subtracted[i - 1], solidCutcell, rot, G4ThreeVector(cos(DeltaTheta[i])*Delta, sin(DeltaTheta[i])*Delta, 0.)));
   }
-
+  delete rot;
+  
   return new G4LogicalVolume(subtracted[3],          //its solid
                              material,           //its material
                              name);            //its name
@@ -166,9 +167,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   int nRows[11] = {7, 6, 7, 6, 5, 6, 5, 4, 5, 4, 3};
   for (int nC = 0; nC < 11; nC++) {
     for (int middle_index = 0; middle_index < nRows[nC]; middle_index++) {
-      new G4PVPlacement(0, G4ThreeVector(nC * dx / 2, dy * (middle_index - nRows[nC] / 2. + 0.5), 0.), Si_pixel_logical, "SiCell", Si_wafer_logical, false, index++, true);
+      new G4PVPlacement(0, G4ThreeVector(dy * (middle_index - nRows[nC] / 2. + 0.5), nC * dx / 2, 0.), Si_pixel_logical, "SiCell", Si_wafer_logical, false, index++, true);
       if (nC <= 0) continue;
-      new G4PVPlacement(0, G4ThreeVector(-nC * dx / 2, dy * (middle_index - nRows[nC] / 2. + 0.5), 0.), Si_pixel_logical, "SiCell", Si_wafer_logical, false, index++, true);
+      new G4PVPlacement(0, G4ThreeVector(dy * (middle_index - nRows[nC] / 2. + 0.5), -nC * dx / 2, 0.), Si_pixel_logical, "SiCell", Si_wafer_logical, false, index++, true);
     }
   }
 
@@ -324,7 +325,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   thickness_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_thickness;
   logical_volume_map["AHCAL_SiPM_2x2HUB"] = AHCAL_SiPM_2x2HUB_logical;
   int copy_counter = 0;
-  for (float _dx = -12.5; _dx <= 12.5; _dx = _dx + 1.) for (float _dy = -12.5; _dy <= 12.5; _dy = _dy + 1.)
+  for (float _dx = -6.0; _dx <= 6.0; _dx = _dx + 1.) for (float _dy = -6.0; _dy <= 6.0; _dy = _dy + 1.)
       new G4PVPlacement(0, G4ThreeVector(_dx * AHCAL_SiPM_xy, _dy * AHCAL_SiPM_xy, 0), AHCAL_SiPM_logical, "AHCAL_SiPM", AHCAL_SiPM_2x2HUB_logical, false, copy_counter++, true);
 
 
@@ -980,9 +981,9 @@ void DetectorConstruction::ConstructHGCal() {
       int nRows_[3] = {1, 2, 1};
       for (int nC = 0; nC < 3; nC++) {
         for (int middle_index = 0; middle_index < nRows_[nC]; middle_index++) {
-          new G4PVPlacement(0, G4ThreeVector(nC * dx_ / 2, dy_ * (middle_index - nRows_[nC] / 2. + 0.5), z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
+          new G4PVPlacement(0, G4ThreeVector(dy_ * (middle_index - nRows_[nC] / 2. + 0.5), -nC * dx_ / 2, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
           if (nC <= 0) continue;
-          new G4PVPlacement(0, G4ThreeVector(-nC * dx_ / 2, dy_ * (middle_index - nRows_[nC] / 2. + 0.5), z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
+          new G4PVPlacement(0, G4ThreeVector(dy_ * (middle_index - nRows_[nC] / 2. + 0.5), +nC * dx_ / 2, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
         }
       }
       z0 += thickness_map[item_type];
