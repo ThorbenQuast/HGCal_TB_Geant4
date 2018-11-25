@@ -33,8 +33,12 @@
 /EventDisplay/ntuple/config 22
 /vis/drawVolume
 #/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/ntuple_384.root
-#/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/ntuple_522.root
-/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/ntuple_718.root
+#/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/ntuple_324.root
+#/EventDisplay/ntuple/pathAHCAL /Users/tquast/Desktop/eventDisplaysOctober/run_dc4_000324.root
+#/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/ntuple_512.root
+#/EventDisplay/ntuple/pathAHCAL /Users/tquast/Desktop/eventDisplaysOctober/run_dc4_000512.root
+/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/ntuple_522.root
+#/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/ntuple_718.root
 
 #
 # Specify view angle:

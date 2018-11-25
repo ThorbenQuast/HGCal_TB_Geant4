@@ -8,6 +8,8 @@
 #include "G4GenericMessenger.hh"
 #include "G4UImanager.hh"
 
+#include "G4Box.hh"
+
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
@@ -17,7 +19,7 @@ class G4LogicalVolume;
 
 /// Detector construction class to define materials and geometry.
 
-struct HGCalHit {
+struct VisHit {
     G4int layer;
     G4double x;
     G4double y;
@@ -47,8 +49,6 @@ protected:
 
 
 private:
-    std::vector<G4double> HGCalLayerDistances;
-    std::vector<HGCalHit*> HGCalHitsForVisualisation;
 
 
     G4LogicalVolume* logicWorld;
@@ -59,10 +59,12 @@ private:
     void SelectConfiguration(G4int val);
     G4int _configuration;
 
-    void OpenNtuple(G4String);
+    void OpenHGCALNtuple(G4String);
     G4String ntuplepath;
-    void ReadNtupleEvent(G4int);
+    void OpenAHCALNtuple(G4String);
+    G4String ntupleAHCALpath;
 
+    void ReadNtupleEvent(G4int);
 
     G4double beamLineLength;
     G4double beamLineXY;
@@ -74,6 +76,7 @@ private:
     G4double Si_wafer_sideLength;
 
     G4double AHCAL_SiPM_xy;
+    G4Box* AHCAL_SiPM_solid;
 
     std::map<std::string, G4double> thickness_map;
     std::map<std::string, G4LogicalVolume*> logical_volume_map;
@@ -104,22 +107,12 @@ private:
 
 
 
+    std::vector<G4double> HGCalLayerDistances;
+    std::vector<VisHit*> HGCalHitsForVisualisation;
 //ntuple readout
-    TFile* m_inputFile;
-    TTree* m_inputTree;
-
-    TBranch *b_eventID;
-    TBranch *b_Nhits;
-    TBranch *b_rechit_layer_;
-    TBranch *b_rechit_module_;
-    TBranch *b_rechit_chip_;
-    TBranch *b_rechit_channel_;
-    TBranch *b_rechit_type_;
-    TBranch *b_rechit_energy_;
-    TBranch *b_rechit_x_;
-    TBranch *b_rechit_y_;
-    TBranch *b_rechit_z_;
-
+    TFile* m_inputFileHGCal;
+    TTree* m_inputTreeHGCal;
+    std::map<std::string, TBranch*> hgcalBranches;
     unsigned int eventID;
     unsigned int Nhits;
     std::vector<unsigned int>* rechit_layer_;
@@ -132,8 +125,24 @@ private:
     std::vector<Float16_t>* rechit_y_;
     std::vector<Float16_t>* rechit_z_;
 
+    std::vector<G4double> AHCALLayerDistances;
+    std::vector<VisHit*> AHCALHitsForVisualisation;
+    int ahcalOffset;
+
+    TFile* m_inputFileAHCAL;
+    TTree* m_inputTreeAHCAL;
+    std::map<std::string, TBranch*> ahcalBranches;
+
+    int AHCAL_eventID;
+    int AHCAL_Nhits;
+    int ahc_hitI_[24*24*40];
+    int ahc_hitJ_[24*24*40];
+    int ahc_hitK_[24*24*40];
+    float ahc_hitEnergy_[24*24*40];
 
 
+//alignment correction
+    std::vector<std::pair<float, float> > transverse_alignment_HGCal;    
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

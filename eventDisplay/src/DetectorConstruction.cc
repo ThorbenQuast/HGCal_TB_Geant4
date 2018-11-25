@@ -1,5 +1,6 @@
 
 #include "DetectorConstruction.hh"
+#include "colors.hh"
 
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
@@ -76,8 +77,8 @@ DetectorConstruction::DetectorConstruction()
 
   DefineCommands();
   ntuplepath = "";
-  m_inputFile = NULL;
-  m_inputTree = NULL;
+  m_inputFileHGCal = NULL;
+  m_inputTreeHGCal = NULL;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -306,10 +307,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   /***** Definition of AHCAL elements *****/
   G4double AHCAL_SiPM_thickness = 5.4 * mm;
   AHCAL_SiPM_xy = 3 * cm;
-  G4Box* AHCAL_SiPM_solid = new G4Box("AHCAL_SiPM", 0.5 * AHCAL_SiPM_xy, 0.5 * AHCAL_SiPM_xy, 0.5 * AHCAL_SiPM_thickness);
+  AHCAL_SiPM_solid = new G4Box("AHCAL_SiPM", 0.5 * AHCAL_SiPM_xy, 0.5 * AHCAL_SiPM_xy, 0.5 * AHCAL_SiPM_thickness);
   AHCAL_SiPM_logical = new G4LogicalVolume(AHCAL_SiPM_solid, mat_Polystyrene, "AHCAL_SiPM");
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   AHCAL_SiPM_logical->SetVisAttributes(visAttributes);
   thickness_map["AHCAL_SiPM"] = AHCAL_SiPM_thickness;
   logical_volume_map["AHCAL_SiPM"] = AHCAL_SiPM_logical;
@@ -346,7 +347,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Box* PCB_AHCAL_solid = new G4Box("PCB_AHCAL", 0.5 * PCB_AHCAL_xy, 0.5 * PCB_AHCAL_xy, 0.5 * PCB_AHCAL_thickness);
   PCB_AHCAL_logical = new G4LogicalVolume(PCB_AHCAL_solid, mat_PCB, "PCB_AHCAL");
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   PCB_AHCAL_logical->SetVisAttributes(visAttributes);
   thickness_map["PCB_AHCAL"] = PCB_AHCAL_thickness;
   logical_volume_map["PCB_AHCAL"] = PCB_AHCAL_logical;
@@ -357,7 +358,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Box* Fe_absorber_AHCAL_solid = new G4Box("Fe_absorber_AHCAL", 0.5 * Fe_absorber_AHCAL_x, 0.5 * Fe_absorber_AHCAL_y, 0.5 * Fe_absorber_AHCAL_thickness);
   Fe_absorber_AHCAL_logical = new G4LogicalVolume(Fe_absorber_AHCAL_solid, mat_Fe, "Fe_absorber_AHCAL");
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   Fe_absorber_AHCAL_logical->SetVisAttributes(visAttributes);
   thickness_map["Fe_absorber_AHCAL"] = Fe_absorber_AHCAL_thickness;
   logical_volume_map["Fe_absorber_AHCAL"] = Fe_absorber_AHCAL_logical;
@@ -759,7 +760,7 @@ void DetectorConstruction::ConstructHGCal() {
 
     dz_map.push_back(std::make_pair("Steel_case", 1.9 * cm));
 
-    /*
+
     //AHCAL
     dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 50.0 * cm));
     for (int l = 0; l < 39; l++) {
@@ -774,7 +775,52 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("AHCAL_SiPM_2x2HUB", 0.));
     dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
     dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
-    */
+
+
+
+    //alignment corrections
+    transverse_alignment_HGCal.push_back(std::make_pair(12.141 * mm, 10.2289 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(12.3922 * mm, 9.2855 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(2.76116 * mm, 1.62551 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(2.37533 * mm, 1.53643 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(2.65149 * mm, 1.31142 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(10.7234 * mm, 1.2203 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(1.49899 * mm, 963.435 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(1.35585 * mm, 846.804 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(949.161 * um, 557.809 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(786.145 * um, 442.091 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(369.472 * um, 152.227 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(207.653 * um, 44.328 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-198.169 * um, -257.791 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-340.096 * um, -358.632 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-734.033 * um, -629.943 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-885.39 * um, -702.495 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-1.27285 * mm, -825.611 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-1.40802 * mm, -897.513 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-1.95743 * mm, -1.07832 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-11.7648 * mm, -1.14806 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-12.8142 * mm, -1.40062 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-6.60605 * mm, -1.66384 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-4.83945 * mm, -13.6163 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-1.58281 * mm, -13.8692 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-2.71289 * mm, -7.86485 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-2.57112 * mm, -6.92423 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-1.55738 * mm, -5.48404 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-4.07674 * mm, -3.31654 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(5.53527 * mm, 3.03084 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(1.74374 * mm, 1.20339 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(489.807 * um, 447.239 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-762.833 * um, -263.527 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-14.9638 * mm, -991.664 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-615.277 * um, -8.26731 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(938.042 * um, -503.529 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-241.428 * um, -1.55229 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(-2.73723 * mm, 1.81628 * mm));
+    transverse_alignment_HGCal.push_back(std::make_pair(1.28911 * mm, 860.212 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-36.572 * um, 97.01 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(-1.37912 * mm, -715.329 * um));
+
+
   }
 
 
@@ -785,11 +831,20 @@ void DetectorConstruction::ConstructHGCal() {
     std::string item_type = dz_map[item_index].first;
     G4double dz = dz_map[item_index].second;
     z0 += dz;
+    //alignment correction
+    float align_dx = 0;
+    float align_dy = 0;
 
     std::cout << "Placing " << item_type << " at position z [mm]=" << z0 / mm << std::endl;
     if (item_type.find("Si_wafer") != std::string::npos) {
       HGCalLayerDistances.push_back(z0);
+      align_dx = transverse_alignment_HGCal[copy_counter_map[item_type]].first;
+      align_dy = transverse_alignment_HGCal[copy_counter_map[item_type]].first;
     }
+    if (item_type.find("AHCAL_SiPM") != std::string::npos) {
+      AHCALLayerDistances.push_back(z0);
+    }
+
     if (item_type.find("_DAISY") != std::string::npos) {
       item_type.resize(item_type.find("_DAISY"));
       if (copy_counter_map.find(item_type) == copy_counter_map.end()) copy_counter_map[item_type] = 0;
@@ -798,15 +853,15 @@ void DetectorConstruction::ConstructHGCal() {
       int nRows_[3] = {1, 2, 1};
       for (int nC = 0; nC < 3; nC++) {
         for (int middle_index = 0; middle_index < nRows_[nC]; middle_index++) {
-          new G4PVPlacement(0, G4ThreeVector(dy_ * (middle_index - nRows_[nC] / 2. + 0.5), -nC * dx_ / 2, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
+          new G4PVPlacement(0, G4ThreeVector(dy_ * (middle_index - nRows_[nC] / 2. + 0.5) + align_dx, -nC * dx_ / 2 + align_dy, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
           if (nC <= 0) continue;
-          new G4PVPlacement(0, G4ThreeVector(dy_ * (middle_index - nRows_[nC] / 2. + 0.5), +nC * dx_ / 2, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
+          new G4PVPlacement(0, G4ThreeVector(dy_ * (middle_index - nRows_[nC] / 2. + 0.5) + align_dx, +nC * dx_ / 2 + align_dy, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
         }
       }
       z0 += thickness_map[item_type];
     } else {
       if (copy_counter_map.find(item_type) == copy_counter_map.end()) copy_counter_map[item_type] = 0;
-      new G4PVPlacement(0, G4ThreeVector(0., 0., z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true); //todo: index
+      new G4PVPlacement(0, G4ThreeVector(align_dx, align_dy, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true); //todo: index
       z0 += thickness_map[item_type];
     }
 
@@ -822,72 +877,116 @@ void DetectorConstruction::ConstructSDandField() {
 void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
   //cleanup
   for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
-    HGCalHit* hit = HGCalHitsForVisualisation[nhit];
+    VisHit* hit = HGCalHitsForVisualisation[nhit];
     hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -beamLineLength / 2));
     delete hit;
   }
   HGCalHitsForVisualisation.clear();
 
+  for (size_t nhit = 0; nhit < AHCALHitsForVisualisation.size(); nhit++) {
+    VisHit* hit = AHCALHitsForVisualisation[nhit];
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -beamLineLength / 2));
+    delete hit;
+  }
+  AHCALHitsForVisualisation.clear();
 
-  for (unsigned int i = 0; i < m_inputTree->GetEntries(); i++) {
-    m_inputTree->GetEntry(i);
-    if (eventID == eventIndex) break;
+
+  //HGCal hits
+  if (m_inputFileHGCal->IsOpen()) {
+    for (unsigned int i = 0; i < m_inputTreeHGCal->GetEntries(); i++) {
+      m_inputTreeHGCal->GetEntry(i);
+      if (eventID == eventIndex) break;
+    }
+
+    for (unsigned int nhit = 0; nhit < Nhits; nhit++) {
+      unsigned int type = rechit_type_->at(nhit);
+      if (type == 1) continue;
+      if (type == 2) continue;
+      if (type == 3) continue;
+      if (type == 5) continue;
+      /*
+      ID = 0 : full cell,
+      ID = 1 : calibration pad,
+      ID = 2 : half cell,
+      ID = 3 : mouse bite cell,
+      ID = 4 : outer calibration pad cell,
+      ID = 5 : merged cell
+      */
+      Float16_t hit_energy = rechit_energy_->at(nhit);
+      if (hit_energy < 0.5) continue;
+
+
+      VisHit* hit = new VisHit;
+      hit->name = "HGCAL-Hit";
+      hit->layer = rechit_layer_->at(nhit);
+      hit->x = rechit_x_->at(nhit) * cm + transverse_alignment_HGCal[hit->layer-1].first;
+      hit->y = rechit_y_->at(nhit) * cm + transverse_alignment_HGCal[hit->layer-1].second;
+
+      setHGCALHitColor(hit);
+
+      HGCalHitsForVisualisation.push_back(hit);
+    }
+    std::cout << "Number of hits in HGCAL file: " << Nhits << std::endl;
+    std::cout << "Number of hits for visualisation: " << HGCalHitsForVisualisation.size() << std::endl;
+  } else {
+    std::cout << "HGCAL file is not open!" << std::endl;
   }
 
-  for (unsigned int nhit = 0; nhit < Nhits; nhit++) {
-    unsigned int type = rechit_type_->at(nhit);
-    if (type == 1) continue;
-    if (type == 2) continue;
-    if (type == 3) continue;
-    if (type == 5) continue;
-    /*
-    ID = 0 : full cell,
-    ID = 1 : calibration pad,
-    ID = 2 : half cell,
-    ID = 3 : mouse bite cell,
-    ID = 4 : outer calibration pad cell,
-    ID = 5 : merged cell
-    */
-    Float16_t hit_energy = rechit_energy_->at(nhit);
-    if (hit_energy < 0.5) continue;
 
 
-    HGCalHit* hit = new HGCalHit;
-    hit->layer = rechit_layer_->at(nhit);
-    hit->x = rechit_x_->at(nhit) * cm;
-    hit->y = rechit_y_->at(nhit) * cm;
+  //AHCAL hits
+  if (m_inputFileAHCAL->IsOpen()) {
+    for (unsigned int i = 0; i < m_inputTreeAHCAL->GetEntries(); i++) {
+      m_inputTreeAHCAL->GetEntry(i);
+      if (AHCAL_eventID == eventIndex + ahcalOffset) break;
+    }
 
+    for (int nhit = 0; nhit < AHCAL_Nhits; nhit++) {
+      float hit_energy = ahc_hitEnergy_[nhit];
+      if (hit_energy < 0.5) continue;
 
-    float _r, _g, _b;
-    if (hit_energy < 3.5) {_r = 0; _g = 0; _b = 1;}
-    else if (hit_energy < 50.) {_r = 0; _g = 0.5; _b = 0.5;}
-    else if (hit_energy < 100.) {_r = 0; _g = 1; _b = 0;}
-    else if (hit_energy < 150.) {_r = 0.5; _g = 0.5; _b = 0;}
-    else if (hit_energy < 200.) {_r = 0.8; _g = 0.2; _b = 0;}
-    else if (hit_energy < 300.) {_r = 1.0; _g = 0.; _b = 0;}
-    else if (hit_energy < 500.) {_r = 0.5; _g = 0.; _b = 0.5;}
-    else {_r = 0.; _g = 0.; _b = 0.;}
-    hit->red = _r;
-    hit->green = _g;
-    hit->blue = _b;
+      VisHit* hit = new VisHit;
+      hit->name = "AHCAL-Hit";
+      hit->layer = ahc_hitK_[nhit];
+      hit->x = -(ahc_hitI_[nhit] - 12.) * AHCAL_SiPM_xy;
+      hit->y = -(ahc_hitJ_[nhit] - 12.) * AHCAL_SiPM_xy;
 
+      setAHCALHitColor(hit);
 
-    HGCalHitsForVisualisation.push_back(hit);
+      AHCALHitsForVisualisation.push_back(hit);
+    }
+    std::cout << "Number of hits in AHCAL file: " << AHCAL_Nhits << std::endl;
+    std::cout << "Number of hits for visualisation: " << AHCALHitsForVisualisation.size() << std::endl;
+  } else {
+    std::cout << "AHCAL file is not open!" << std::endl;
   }
-  std::cout << "Number of hits in file: " << Nhits << std::endl;
-  std::cout << "Number of hits for visualisation: " << HGCalHitsForVisualisation.size() << std::endl;
+
+
+
 
   /*****    START GENERIC PLACEMENT ALGORITHM  FOR THE SETUP  *****/
   G4VisAttributes* visAttributes;
   for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
-    HGCalHit* hit = HGCalHitsForVisualisation[nhit];
+    VisHit* hit = HGCalHitsForVisualisation[nhit];
     G4LogicalVolume* hit_logical = HexagonLogical(hit->name, Si_wafer_thickness, Si_pixel_sideLength, mat_Vacuum);
     visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
     visAttributes->SetVisibility(true);
     hit_logical->SetVisAttributes(visAttributes);
-    std::cout << "Placing HGCal hit: " << hit->layer << "  " << hit->x << "  " << hit->y << std::endl;
+    //std::cout << "Placing HGCal hit: " << hit->layer << "  " << hit->x << "  " << hit->y << std::endl;
     hit->physicalVolume = new G4PVPlacement(0, G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
   }
+
+
+  for (size_t nhit = 0; nhit < AHCALHitsForVisualisation.size(); nhit++) {
+    VisHit* hit = AHCALHitsForVisualisation[nhit];
+    G4LogicalVolume* hit_logical = new G4LogicalVolume(AHCAL_SiPM_solid, mat_Vacuum, hit->name);
+    visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
+    visAttributes->SetVisibility(true);
+    hit_logical->SetVisAttributes(visAttributes);
+    //std::cout << "Placing AHCAL hit: " << hit->layer << "  " << hit->x << "  " << hit->y << std::endl;
+    hit->physicalVolume = new G4PVPlacement(0, G4ThreeVector(hit->x, hit->y, AHCALLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
+  }
+
 
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
@@ -898,48 +997,48 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 }
 
 
-void DetectorConstruction::OpenNtuple(G4String path) {
+void DetectorConstruction::OpenHGCALNtuple(G4String path) {
   //reading from the file
   if (path == "") {
     return;
   } else {
-    
-    
-  }
-  if (m_inputFile==NULL) {
-    m_inputFile = new TFile(path.c_str(), "READ");
-    m_inputTree = (TTree*)m_inputFile->Get("rechitntupler/hits");
 
-    b_eventID = new TBranch;
-    b_Nhits = new TBranch;
-    b_rechit_layer_ = new TBranch;
-    b_rechit_module_ = new TBranch;
-    b_rechit_chip_ = new TBranch;
-    b_rechit_channel_ = new TBranch;
-    b_rechit_type_ = new TBranch;
-    b_rechit_energy_ = new TBranch;
-    b_rechit_x_ = new TBranch;
-    b_rechit_y_ = new TBranch;
-    b_rechit_z_ = new TBranch;
+
+  }
+  if (m_inputFileHGCal == NULL) {
+    m_inputFileHGCal = new TFile(path.c_str(), "READ");
+    m_inputTreeHGCal = (TTree*)m_inputFileHGCal->Get("rechitntupler/hits");
+
+    hgcalBranches["eventID"] = new TBranch;
+    hgcalBranches["Nhits"] = new TBranch;
+    hgcalBranches["rechit_layer_"] = new TBranch;
+    hgcalBranches["rechit_module_"] = new TBranch;
+    hgcalBranches["rechit_chip_"] = new TBranch;
+    hgcalBranches["rechit_channel_"] = new TBranch;
+    hgcalBranches["rechit_type_"] = new TBranch;
+    hgcalBranches["rechit_energy_"] = new TBranch;
+    hgcalBranches["rechit_x_"] = new TBranch;
+    hgcalBranches["rechit_y_"] = new TBranch;
+    hgcalBranches["rechit_z_"] = new TBranch;
   } else {
-    std::cout<<"Closing "<<ntuplepath<<std::endl;
-    m_inputFile->Close();
-    m_inputFile = new TFile(path.c_str(), "READ");
-    m_inputTree = (TTree*)m_inputFile->Get("rechitntupler/hits");
+    std::cout << "Closing " << ntuplepath << std::endl;
+    m_inputFileHGCal->Close();
+    m_inputFileHGCal = new TFile(path.c_str(), "READ");
+    m_inputTreeHGCal = (TTree*)m_inputFileHGCal->Get("rechitntupler/hits");
   }
   ntuplepath = path;
   std::cout << "Opened " << ntuplepath << std::endl;
-  m_inputTree->SetBranchAddress("event", &eventID, &b_eventID);
-  m_inputTree->SetBranchAddress("NRechits", &Nhits, &b_Nhits);
-  m_inputTree->SetBranchAddress("rechit_layer", &rechit_layer_, &b_rechit_layer_);
-  m_inputTree->SetBranchAddress("rechit_module", &rechit_module_, &b_rechit_module_);
-  m_inputTree->SetBranchAddress("rechit_chip", &rechit_chip_, &b_rechit_chip_);
-  m_inputTree->SetBranchAddress("rechit_channel", &rechit_channel_, &b_rechit_channel_);
-  m_inputTree->SetBranchAddress("rechit_type", &rechit_type_, &b_rechit_type_);
-  m_inputTree->SetBranchAddress("rechit_energy", &rechit_energy_, &b_rechit_energy_);
-  m_inputTree->SetBranchAddress("rechit_x", &rechit_x_, &b_rechit_x_);
-  m_inputTree->SetBranchAddress("rechit_y", &rechit_y_, &b_rechit_y_);
-  m_inputTree->SetBranchAddress("rechit_z", &rechit_z_, &b_rechit_z_);
+  m_inputTreeHGCal->SetBranchAddress("event", &eventID, &hgcalBranches["eventID"]);
+  m_inputTreeHGCal->SetBranchAddress("NRechits", &Nhits, &hgcalBranches["Nhits"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_layer", &rechit_layer_, &hgcalBranches["rechit_layer_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_module", &rechit_module_, &hgcalBranches["rechit_module_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_chip", &rechit_chip_, &hgcalBranches["rechit_chip_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_channel", &rechit_channel_, &hgcalBranches["rechit_channel_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_type", &rechit_type_, &hgcalBranches["rechit_type_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_energy", &rechit_energy_, &hgcalBranches["rechit_energy_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_x", &rechit_x_, &hgcalBranches["rechit_x_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_y", &rechit_y_, &hgcalBranches["rechit_y_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_z", &rechit_z_, &hgcalBranches["rechit_z_"]);
 
   eventID = Nhits = 0;
   rechit_layer_ = 0;
@@ -952,6 +1051,43 @@ void DetectorConstruction::OpenNtuple(G4String path) {
   rechit_y_ = 0;
   rechit_z_ = 0;
 
+
+}
+
+
+void DetectorConstruction::OpenAHCALNtuple(G4String path) {
+  //reading from the file
+  if (path == "") {
+    return;
+  } else {
+
+  }
+  if (m_inputFileAHCAL == NULL) {
+    m_inputFileAHCAL = new TFile(path.c_str(), "READ");
+    m_inputTreeAHCAL = (TTree*)m_inputFileAHCAL->Get("bigtree");
+
+    ahcalBranches["eventNumber"] = new TBranch;
+    ahcalBranches["ahc_nHits"] = new TBranch;
+    ahcalBranches["ahc_hitI"] = new TBranch;
+    ahcalBranches["ahc_hitJ"] = new TBranch;
+    ahcalBranches["ahc_hitK"] = new TBranch;
+    ahcalBranches["ahc_hitEnergy"] = new TBranch;
+  } else {
+    std::cout << "Closing " << ntupleAHCALpath << std::endl;
+    m_inputFileAHCAL->Close();
+    m_inputFileAHCAL = new TFile(path.c_str(), "READ");
+    m_inputTreeAHCAL = (TTree*)m_inputFileAHCAL->Get("bigtree");
+  }
+  ntupleAHCALpath = path;
+  std::cout << "Opened " << ntupleAHCALpath << std::endl;
+  m_inputTreeAHCAL->SetBranchAddress("eventNumber", &AHCAL_eventID, &ahcalBranches["eventNumber"]);
+  m_inputTreeAHCAL->SetBranchAddress("ahc_nHits", &AHCAL_Nhits, &ahcalBranches["ahc_nHits"]);
+  m_inputTreeAHCAL->SetBranchAddress("ahc_hitI", ahc_hitI_, &ahcalBranches["ahc_hitI"]);
+  m_inputTreeAHCAL->SetBranchAddress("ahc_hitJ", ahc_hitJ_, &ahcalBranches["ahc_hitJ"]);
+  m_inputTreeAHCAL->SetBranchAddress("ahc_hitK", ahc_hitK_, &ahcalBranches["ahc_hitK"]);
+  m_inputTreeAHCAL->SetBranchAddress("ahc_hitEnergy", ahc_hitEnergy_, &ahcalBranches["ahc_hitEnergy"]);
+
+  AHCAL_eventID = AHCAL_Nhits = 0;
 
 }
 
@@ -996,10 +1132,39 @@ void DetectorConstruction::DefineCommands()
 
   auto& ntuplePathCmd
     = fMessenger->DeclareMethod("path",
-                                &DetectorConstruction::OpenNtuple,
+                                &DetectorConstruction::OpenHGCALNtuple,
                                 "Path to the ntuple");
   ntuplePathCmd.SetDefaultValue("");
 
+  auto& ntupleAHCALPathCmd
+    = fMessenger->DeclareMethod("pathAHCAL",
+                                &DetectorConstruction::OpenAHCALNtuple,
+                                "Path to the AHCAL ntuple");
+  ntupleAHCALPathCmd.SetDefaultValue("");
+
+  auto& offsetAHCALCmd
+    = fMessenger->DeclareProperty("AHCALOffset", ahcalOffset);
+  G4String guidance = "Event offset AHCAL vs HGCAL";
+  offsetAHCALCmd.SetGuidance(guidance);
+  offsetAHCALCmd.SetParameterName("AHCALOffset", true);
+  offsetAHCALCmd.SetDefaultValue("0");
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
