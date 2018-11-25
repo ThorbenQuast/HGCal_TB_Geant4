@@ -453,6 +453,8 @@ void DetectorConstruction::ConstructHGCal() {
 
   G4double z0 = -beamLineLength / 2.;
 
+  std::cout<<"Constructing configuration "<<_configuration<<std::endl;
+
   if (_configuration == 22 || _configuration == 221) {
     dz_map.push_back(std::make_pair("DWC", 0.0 * m));
     dz_map.push_back(std::make_pair("DWC", 2.0 * m));
@@ -779,46 +781,46 @@ void DetectorConstruction::ConstructHGCal() {
 
 
     //alignment corrections
-    transverse_alignment_HGCal.push_back(std::make_pair(12.141 * mm, 10.2289 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(12.3922 * mm, 9.2855 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(2.76116 * mm, 1.62551 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(2.37533 * mm, 1.53643 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(2.65149 * mm, 1.31142 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(10.7234 * mm, 1.2203 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(1.49899 * mm, 963.435 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(1.35585 * mm, 846.804 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(949.161 * um, 557.809 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(786.145 * um, 442.091 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(369.472 * um, 152.227 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(207.653 * um, 44.328 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-198.169 * um, -257.791 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-340.096 * um, -358.632 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-734.033 * um, -629.943 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-885.39 * um, -702.495 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-1.27285 * mm, -825.611 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-1.40802 * mm, -897.513 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-1.95743 * mm, -1.07832 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-11.7648 * mm, -1.14806 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-12.8142 * mm, -1.40062 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-6.60605 * mm, -1.66384 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-4.83945 * mm, -13.6163 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-1.58281 * mm, -13.8692 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-2.71289 * mm, -7.86485 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-2.57112 * mm, -6.92423 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-1.55738 * mm, -5.48404 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-4.07674 * mm, -3.31654 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(5.53527 * mm, 3.03084 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(1.74374 * mm, 1.20339 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(489.807 * um, 447.239 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-762.833 * um, -263.527 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-14.9638 * mm, -991.664 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-615.277 * um, -8.26731 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(938.042 * um, -503.529 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-241.428 * um, -1.55229 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(-2.73723 * mm, 1.81628 * mm));
-    transverse_alignment_HGCal.push_back(std::make_pair(1.28911 * mm, 860.212 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-36.572 * um, 97.01 * um));
-    transverse_alignment_HGCal.push_back(std::make_pair(-1.37912 * mm, -715.329 * um));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
+    transverse_alignment_HGCal.push_back(std::make_pair(0, 0));
 
 
   }
@@ -835,7 +837,7 @@ void DetectorConstruction::ConstructHGCal() {
     float align_dx = 0;
     float align_dy = 0;
 
-    std::cout << "Placing " << item_type << " at position z [mm]=" << z0 / mm << std::endl;
+    //std::cout << "Placing " << item_type << " at position z [mm]=" << z0 / mm << std::endl;
     if (item_type.find("Si_wafer") != std::string::npos) {
       HGCalLayerDistances.push_back(z0);
       align_dx = transverse_alignment_HGCal[copy_counter_map[item_type]].first;
@@ -892,7 +894,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
 
   //HGCal hits
-  if (m_inputFileHGCal->IsOpen()) {
+  if ((m_inputTreeHGCal != NULL) && (m_inputFileHGCal->IsOpen())) {
     for (unsigned int i = 0; i < m_inputTreeHGCal->GetEntries(); i++) {
       m_inputTreeHGCal->GetEntry(i);
       if (eventID == eventIndex) break;
@@ -915,12 +917,12 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       Float16_t hit_energy = rechit_energy_->at(nhit);
       if (hit_energy < 0.5) continue;
 
-
       VisHit* hit = new VisHit;
       hit->name = "HGCAL-Hit";
       hit->layer = rechit_layer_->at(nhit);
-      hit->x = rechit_x_->at(nhit) * cm + transverse_alignment_HGCal[hit->layer-1].first;
-      hit->y = rechit_y_->at(nhit) * cm + transverse_alignment_HGCal[hit->layer-1].second;
+      hit->x = rechit_x_->at(nhit) * cm + transverse_alignment_HGCal[hit->layer - 1].first;
+      hit->y = rechit_y_->at(nhit) * cm + transverse_alignment_HGCal[hit->layer - 1].second;
+      hit->energy = hit_energy;
 
       setHGCALHitColor(hit);
 
@@ -935,7 +937,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
 
   //AHCAL hits
-  if (m_inputFileAHCAL->IsOpen()) {
+  if ((m_inputTreeAHCAL != NULL) && (m_inputFileAHCAL->IsOpen())) {
     for (unsigned int i = 0; i < m_inputTreeAHCAL->GetEntries(); i++) {
       m_inputTreeAHCAL->GetEntry(i);
       if (AHCAL_eventID == eventIndex + ahcalOffset) break;
@@ -948,8 +950,9 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       VisHit* hit = new VisHit;
       hit->name = "AHCAL-Hit";
       hit->layer = ahc_hitK_[nhit];
-      hit->x = -(ahc_hitI_[nhit] - 12.) * AHCAL_SiPM_xy;
-      hit->y = -(ahc_hitJ_[nhit] - 12.) * AHCAL_SiPM_xy;
+      hit->x = -(ahc_hitI_[nhit] - 12.) * AHCAL_SiPM_xy;  //x coordinates swapped w.r.t. HGCAL
+      hit->y = (ahc_hitJ_[nhit] - 12.) * AHCAL_SiPM_xy;
+      hit->energy = hit_energy;
 
       setAHCALHitColor(hit);
 
@@ -992,7 +995,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   UImanager->ApplyCommand("/vis/drawVolume");
   UImanager->ApplyCommand("/vis/viewer/set/viewpointThetaPhi 115 20");
-  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 11.3 m");
+  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 12.3 m");
 
 }
 
