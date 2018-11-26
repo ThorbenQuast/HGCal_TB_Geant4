@@ -1,34 +1,52 @@
 #include "G4Colour.hh"
 #include "DetectorConstruction.hh"
+#include <iostream>
+
+//http://ultrahigh.org/2007/08/making-pretty-root-color-palettes/
+std::vector<float> HGCAL_energies = {0.0, 3.5, 50, 120, 500};            //must start at 0 and must have at least two entries
+std::vector<float> HGCAL_red = {0.00, 0.00, 0.87, 1.00, 0.51};
+std::vector<float> HGCAL_green = {0.00, 0.81, 1.00, 0.20, 0.00};
+std::vector<float> HGCAL_blue = {0.51, 1.00, 0.12, 0.00, 0.00};
+
+
+std::vector<float> AHCAL_energies = {0.0, 3.5, 50, 120, 500};            //must start at 0 and must have at least two entries
+std::vector<float> AHCAL_red = {0.00, 0.00, 0.87, 1.00, 0.51};
+std::vector<float> AHCAL_green = {0.00, 0.81, 1.00, 0.20, 0.00};
+std::vector<float> AHCAL_blue = {0.51, 1.00, 0.12, 0.00, 0.00};
 
 void setHGCALHitColor (VisHit* hit) {
-      float _r, _g, _b;
       float hit_energy = hit->energy;
-      if (hit_energy < 3.5) {_r = 0; _g = 0; _b = 1;}
-      else if (hit_energy < 50.) {_r = 0; _g = 0.5; _b = 0.5;}
-      else if (hit_energy < 100.) {_r = 0; _g = 1; _b = 0;}
-      else if (hit_energy < 150.) {_r = 0.5; _g = 0.5; _b = 0;}
-      else if (hit_energy < 200.) {_r = 0.8; _g = 0.2; _b = 0;}
-      else if (hit_energy < 300.) {_r = 1.0; _g = 0.; _b = 0;}
-      else if (hit_energy < 500.) {_r = 0.5; _g = 0.; _b = 0.5;}
-      else {_r = 0.; _g = 0.; _b = 0.;}
-      hit->red = _r;
-      hit->green = _g;
-      hit->blue = _b;
+      unsigned short upper_index = HGCAL_energies.size()-1;
+      unsigned short lower_index = HGCAL_energies.size()-1;
+      
+      for (unsigned short i=0; i<HGCAL_energies.size(); i++) {
+            if (hit_energy<HGCAL_energies[i]) {
+                  upper_index = i;
+                  lower_index = i-1;
+                  break;
+            }
+      }
+
+      hit->red = upper_index!=lower_index ? (HGCAL_red[upper_index]-HGCAL_red[lower_index])/(HGCAL_energies[upper_index]-HGCAL_energies[lower_index]) * (hit_energy-HGCAL_energies[lower_index])+HGCAL_red[lower_index] : HGCAL_red[lower_index];
+      hit->green = upper_index!=lower_index ? (HGCAL_green[upper_index]-HGCAL_green[lower_index])/(HGCAL_energies[upper_index]-HGCAL_energies[lower_index]) * (hit_energy-HGCAL_energies[lower_index])+HGCAL_green[lower_index] : HGCAL_green[lower_index];
+      hit->blue = upper_index!=lower_index ? (HGCAL_blue[upper_index]-HGCAL_blue[lower_index])/(HGCAL_energies[upper_index]-HGCAL_energies[lower_index]) * (hit_energy-HGCAL_energies[lower_index])+HGCAL_blue[lower_index] : HGCAL_blue[lower_index];
+
 }
 
 void setAHCALHitColor (VisHit* hit) {
-      float _r, _g, _b;
       float hit_energy = hit->energy;
-      if (hit_energy < 3.5) {_r = 0; _g = 0; _b = 1;}
-      else if (hit_energy < 50.) {_r = 0; _g = 0.5; _b = 0.5;}
-      else if (hit_energy < 100.) {_r = 0; _g = 1; _b = 0;}
-      else if (hit_energy < 150.) {_r = 0.5; _g = 0.5; _b = 0;}
-      else if (hit_energy < 200.) {_r = 0.8; _g = 0.2; _b = 0;}
-      else if (hit_energy < 300.) {_r = 1.0; _g = 0.; _b = 0;}
-      else if (hit_energy < 500.) {_r = 0.5; _g = 0.; _b = 0.5;}
-      else {_r = 0.; _g = 0.; _b = 0.;}
-      hit->red = _r;
-      hit->green = _g;
-      hit->blue = _b;
+      unsigned short upper_index = AHCAL_energies.size()-1;
+      unsigned short lower_index = AHCAL_energies.size()-1;
+      
+      for (size_t i=0; i<AHCAL_energies.size(); i++) {
+            if (hit_energy<AHCAL_energies[i]) {
+                  upper_index = i;
+                  lower_index = i-1;
+                  break;
+            }
+      }
+
+      hit->red = upper_index!=lower_index ? (AHCAL_red[upper_index]-AHCAL_red[lower_index])/(AHCAL_energies[upper_index]-AHCAL_energies[lower_index]) * (hit_energy-AHCAL_energies[lower_index])+AHCAL_red[lower_index] : AHCAL_red[lower_index];
+      hit->green = upper_index!=lower_index ? (AHCAL_green[upper_index]-AHCAL_green[lower_index])/(AHCAL_energies[upper_index]-AHCAL_energies[lower_index]) * (hit_energy-AHCAL_energies[lower_index])+AHCAL_green[lower_index] : AHCAL_green[lower_index];
+      hit->blue = upper_index!=lower_index ? (AHCAL_blue[upper_index]-AHCAL_blue[lower_index])/(AHCAL_energies[upper_index]-AHCAL_energies[lower_index]) * (hit_energy-AHCAL_energies[lower_index])+AHCAL_blue[lower_index] : AHCAL_blue[lower_index];
 }
