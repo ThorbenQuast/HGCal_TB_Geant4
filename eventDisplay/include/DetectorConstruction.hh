@@ -124,6 +124,7 @@ private:
     std::vector<Float16_t>* rechit_x_;
     std::vector<Float16_t>* rechit_y_;
     std::vector<Float16_t>* rechit_z_;
+    std::vector<bool>* rechit_noise_flag_;
 
     std::vector<G4double> AHCALLayerDistances;
     std::vector<VisHit*> AHCALHitsForVisualisation;

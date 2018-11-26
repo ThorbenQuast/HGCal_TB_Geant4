@@ -901,6 +901,8 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     }
 
     for (unsigned int nhit = 0; nhit < Nhits; nhit++) {
+      if (rechit_noise_flag_->at(nhit)) continue;
+
       unsigned int type = rechit_type_->at(nhit);
       if (type == 1) continue;
       if (type == 2) continue;
@@ -1023,6 +1025,7 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
     hgcalBranches["rechit_x_"] = new TBranch;
     hgcalBranches["rechit_y_"] = new TBranch;
     hgcalBranches["rechit_z_"] = new TBranch;
+    hgcalBranches["rechit_noise_flag"] = new TBranch;
   } else {
     std::cout << "Closing " << ntuplepath << std::endl;
     m_inputFileHGCal->Close();
@@ -1042,6 +1045,7 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
   m_inputTreeHGCal->SetBranchAddress("rechit_x", &rechit_x_, &hgcalBranches["rechit_x_"]);
   m_inputTreeHGCal->SetBranchAddress("rechit_y", &rechit_y_, &hgcalBranches["rechit_y_"]);
   m_inputTreeHGCal->SetBranchAddress("rechit_z", &rechit_z_, &hgcalBranches["rechit_z_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_noise_flag", &rechit_noise_flag_, &hgcalBranches["rechit_noise_flag"]);
 
   eventID = Nhits = 0;
   rechit_layer_ = 0;
