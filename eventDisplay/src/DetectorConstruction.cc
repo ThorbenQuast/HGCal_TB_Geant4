@@ -453,7 +453,7 @@ void DetectorConstruction::ConstructHGCal() {
 
   G4double z0 = -beamLineLength / 2.;
 
-  std::cout<<"Constructing configuration "<<_configuration<<std::endl;
+  std::cout << "Constructing configuration " << _configuration << std::endl;
 
   if (_configuration == 22 || _configuration == 221) {
     dz_map.push_back(std::make_pair("DWC", 0.0 * m));
@@ -878,9 +878,13 @@ void DetectorConstruction::ConstructSDandField() {
 
 void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
   //cleanup
+  G4VisAttributes* visAttributes = new G4VisAttributes(G4Colour(1,1,1, 0.));
+  visAttributes->SetVisibility(false);
+
   for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
     VisHit* hit = HGCalHitsForVisualisation[nhit];
     hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -beamLineLength / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
     delete hit;
   }
   HGCalHitsForVisualisation.clear();
@@ -888,6 +892,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
   for (size_t nhit = 0; nhit < AHCALHitsForVisualisation.size(); nhit++) {
     VisHit* hit = AHCALHitsForVisualisation[nhit];
     hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -beamLineLength / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
     delete hit;
   }
   AHCALHitsForVisualisation.clear();
@@ -899,7 +904,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       m_inputTreeHGCal->GetEntry(i);
       if (eventID == eventIndex) break;
     }
-    if (eventID!=eventIndex) std::cout<<"[WARNING] loaded HGCAL event "<<eventID<<" !="<<eventIndex<<std::endl;
+    if (eventID != eventIndex) std::cout << "[WARNING] loaded HGCAL event " << eventID << " !=" << eventIndex << std::endl;
 
     for (unsigned int nhit = 0; nhit < Nhits; nhit++) {
       if (rechit_noise_flag_->at(nhit)) continue;
@@ -945,7 +950,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       m_inputTreeAHCAL->GetEntry(i);
       if (AHCAL_eventID == eventIndex + ahcalOffset) break;
     }
-    if (AHCAL_eventID!=eventIndex + ahcalOffset) std::cout<<"[WARNING] loaded AHCAL event "<<AHCAL_eventID<<" !="<<eventIndex + ahcalOffset<<std::endl;
+    if (AHCAL_eventID != eventIndex + ahcalOffset) std::cout << "[WARNING] loaded AHCAL event " << AHCAL_eventID << " !=" << eventIndex + ahcalOffset << std::endl;
 
     for (int nhit = 0; nhit < AHCAL_Nhits; nhit++) {
       float hit_energy = ahc_hitEnergy_[nhit];
@@ -972,7 +977,6 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
 
   /*****    START GENERIC PLACEMENT ALGORITHM  FOR THE SETUP  *****/
-  G4VisAttributes* visAttributes;
   for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
     VisHit* hit = HGCalHitsForVisualisation[nhit];
     G4LogicalVolume* hit_logical = HexagonLogical(hit->name, Si_wafer_thickness, Si_pixel_sideLength, mat_Vacuum);
