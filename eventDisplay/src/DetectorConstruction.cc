@@ -899,6 +899,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       m_inputTreeHGCal->GetEntry(i);
       if (eventID == eventIndex) break;
     }
+    if (eventID!=eventIndex) std::cout<<"[WARNING] loaded HGCAL event "<<eventID<<" !="<<eventIndex<<std::endl;
 
     for (unsigned int nhit = 0; nhit < Nhits; nhit++) {
       if (rechit_noise_flag_->at(nhit)) continue;
@@ -944,6 +945,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       m_inputTreeAHCAL->GetEntry(i);
       if (AHCAL_eventID == eventIndex + ahcalOffset) break;
     }
+    if (AHCAL_eventID!=eventIndex + ahcalOffset) std::cout<<"[WARNING] loaded AHCAL event "<<AHCAL_eventID<<" !="<<eventIndex + ahcalOffset<<std::endl;
 
     for (int nhit = 0; nhit < AHCAL_Nhits; nhit++) {
       float hit_energy = ahc_hitEnergy_[nhit];
