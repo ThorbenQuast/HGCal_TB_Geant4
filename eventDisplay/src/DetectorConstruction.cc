@@ -286,7 +286,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4double W_absorber_EE_xy = 30 * cm;
   G4Box* W_absorber_EE_solid = new G4Box("W_absorber_EE", 0.5 * W_absorber_EE_xy, 0.5 * W_absorber_EE_xy, 0.5 * W_absorber_EE_thickness);
   W_absorber_EE_logical = new G4LogicalVolume(W_absorber_EE_solid, mat_W, "W_absorber_EE");
-  visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
   visAttributes->SetVisibility(true);
   W_absorber_EE_logical->SetVisAttributes(visAttributes);
   thickness_map["W_absorber_EE"] = W_absorber_EE_thickness;

@@ -3,16 +3,16 @@
 #include <iostream>
 
 //http://ultrahigh.org/2007/08/making-pretty-root-color-palettes/
-std::vector<float> HGCAL_energies = {0.0, 3.5, 50, 120, 500};            //must start at 0 and must have at least two entries
-std::vector<float> HGCAL_red = {0.00, 0.00, 0.87, 1.00, 0.51};
-std::vector<float> HGCAL_green = {0.00, 0.81, 1.00, 0.20, 0.00};
-std::vector<float> HGCAL_blue = {0.51, 1.00, 0.12, 0.00, 0.00};
+std::vector<float> HGCAL_energies = {0.0, 0.5, 1.5, 5.0, 50, 120, 500};            //must start at 0 and must have at least two entries
+std::vector<float> HGCAL_red = {1.00, 0.0, 0.00, 0.00, 0.87, 1.00, 0.51};
+std::vector<float> HGCAL_green = {1.00, 0.0, 0.81, 1.00, 0.20, 0.00};
+std::vector<float> HGCAL_blue = {1.00, 0.0, 0.51, 1.00, 0.12, 0.00, 0.00};
 
 
-std::vector<float> AHCAL_energies = {0.0, 3.5, 50, 120, 500};            //must start at 0 and must have at least two entries
-std::vector<float> AHCAL_red = {0.00, 0.00, 0.87, 1.00, 0.51};
-std::vector<float> AHCAL_green = {0.00, 0.81, 1.00, 0.20, 0.00};
-std::vector<float> AHCAL_blue = {0.51, 1.00, 0.12, 0.00, 0.00};
+std::vector<float> AHCAL_energies = {0.0, 0.5, 1.5, 5.0, 50, 120, 500};            //must start at 0 and must have at least two entries
+std::vector<float> AHCAL_red = {1.00, 0.0, 0.00, 0.00, 0.87, 1.00, 0.51};
+std::vector<float> AHCAL_green = {1.00, 0.0, 0.00, 0.81, 1.00, 0.20, 0.00};
+std::vector<float> AHCAL_blue = {1.00, 0.0, 0.51, 1.00, 0.12, 0.00, 0.00};
 
 void setHGCALHitColor (VisHit* hit) {
       float hit_energy = hit->energy;
