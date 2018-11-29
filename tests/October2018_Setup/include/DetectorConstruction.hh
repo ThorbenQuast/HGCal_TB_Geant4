@@ -65,6 +65,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4LogicalVolume* Steel_case_logical;
     G4LogicalVolume* Pb_absorber_EE_logical;
     G4LogicalVolume* Cu_absorber_EE_logical;
+    G4LogicalVolume* W_absorber_EE_logical;
     G4LogicalVolume* Cu_absorber_FH_logical;
     G4LogicalVolume* Fe_absorber_FH_logical;
     G4LogicalVolume* AHCAL_SiPM_logical;

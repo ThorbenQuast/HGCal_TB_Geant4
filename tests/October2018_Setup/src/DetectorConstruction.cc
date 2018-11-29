@@ -59,7 +59,7 @@ G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double 
     subtracted.push_back(new G4SubtractionSolid("cellSubtracted", subtracted[i - 1], solidCutcell, rot, G4ThreeVector(cos(DeltaTheta[i])*Delta, sin(DeltaTheta[i])*Delta, 0.)));
   }
   delete rot;
-  
+
   return new G4LogicalVolume(subtracted[3],          //its solid
                              material,           //its material
                              name);            //its name
@@ -280,6 +280,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   thickness_map["Cu_absorber_EE"] = Cu_absorber_EE_thickness;
   logical_volume_map["Cu_absorber_EE"] = Cu_absorber_EE_logical;
 
+
+  G4double W_absorber_EE_thickness = 2.8 * mm;
+  G4double W_absorber_EE_xy = 30 * cm;
+  G4Box* W_absorber_EE_solid = new G4Box("W_absorber_EE", 0.5 * W_absorber_EE_xy, 0.5 * W_absorber_EE_xy, 0.5 * W_absorber_EE_thickness);
+  W_absorber_EE_logical = new G4LogicalVolume(W_absorber_EE_solid, mat_W, "W_absorber_EE");
+  visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
+  visAttributes->SetVisibility(true);
+  W_absorber_EE_logical->SetVisAttributes(visAttributes);
+  thickness_map["W_absorber_EE"] = W_absorber_EE_thickness;
+  logical_volume_map["W_absorber_EE"] = W_absorber_EE_logical;
+
+
   //defintion of absorber plates in the FH part
   G4double Cu_absorber_FH_thickness = 6 * mm;
   G4double Cu_absorber_FH_xy = 50 * cm;
@@ -377,7 +389,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   //MCPs = quartz disks
   G4double MCP_thickness = 10 * mm;
   G4double MCP_radius = 2 * cm;
-  G4Tubs* MCP_solid = new G4Tubs("MCP", 0. ,MCP_radius, MCP_thickness, 0, 360*degree);
+  G4Tubs* MCP_solid = new G4Tubs("MCP", 0. , MCP_radius, MCP_thickness, 0, 360 * degree);
   MCP_logical = new G4LogicalVolume(MCP_solid, mat_Quartz, "MCP");
   visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.5));
   visAttributes->SetVisibility(true);
@@ -451,7 +463,8 @@ void DetectorConstruction::ConstructHGCal() {
 
   G4double z0 = -beamLineLength / 2.;
 
-  if (_configuration == 22 || _configuration==221) {
+  //OCTOBER 2018 CONFIGURATION 1
+  if (_configuration == 22 || _configuration == 221) {
     dz_map.push_back(std::make_pair("DWC", 0.0 * m));
     dz_map.push_back(std::make_pair("DWC", 2.0 * m));
     dz_map.push_back(std::make_pair("DWC", 0.3 * m));
@@ -463,13 +476,12 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Scintillator", 0.3 * m));
     dz_map.push_back(std::make_pair("Scintillator", 2.0 * m));
 
-    if (_configuration==22) dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
+    if (_configuration == 22) dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
     else {
-     dz_map.push_back(std::make_pair("MCP", 0.0 * m));
-     dz_map.push_back(std::make_pair("MCP", 0.0 * m));
-     dz_map.push_back(std::make_pair("Al_case", 0.1 * m - 2*thickness_map["MCP"]));
+      dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+      dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+      dz_map.push_back(std::make_pair("Al_case", 0.1 * m - 2 * thickness_map["MCP"]));
     }
-
 
     //EE1
     dz_map.push_back(std::make_pair("Pb_absorber_EE", 12 * cm));
@@ -868,7 +880,7 @@ void DetectorConstruction::ConstructHGCal() {
     //FH10, orientation correct?
     dz_map.push_back(std::make_pair("PCB", 1.1 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-        if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
       dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
       dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
     }
@@ -880,7 +892,7 @@ void DetectorConstruction::ConstructHGCal() {
     //FH11, orientation correct?
     dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-        if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
       dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
       dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
     }
@@ -892,7 +904,7 @@ void DetectorConstruction::ConstructHGCal() {
     //FH12, orientation correct?
     dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
     dz_map.push_back(std::make_pair("Si_wafer", 0.));
-        if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
+    if (!_useGoldPlatedKapton) dz_map.push_back(std::make_pair("Kapton_layer", 0.)); else {
       dz_map.push_back(std::make_pair("Gold_half_layer", 0.));
       dz_map.push_back(std::make_pair("Kapton_half_layer", 0.));
     }
@@ -916,10 +928,570 @@ void DetectorConstruction::ConstructHGCal() {
     dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
     dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
 
+
+    //OCTOBER 2018 CONFIGURATION 2
+  } else if (_configuration == 23 || _configuration == 231) {
+    dz_map.push_back(std::make_pair("DWC", 0.0 * m));
+    dz_map.push_back(std::make_pair("DWC", 2.0 * m));
+    dz_map.push_back(std::make_pair("DWC", 0.3 * m));
+    dz_map.push_back(std::make_pair("Scintillator", 1.5 * m));
+    dz_map.push_back(std::make_pair("DWC", 0.3 * m));
+    dz_map.push_back(std::make_pair("DWC", 15. * m));
+    dz_map.push_back(std::make_pair("DWC", 7. * m));
+
+    dz_map.push_back(std::make_pair("Scintillator", 0.3 * m));
+    dz_map.push_back(std::make_pair("Scintillator", 2.0 * m));
+
+    if (_configuration == 23) dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
+    else {
+      dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+      dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+      dz_map.push_back(std::make_pair("Al_case", 0.1 * m - 2 * thickness_map["MCP"]));
+    }
+
+    //EE1
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 12 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.3 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    dz_map.push_back(std::make_pair("Al_case", 0.6 * cm));
+
+    //EE2
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE3
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.1 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE4
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.2 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE5
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.2 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE6
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.2 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE7
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE8
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE9
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE10
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE11
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.0 * cm));
+    dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE12
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.4 * cm));
+    dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE13
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.4 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    //EE14
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 1.4 * cm));
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("PCB", 0));
+
+    dz_map.push_back(std::make_pair("Al_case", 8.4 * cm));
+
+    //beginning of FH
+    dz_map.push_back(std::make_pair("Steel_case", 28.5 * cm));
+
+    //FH10, orientation correct?
+    dz_map.push_back(std::make_pair("PCB", 0.59 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    //FH11, orientation correct?
+    dz_map.push_back(std::make_pair("PCB", 12.39 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.9 * cm));
+
+    //FH1, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.37 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 2 * cm));
+
+    //FH8, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.7 * cm));
+
+    //FH9, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.17 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.5 * cm));
+
+    dz_map.push_back(std::make_pair("Steel_case", 4.7 * cm));
+    dz_map.push_back(std::make_pair("Steel_case", 5.2 * cm));
+
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 4.5 * cm));
+
+    //FH7, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.6 * cm));
+
+    //FH6, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.8 * cm));
+
+    //FH2, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.8 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.6 * cm));
+
+    //FH3, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.5 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.9 * cm));
+
+    //FH4, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.6 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.8 * cm));
+
+    //FH5, orientation correct?
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.3 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Steel_case", 3.0 * cm));
+
+    dz_map.push_back(std::make_pair("Scintillator", 10 * cm));
+
+
+    //AHCAL
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 25.0 * cm));
+    for (int l = 0; l < 39; l++) {
+      dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.5 * cm));
+      dz_map.push_back(std::make_pair("AHCAL_SiPM_2x2HUB", 0.));
+      dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
+      dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
+    }
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 1.1 * cm));
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 1.1 * cm));
+    dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.5 * cm));
+    dz_map.push_back(std::make_pair("AHCAL_SiPM_2x2HUB", 0.));
+    dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
+
   }
 
 
-  if (_configuration == 101) {
+  //OCTOBER 2018 CONFIGURATION 3
+  else if (_configuration == 24 || _configuration == 241) {
+
+    dz_map.push_back(std::make_pair("DWC", 0.0 * m));
+    dz_map.push_back(std::make_pair("DWC", 2.0 * m));
+    dz_map.push_back(std::make_pair("DWC", 0.3 * m));
+    dz_map.push_back(std::make_pair("Scintillator", 1.5 * m));
+    dz_map.push_back(std::make_pair("DWC", 0.3 * m));
+    dz_map.push_back(std::make_pair("DWC", 15. * m));
+    dz_map.push_back(std::make_pair("DWC", 7. * m));
+
+    dz_map.push_back(std::make_pair("Scintillator", 0.3 * m));
+    dz_map.push_back(std::make_pair("Scintillator", 2.0 * m));
+
+    if (_configuration == 24) dz_map.push_back(std::make_pair("Al_case", 0.1 * m));
+    else {
+      dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+      dz_map.push_back(std::make_pair("MCP", 0.0 * m));
+      dz_map.push_back(std::make_pair("Al_case", 0.1 * m - 2 * thickness_map["MCP"]));
+    }
+
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 18.4 * cm));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.9 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.7 * cm));
+
+    //EE1
+    dz_map.push_back(std::make_pair("PCB", 1.43 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("W_absorber_EE", 0.8 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.4 * cm));
+
+    //EE2
+    dz_map.push_back(std::make_pair("PCB", 1.3 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("W_absorber_EE", 0.8 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.4 * cm));
+
+    //EE3
+    dz_map.push_back(std::make_pair("PCB", 0.8 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("W_absorber_EE", 0.8 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.4 * cm));
+
+    //EE4
+    dz_map.push_back(std::make_pair("PCB", 1.0 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("W_absorber_EE", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.16 * cm));
+
+    //EE5
+    dz_map.push_back(std::make_pair("PCB", 0.86 * cm));
+    //dz_map.push_back(std::make_pair("Si_wafer", 0.));   //inactive in beam test
+    dz_map.push_back(std::make_pair("Kapton_layer", 0. + Si_wafer_thickness));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("W_absorber_EE", 0.76 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.9 * cm));
+
+    //EE6
+    dz_map.push_back(std::make_pair("PCB", 0.77 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("W_absorber_EE", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.3 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.31 * cm));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.31 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.48 * cm));
+
+    //EE7
+    dz_map.push_back(std::make_pair("PCB", 1.23 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("W_absorber_EE", 0.71 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.53 * cm));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.22 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.79 * cm));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.13 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.27 * cm));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.35 * cm));
+    dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.21 * cm));
+
+    //EE8
+    dz_map.push_back(std::make_pair("PCB", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer", 0.));
+    dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+
+    dz_map.push_back(std::make_pair("Al_case", 4 * cm));
+
+
+    //FH10
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.85 * cm));
+
+    //FH11
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.44 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.8 * cm));
+
+    //FH12
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.8 * cm));
+
+    //FH1
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.86 * cm));
+
+    //FH8
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.7 * cm));
+
+    //FH9
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.7 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 5.2 * cm));
+    dz_map.push_back(std::make_pair("Steel_case", 4.0 * cm));
+
+    //FH7
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.4 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.6 * cm));
+
+    //FH6
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.5 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.8 * cm));
+
+    //FH2
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.94 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.71 * cm));
+
+    //FH3
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.33 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 2.0 * cm));
+
+    //FH4
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.9 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Fe_absorber_FH", 1.745 * cm));
+
+    //FH5
+    dz_map.push_back(std::make_pair("PCB_DAISY", 0.6 * cm));
+    dz_map.push_back(std::make_pair("Si_wafer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Kapton_layer_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_baseplate_DAISY", 0.));
+    dz_map.push_back(std::make_pair("Cu_absorber_FH", 0.));
+
+    dz_map.push_back(std::make_pair("Steel_case", 3.5 * cm));
+
+
+    dz_map.push_back(std::make_pair("Scintillator", 10 * cm));
+
+
+    //AHCAL
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 25.0 * cm));
+    for (int l = 0; l < 39; l++) {
+      dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.5 * cm));
+      dz_map.push_back(std::make_pair("AHCAL_SiPM_2x2HUB", 0.));
+      dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
+      dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
+    }
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 1.1 * cm));
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 1.1 * cm));
+    dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.5 * cm));
+    dz_map.push_back(std::make_pair("AHCAL_SiPM_2x2HUB", 0.));
+    dz_map.push_back(std::make_pair("Al_absorber_AHCAL", 0.));
+    dz_map.push_back(std::make_pair("Fe_absorber_AHCAL", 0.5 * cm));
+
+  } else if (_configuration == 101) {
     G4double dzPbEE = 0.1 * mm;
     //EE1
     dz_map.push_back(std::make_pair("Pb_absorber_EE", beamLineLength / 2 + 13.3 * m));
@@ -940,6 +1512,8 @@ void DetectorConstruction::ConstructHGCal() {
 
     dz_map.push_back(std::make_pair("Pb_absorber_EE", absPbEE_post_config101));
     dz_map.push_back(std::make_pair("Pb_absorber_EE", dzPbEE));
+
+
   }
 
 
@@ -1052,8 +1626,8 @@ void DetectorConstruction::DefineCommands()
   // configuration command
   auto& KaptonCmd
     = fMessenger->DeclareProperty("useGoldKapton",
-                                _useGoldPlatedKapton,
-                                "Use gold plating for Kapton");
+                                  _useGoldPlatedKapton,
+                                  "Use gold plating for Kapton");
   KaptonCmd.SetParameterName("useGoldKapton", true);
   KaptonCmd.SetDefaultValue("0");
 
