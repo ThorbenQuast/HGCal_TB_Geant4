@@ -77,6 +77,7 @@ DetectorConstruction::DetectorConstruction()
 
   DefineCommands();
   ntuplepath = "";
+  time_cut = -1;
   m_inputFileHGCal = NULL;
   m_inputTreeHGCal = NULL;
 }
@@ -1452,6 +1453,9 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       Float16_t hit_energy = rechit_energy_->at(nhit);
       if (hit_energy < 0.5) continue;
 
+      unsigned short hit_tot = rechit_toa_->at(nhit);
+      if ((time_cut>=0)&&(hit_tot<time_cut)) continue;
+
       VisHit* hit = new VisHit;
       hit->name = "HGCAL-Hit";
       hit->layer = rechit_layer_->at(nhit);
@@ -1472,32 +1476,34 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
 
   //AHCAL hits
-  if ((m_inputTreeAHCAL != NULL) && (m_inputFileAHCAL->IsOpen())) {
-    for (unsigned int i = 0; i < m_inputTreeAHCAL->GetEntries(); i++) {
-      m_inputTreeAHCAL->GetEntry(i);
-      if (AHCAL_eventID == eventIndex + ahcalOffset) break;
+  if (time_cut<0) {
+    if ((m_inputTreeAHCAL != NULL) && (m_inputFileAHCAL->IsOpen())) {
+      for (unsigned int i = 0; i < m_inputTreeAHCAL->GetEntries(); i++) {
+        m_inputTreeAHCAL->GetEntry(i);
+        if (AHCAL_eventID == eventIndex + ahcalOffset) break;
+      }
+      if (AHCAL_eventID != eventIndex + ahcalOffset) std::cout << "[WARNING] loaded AHCAL event " << AHCAL_eventID << " !=" << eventIndex + ahcalOffset << std::endl;
+
+      for (int nhit = 0; nhit < AHCAL_Nhits; nhit++) {
+        float hit_energy = ahc_hitEnergy_[nhit];
+        if (hit_energy < 0.5) continue;
+
+        VisHit* hit = new VisHit;
+        hit->name = "AHCAL-Hit";
+        hit->layer = ahc_hitK_[nhit];
+        hit->x = -(ahc_hitI_[nhit] - 12.) * AHCAL_SiPM_xy;  //x coordinates swapped w.r.t. HGCAL
+        hit->y = (ahc_hitJ_[nhit] - 12.) * AHCAL_SiPM_xy;
+        hit->energy = hit_energy;
+
+        setAHCALHitColor(hit);
+
+        AHCALHitsForVisualisation.push_back(hit);
+      }
+      std::cout << "Number of hits in AHCAL file: " << AHCAL_Nhits << std::endl;
+      std::cout << "Number of hits for visualisation: " << AHCALHitsForVisualisation.size() << std::endl;
+    } else {
+      std::cout << "AHCAL file is not open!" << std::endl;
     }
-    if (AHCAL_eventID != eventIndex + ahcalOffset) std::cout << "[WARNING] loaded AHCAL event " << AHCAL_eventID << " !=" << eventIndex + ahcalOffset << std::endl;
-
-    for (int nhit = 0; nhit < AHCAL_Nhits; nhit++) {
-      float hit_energy = ahc_hitEnergy_[nhit];
-      if (hit_energy < 0.5) continue;
-
-      VisHit* hit = new VisHit;
-      hit->name = "AHCAL-Hit";
-      hit->layer = ahc_hitK_[nhit];
-      hit->x = -(ahc_hitI_[nhit] - 12.) * AHCAL_SiPM_xy;  //x coordinates swapped w.r.t. HGCAL
-      hit->y = (ahc_hitJ_[nhit] - 12.) * AHCAL_SiPM_xy;
-      hit->energy = hit_energy;
-
-      setAHCALHitColor(hit);
-
-      AHCALHitsForVisualisation.push_back(hit);
-    }
-    std::cout << "Number of hits in AHCAL file: " << AHCAL_Nhits << std::endl;
-    std::cout << "Number of hits for visualisation: " << AHCALHitsForVisualisation.size() << std::endl;
-  } else {
-    std::cout << "AHCAL file is not open!" << std::endl;
   }
 
 
@@ -1555,6 +1561,7 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
     hgcalBranches["rechit_channel_"] = new TBranch;
     hgcalBranches["rechit_type_"] = new TBranch;
     hgcalBranches["rechit_energy_"] = new TBranch;
+    hgcalBranches["rechit_toa_"] = new TBranch;
     hgcalBranches["rechit_x_"] = new TBranch;
     hgcalBranches["rechit_y_"] = new TBranch;
     hgcalBranches["rechit_z_"] = new TBranch;
@@ -1575,6 +1582,7 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
   m_inputTreeHGCal->SetBranchAddress("rechit_channel", &rechit_channel_, &hgcalBranches["rechit_channel_"]);
   m_inputTreeHGCal->SetBranchAddress("rechit_type", &rechit_type_, &hgcalBranches["rechit_type_"]);
   m_inputTreeHGCal->SetBranchAddress("rechit_energy", &rechit_energy_, &hgcalBranches["rechit_energy_"]);
+  m_inputTreeHGCal->SetBranchAddress("rechit_toaRise", &rechit_toa_, &hgcalBranches["rechit_toa_"]);
   m_inputTreeHGCal->SetBranchAddress("rechit_x", &rechit_x_, &hgcalBranches["rechit_x_"]);
   m_inputTreeHGCal->SetBranchAddress("rechit_y", &rechit_y_, &hgcalBranches["rechit_y_"]);
   m_inputTreeHGCal->SetBranchAddress("rechit_z", &rechit_z_, &hgcalBranches["rechit_z_"]);
@@ -1669,7 +1677,6 @@ void DetectorConstruction::DefineCommands()
   eventCmd.SetParameterName("showEvent", true);
   eventCmd.SetDefaultValue(1);
 
-
   auto& ntuplePathCmd
     = fMessenger->DeclareMethod("path",
                                 &DetectorConstruction::OpenHGCALNtuple,
@@ -1682,9 +1689,17 @@ void DetectorConstruction::DefineCommands()
                                 "Path to the AHCAL ntuple");
   ntupleAHCALPathCmd.SetDefaultValue("");
 
+
+  auto& timeCutCmd
+    = fMessenger->DeclareProperty("timeCut", time_cut);
+  G4String guidance = "max time in terms of TOA";
+  timeCutCmd.SetGuidance(guidance);
+  timeCutCmd.SetParameterName("timeCut", true);
+  timeCutCmd.SetDefaultValue("-1");
+
   auto& offsetAHCALCmd
     = fMessenger->DeclareProperty("AHCALOffset", ahcalOffset);
-  G4String guidance = "Event offset AHCAL vs HGCAL";
+  guidance = "Event offset AHCAL vs HGCAL";
   offsetAHCALCmd.SetGuidance(guidance);
   offsetAHCALCmd.SetParameterName("AHCALOffset", true);
   offsetAHCALCmd.SetDefaultValue("0");

@@ -122,6 +122,7 @@ private:
     std::vector<unsigned int>* rechit_channel_;
     std::vector<unsigned int>* rechit_type_;
     std::vector<Float16_t>* rechit_energy_;
+    std::vector<unsigned short>* rechit_toa_;
     std::vector<Float16_t>* rechit_x_;
     std::vector<Float16_t>* rechit_y_;
     std::vector<Float16_t>* rechit_z_;
@@ -130,6 +131,8 @@ private:
     std::vector<G4double> AHCALLayerDistances;
     std::vector<VisHit*> AHCALHitsForVisualisation;
     int ahcalOffset;
+
+    float time_cut;
 
     TFile* m_inputFileAHCAL;
     TTree* m_inputTreeAHCAL;
