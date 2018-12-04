@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------------
 # Setup the project
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(EVENTDISPLAY)
+project(Event_DISPLAY)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -63,12 +63,11 @@ foreach(_script ${EXAMPLEB1_SCRIPTS})
     )
 endforeach()
 
-
 #----------------------------------------------------------------------------
 # For internal Geant4 use - but has no effect if you build this
 # example standalone
 #
-add_custom_target(EVENTDISPLAY DEPENDS EventDisplay)
+add_custom_target(Event_DISPLAY DEPENDS EventDisplay)
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
