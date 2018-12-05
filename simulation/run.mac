@@ -11,7 +11,7 @@
 # Initialize kernel
 /run/initialize
 
-/Simulation/setup/config 22
+/Simulation/setup/configuration 22
 
 /Simulation/output/file HGCalTB_October2018_config22_e+_150GeV.root
 /Simulation/generator/momentum 150 GeV
