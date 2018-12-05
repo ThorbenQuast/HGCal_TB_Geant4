@@ -113,10 +113,10 @@ void DetectorConstruction::DefineCommands()
 
   // configuration command
   auto& configCmd
-    = fMessenger->DeclareMethod("config",
+    = fMessenger->DeclareMethod("configuration",
                                 &DetectorConstruction::SelectConfiguration,
                                 "Select the configuration (22-24)");
-  configCmd.SetParameterName("config", true);
+  configCmd.SetParameterName("index", true);
   configCmd.SetDefaultValue("22");
 }
 

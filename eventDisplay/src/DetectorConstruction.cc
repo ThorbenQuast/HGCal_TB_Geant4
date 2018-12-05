@@ -192,6 +192,8 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     } else {
       std::cout << "AHCAL file is not open!" << std::endl;
     }
+  } else {
+    std::cout << "timing cut: " <<time_cut << " prevents AHCAL hits to be visualised" << std::endl;
   }
 
 
@@ -350,18 +352,23 @@ void DetectorConstruction::DefineCommands()
 {
   // Define /B5/detector command directory using generic messenger class
   fMessenger = new G4GenericMessenger(this,
-                                      "/EventDisplay/ntuple/",
+                                      "/EventDisplay/setup/",
                                       "Configuration specifications");
 
 
 
   // configuration command
   auto& configCmd
-    = fMessenger->DeclareMethod("config",
+    = fMessenger->DeclareMethod("configuration",
                                 &DetectorConstruction::SelectConfiguration,
                                 "Select the configuration (22-24)");
-  configCmd.SetParameterName("config", true);
+  configCmd.SetParameterName("index", true);
   configCmd.SetDefaultValue("22");
+
+
+  fMessenger = new G4GenericMessenger(this,
+                                      "/EventDisplay/ntuple/",
+                                      "Configuration specifications");
 
   auto& eventCmd
     = fMessenger->DeclareMethod("showEvent",
