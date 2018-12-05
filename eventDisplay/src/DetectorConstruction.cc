@@ -36,11 +36,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   materials->setEventDisplayColorScheme();
 
   /***** Definition of the world = beam line *****/
-  beamLineLength = 36 * m;
-  beamLineXY = 9 * m;
 
-
-  // World = Beam line
   G4Box* solidWorld = new G4Box("World", 0.5 * BEAMLINEXY * m, 0.5 * BEAMLINEXY * m, 0.5 * BEAMLINELENGTH * m);
 
   G4Material* world_mat = materials->air();
@@ -59,10 +55,11 @@ void DetectorConstruction::ConstructHGCal() {
   std::vector<std::pair<std::string, G4double> > dz_map;
 
   G4double z0 = -BEAMLINELENGTH * m / 2.;
+  G4double viewpoint = 0;
 
-  if (_configuration == 22) defineConfig22_October2018_1(dz_map);
-  else if (_configuration == 23) defineConfig23_October2018_2(dz_map);
-  else if (_configuration == 24) defineConfig24_October2018_3(dz_map);
+  if (_configuration == 22) defineConfig22_October2018_1(dz_map, viewpoint);
+  else if (_configuration == 23) defineConfig23_October2018_2(dz_map, viewpoint);
+  else if (_configuration == 24) defineConfig24_October2018_3(dz_map, viewpoint);
   else {
     std::cout << "Configuration " << _configuration << " not implemented --> return"; 
     return;
@@ -87,7 +84,12 @@ void DetectorConstruction::ConstructHGCal() {
     //places the item at inside the world at z0, z0 is incremented by the item's thickness
     materials->placeItemInLogicalVolume(item_type, z0, logicWorld);
   }
-
+  
+  G4RunManager::GetRunManager()->GeometryHasBeenModified();
+  G4UImanager* UImanager = G4UImanager::GetUIpointer();
+  UImanager->ApplyCommand("/vis/drawVolume");
+  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 "+std::to_string(default_viewpoint/m)+" m");
+  
 }
 
 void DetectorConstruction::ConstructSDandField() {
@@ -102,7 +104,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
   for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
     VisHit* hit = HGCalHitsForVisualisation[nhit];
-    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -beamLineLength / 2));
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
     hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
     delete hit;
   }
@@ -110,7 +112,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
   for (size_t nhit = 0; nhit < AHCALHitsForVisualisation.size(); nhit++) {
     VisHit* hit = AHCALHitsForVisualisation[nhit];
-    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -beamLineLength / 2));
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
     hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
     delete hit;
   }
@@ -329,11 +331,17 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
 
   if (_configuration != -1) return;
 
+  default_viewpoint = 0;
+  if (val == 22) defineConfig22_October2018_1(dz_map, default_viewpoint);
+  else if (val == 23) defineConfig23_October2018_2(dz_map, default_viewpoint);
+  else if (val == 24) defineConfig24_October2018_3(dz_map, default_viewpoint);
+  else {
+    std::cout << "Configuration " << val << " not implemented --> return" << std::endl;; 
+    return;
+  }
   _configuration = val;
 
   ConstructHGCal();
-  // tell G4RunManager that we change the geometry
-  G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

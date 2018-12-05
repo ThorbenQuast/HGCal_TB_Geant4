@@ -3,6 +3,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "G4RunManager.hh"
+#include "G4UIManager.hh"
 #include "globals.hh"
 #include "G4LogicalVolume.hh"
 #include "G4GenericMessenger.hh"
@@ -36,7 +37,8 @@ class DetectorConstruction : public G4VUserDetectorConstruction
 
   private:
     G4LogicalVolume* logicWorld;
-
+    std::vector<std::pair<std::string, G4double> > dz_map;
+    G4double default_viewpoint;
     void DefineCommands();
     G4GenericMessenger* fMessenger;
     void SelectConfiguration(G4int val);

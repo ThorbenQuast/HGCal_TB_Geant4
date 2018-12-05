@@ -5,4 +5,4 @@
 #include <string>
 #include <cmath>
 
-void defineConfig23_October2018_2(std::vector<std::pair<std::string, G4double> > &dz_map);
+void defineConfig23_October2018_2(std::vector<std::pair<std::string, G4double> > &dz_map, G4double &viewpoint);

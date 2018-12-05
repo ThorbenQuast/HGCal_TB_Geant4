@@ -47,20 +47,11 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
 void DetectorConstruction::ConstructHGCal() {
-  std::vector<std::pair<std::string, G4double> > dz_map;
+  
 
   G4double z0 = -BEAMLINELENGTH * m / 2.;
-
-  if (_configuration == 22) defineConfig22_October2018_1(dz_map);
-  else if (_configuration == 23) defineConfig23_October2018_2(dz_map);
-  else if (_configuration == 24) defineConfig24_October2018_3(dz_map);
-  else {
-    std::cout << "Configuration " << _configuration << " not implemented --> return"; 
-    return;
-  }
   
   std::cout << "Constructing configuration " << _configuration << std::endl;
-
 
   /*****    START GENERIC PLACEMENT ALGORITHM  FOR THE SETUP  *****/
   for (size_t item_index = 0; item_index < dz_map.size(); item_index++) {
@@ -71,6 +62,13 @@ void DetectorConstruction::ConstructHGCal() {
     //places the item at inside the world at z0, z0 is incremented by the item's thickness
     materials->placeItemInLogicalVolume(item_type, z0, logicWorld);
   }
+
+  G4RunManager::GetRunManager()->GeometryHasBeenModified();
+  G4UImanager* UImanager = G4UImanager::GetUIpointer();
+  UImanager->ApplyCommand("/vis/drawVolume");
+  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 "+std::to_string(default_viewpoint/m)+" m");
+  UImanager->ApplyCommand("/vis/scene/add/trajectories smooth");
+  UImanager->ApplyCommand("/vis/scene/add/hits");
 
 }
 
@@ -91,11 +89,17 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
 
   if (_configuration != -1) return;
 
+  default_viewpoint = 0;
+  if (val == 22) defineConfig22_October2018_1(dz_map, default_viewpoint);
+  else if (val == 23) defineConfig23_October2018_2(dz_map, default_viewpoint);
+  else if (val == 24) defineConfig24_October2018_3(dz_map, default_viewpoint);
+  else {
+    std::cout << "Configuration " << val << " not implemented --> return" << std::endl;; 
+    return;
+  }
   _configuration = val;
 
   ConstructHGCal();
-  // tell G4RunManager that we change the geometry
-  G4RunManager::GetRunManager()->GeometryHasBeenModified();
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

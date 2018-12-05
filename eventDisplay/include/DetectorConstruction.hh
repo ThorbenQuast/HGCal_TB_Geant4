@@ -48,6 +48,8 @@ protected:
 
 private:
     G4LogicalVolume* logicWorld;
+    std::vector<std::pair<std::string, G4double> > dz_map;
+    G4double default_viewpoint;
 
     void DefineCommands();
     G4GenericMessenger* fMessenger;

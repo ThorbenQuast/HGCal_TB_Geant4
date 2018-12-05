@@ -1,6 +1,8 @@
 #include "config23_October2018_2.hh"
 
-void defineConfig23_October2018_2(std::vector<std::pair<std::string, G4double> > &dz_map) {
+void defineConfig23_October2018_2(std::vector<std::pair<std::string, G4double> > &dz_map, G4double &viewpoint) {
+	viewpoint = 9.3 * m;
+	
 	dz_map.push_back(std::make_pair("DWC", 0.0 * m));
 	dz_map.push_back(std::make_pair("DWC", 2.0 * m));
 	dz_map.push_back(std::make_pair("DWC", 0.3 * m));
