@@ -9,8 +9,6 @@
 #include "G4GenericMessenger.hh"
 #include "G4UImanager.hh"
 
-#include "G4Box.hh"
-
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
@@ -49,7 +47,6 @@ protected:
 
 
 private:
-
     G4LogicalVolume* logicWorld;
 
     void DefineCommands();
@@ -70,9 +67,11 @@ private:
 
     void ConstructHGCal();
 
+
+//ntuple readout
     std::vector<G4double> HGCalLayerDistances;
     std::vector<VisHit*> HGCalHitsForVisualisation;
-//ntuple readout
+
     TFile* m_inputFileHGCal;
     TTree* m_inputTreeHGCal;
     std::map<std::string, TBranch*> hgcalBranches;

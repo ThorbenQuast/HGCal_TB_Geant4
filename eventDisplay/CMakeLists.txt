@@ -51,7 +51,6 @@ target_link_libraries(EventDisplay ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 #
 set(EXAMPLEB1_SCRIPTS
   init_vis.mac
-  run.mac
   vis.mac
   )
 

@@ -56,13 +56,6 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
 void DetectorConstruction::ConstructHGCal() {
-  /***** Start the placement *****/
-  //
-  //
-  // Option to switch on/off checking of volumes overlaps
-  //
-
-
   std::vector<std::pair<std::string, G4double> > dz_map;
 
   G4double z0 = -beamLineLength / 2.;
