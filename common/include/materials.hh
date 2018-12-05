@@ -95,10 +95,14 @@ private:
 public:
 	HGCalTBMaterials();
 	void setEventDisplayColorScheme();
+	void setSimulationColorScheme();
 	G4Material* air() {return mat_AIR;}
 	G4double getAHCAL_SiPM_xy() {return AHCAL_SiPM_xy;}
 
 	void placeItemInLogicalVolume(std::string, G4double&, G4LogicalVolume*);
 	G4LogicalVolume* newSiPixelHitLogical(std::string name);
 	G4LogicalVolume* newSiPMHitLogical(std::string name);
+
+	G4LogicalVolume* getSi_pixel_logical(){return this->Si_pixel_logical;}
+	G4LogicalVolume* getAHCAL_SiPM_logical(){return this->AHCAL_SiPM_logical;}
 };

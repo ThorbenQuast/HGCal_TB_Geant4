@@ -119,7 +119,6 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   visAttributes->SetVisibility(true);
   W_absorber_EE_logical->SetVisAttributes(visAttributes);
 
-
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
   visAttributes->SetVisibility(true);
   Cu_absorber_FH_logical->SetVisAttributes(visAttributes);
@@ -162,6 +161,96 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
 
   visAttributes = new G4VisAttributes(G4Colour(0.05, 0.05, 0.05, 0.0));
   visAttributes->SetVisibility(false);
+  DWC_gas_logical->SetVisAttributes(visAttributes);
+}
+
+void HGCalTBMaterials::setSimulationColorScheme() {
+  visAttributes = new G4VisAttributes(G4Colour(.0, 0.0, 0.0));
+  visAttributes->SetVisibility(false);
+  Si_wafer_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 1.0));
+  visAttributes->SetVisibility(true);
+  Si_pixel_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.5, 0.0, 0.5, 0.3));
+  visAttributes->SetVisibility(true);
+  CuW_baseplate_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.3));
+  visAttributes->SetVisibility(true);
+  Cu_baseplate_logical->SetVisAttributes(visAttributes);  
+
+  visAttributes = new G4VisAttributes(G4Colour(.0, 1., 0.0, 0.3));
+  visAttributes->SetVisibility(true);
+  PCB_baseplate_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.4, 0.4, 0.0, 0.3));
+  visAttributes->SetVisibility(true);
+  Kapton_layer_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
+  visAttributes->SetVisibility(true);
+  Al_case_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
+  visAttributes->SetVisibility(true);
+  Steel_case_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.1, 0.4, 0.8, 0.1));
+  visAttributes->SetVisibility(true);
+  Pb_absorber_EE_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
+  visAttributes->SetVisibility(true);
+  Cu_absorber_EE_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
+  visAttributes->SetVisibility(true);
+  W_absorber_EE_logical->SetVisAttributes(visAttributes);  
+
+  visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
+  visAttributes->SetVisibility(true);
+  Cu_absorber_FH_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.1));
+  visAttributes->SetVisibility(true);
+  Fe_absorber_FH_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 1.0));
+  visAttributes->SetVisibility(true);
+  AHCAL_SiPM_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
+  visAttributes->SetVisibility(true);
+  AHCAL_SiPM_2x2HUB_logical->SetVisAttributes(visAttributes);  
+
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
+  visAttributes->SetVisibility(true);
+  Al_absorber_AHCAL_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.0, 1., 0.0, 0.3));
+  visAttributes->SetVisibility(true);
+  PCB_AHCAL_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.1));
+  visAttributes->SetVisibility(true);
+  Fe_absorber_AHCAL_logical->SetVisAttributes(visAttributes);  
+
+  visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.5));
+  visAttributes->SetVisibility(true);
+  scintillator_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.5));
+  visAttributes->SetVisibility(true);
+  MCP_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.7));
+  visAttributes->SetVisibility(true);
+  DWC_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.05, 0.05, 0.05, 0.0));
+  visAttributes->SetVisibility(true);  
   DWC_gas_logical->SetVisAttributes(visAttributes);
 }
 
