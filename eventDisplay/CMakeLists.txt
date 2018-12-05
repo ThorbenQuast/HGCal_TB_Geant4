@@ -28,15 +28,15 @@ if(ROOT_FOUND)
 else()
   message(STATUS "G4 Event Display: ROOT package not found.") 
 endif()     
-include_directories(${PROJECT_SOURCE_DIR}/include ${ROOT_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/../common/include ${ROOT_INCLUDE_DIRS})
 
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
-file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
-file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
+file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc ${PROJECT_SOURCE_DIR}/../common/src/*.cc)
+file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh ${PROJECT_SOURCE_DIR}/../common/include/*.hh)
 
 #----------------------------------------------------------------------------
 # Add the executable, and link it to the Geant4 libraries
