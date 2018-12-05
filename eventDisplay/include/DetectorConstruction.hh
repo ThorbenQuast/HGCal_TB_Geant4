@@ -61,8 +61,6 @@ private:
 
     void ReadNtupleEvent(G4int);
 
-    G4double beamLineLength;
-    G4double beamLineXY;
     HGCalTBMaterials* materials;
 
     void ConstructHGCal();

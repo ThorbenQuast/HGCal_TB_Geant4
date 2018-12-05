@@ -19,6 +19,10 @@
 #include "G4Colour.hh"
 
 
+#define BEAMLINELENGTH 40		//length of the beam line in m
+#define BEAMLINEXY 4 			//transversal dimension of the beam line
+  
+
 G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double cellSideLength, G4Material* material);
 
 

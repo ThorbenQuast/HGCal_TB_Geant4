@@ -42,8 +42,6 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void SelectConfiguration(G4int val);
     G4int _configuration;
 
-    G4double beamLineLength;
-    G4double beamLineXY;
     HGCalTBMaterials* materials;
 
     void ConstructHGCal();

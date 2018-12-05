@@ -1,5 +1,5 @@
 # Macro file for the visualization setting in the initialization phase 
-# of the B1 example when running in interactive mode
+# of the Event display when running in interactive mode
 #
 
 # Use these open statements to open selected visualization
@@ -105,7 +105,7 @@
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
 /vis/viewer/set/viewpointThetaPhi 115 20
-/vis/viewer/set/targetPoint 0 0 11.3 m
+/vis/viewer/set/targetPoint 0 0 9.3 m
 /vis/viewer/zoom 20
 #
 /vis/verbose warnings

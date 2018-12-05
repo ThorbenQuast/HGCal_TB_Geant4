@@ -30,12 +30,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   materials->setSimulationColorScheme();
 
   /***** Definition of the world = beam line *****/
-  beamLineLength = 36 * m;
-  beamLineXY = 9 * m;
-
 
   // World = Beam line
-  G4Box* solidWorld = new G4Box("World", 0.5 * beamLineXY, 0.5 * beamLineXY, 0.5 * beamLineLength);
+  G4Box* solidWorld = new G4Box("World", 0.5 * BEAMLINEXY * m, 0.5 * BEAMLINEXY * m, 0.5 * BEAMLINELENGTH * m);
 
   G4Material* world_mat = materials->air();
   logicWorld = new G4LogicalVolume(solidWorld, world_mat, "World");
@@ -52,7 +49,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 void DetectorConstruction::ConstructHGCal() {
   std::vector<std::pair<std::string, G4double> > dz_map;
 
-  G4double z0 = -beamLineLength / 2.;
+  G4double z0 = -BEAMLINELENGTH * m / 2.;
 
   if (_configuration == 22) defineConfig22_October2018_1(dz_map);
   else if (_configuration == 23) defineConfig23_October2018_2(dz_map);
