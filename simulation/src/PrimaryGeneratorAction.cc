@@ -18,8 +18,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 : G4VUserPrimaryGeneratorAction(),
   fParticleGun(0), 
   fEnvelopeBox(0),
-  fMomentum(10*GeV),
-  fparticleDef("e+")
+  fMomentum(120*GeV),
+  fparticleDef("mu+")
 {
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
@@ -74,8 +74,8 @@ void PrimaryGeneratorAction::DefineCommands() {
   auto& beamZ0Cmd
     = fMessenger->DeclarePropertyWithUnit("z0", "m", beamZ0, 
         "Beam position along the beam line");
-  beamSpreadYCmd.SetParameterName("z0", true);
-  beamSpreadYCmd.SetDefaultValue("0");
+  beamZ0Cmd.SetParameterName("z0", true);
+  beamZ0Cmd.SetDefaultValue("0");
 
   auto& particleComd
     = fMessenger->DeclareProperty("particle", fparticleDef);
@@ -128,9 +128,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0. ,1.));
   fParticleGun->SetParticleEnergy(fMomentum);  
   
-  G4double z0 = beamZ0==-999 ? -worldDZ : beamZ0;
+  G4double z0 = (beamZ0==-999) ? -worldDZ : beamZ0;
   fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., sigmaBeamX),G4RandGauss::shoot(0., sigmaBeamY), z0)); 
-
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
