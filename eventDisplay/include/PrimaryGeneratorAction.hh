@@ -31,11 +31,6 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4ParticleGun*  fParticleGun; // pointer a to G4 gun class
     G4Box* fEnvelopeBox;
 
-    void DefineCommands();
-    G4GenericMessenger* fMessenger;
-    G4double fMomentum;
-    G4String fparticleDef;
-
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
