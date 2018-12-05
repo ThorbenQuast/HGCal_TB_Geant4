@@ -26,6 +26,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
 
   sigmaBeamX = .5 * cm;
   sigmaBeamY = .5 * cm;
+  beamZ0 = -999 * m;
 
   DefineCommands();
 }
@@ -53,7 +54,7 @@ void PrimaryGeneratorAction::DefineCommands() {
   momentumCmd.SetRange("p>=0.");                                
   momentumCmd.SetDefaultValue("10.");
 
-  // momentum command
+  // beam spread in x command
   auto& beamSpreadXCmd
     = fMessenger->DeclarePropertyWithUnit("sigmaBeamX", "cm", sigmaBeamX, 
         "Gaussian beam spread in X");
@@ -61,13 +62,20 @@ void PrimaryGeneratorAction::DefineCommands() {
   beamSpreadXCmd.SetRange("sigmaBeamX>0.");                                
   beamSpreadXCmd.SetDefaultValue(".5");
 
-  // momentum command
+  // beam spread in y command
   auto& beamSpreadYCmd
     = fMessenger->DeclarePropertyWithUnit("sigmaBeamY", "cm", sigmaBeamY, 
         "Gaussian beam spread in Y");
   beamSpreadYCmd.SetParameterName("sigmaBeamY", true);
   beamSpreadYCmd.SetRange("sigmaBeamY>0.");                                
   beamSpreadYCmd.SetDefaultValue(".5");
+
+  // beam position along beam line
+  auto& beamZ0Cmd
+    = fMessenger->DeclarePropertyWithUnit("z0", "m", beamZ0, 
+        "Beam position along the beam line");
+  beamSpreadYCmd.SetParameterName("z0", true);
+  beamSpreadYCmd.SetDefaultValue("0");
 
   auto& particleComd
     = fMessenger->DeclareProperty("particle", fparticleDef);
@@ -120,7 +128,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0. ,1.));
   fParticleGun->SetParticleEnergy(fMomentum);  
   
-  G4double z0 = -worldDZ;
+  G4double z0 = beamZ0==-999 ? -worldDZ : beamZ0;
   fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., sigmaBeamX),G4RandGauss::shoot(0., sigmaBeamY), z0)); 
 
 

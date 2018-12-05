@@ -38,6 +38,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
     G4double sigmaBeamX;
     G4double sigmaBeamY;
+    G4double beamZ0;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
