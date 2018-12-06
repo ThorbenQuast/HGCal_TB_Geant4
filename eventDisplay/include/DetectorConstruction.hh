@@ -93,6 +93,7 @@ private:
     std::vector<VisHit*> AHCALHitsForVisualisation;
     int ahcalOffset;
 
+    float energyThreshold;
     float time_cut;
 
     TFile* m_inputFileAHCAL;

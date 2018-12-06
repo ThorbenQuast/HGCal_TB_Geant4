@@ -18,6 +18,7 @@ DetectorConstruction::DetectorConstruction()
 
   DefineCommands();
   ntuplepath = "";
+  energyThreshold = 0;
   time_cut = -1;
   m_inputFileHGCal = NULL;
   m_inputTreeHGCal = NULL;
@@ -122,6 +123,9 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     for (unsigned int nhit = 0; nhit < Nhits; nhit++) {
       if (rechit_noise_flag_->at(nhit)) continue;
 
+      Float16_t hit_energy = rechit_energy_->at(nhit);
+      if (hit_energy < energyThreshold) continue;
+
       unsigned int type = rechit_type_->at(nhit);
       if (type == 1) continue;
       if (type == 2) continue;
@@ -144,7 +148,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       hit->layer = rechit_layer_->at(nhit);
       hit->x = rechit_x_->at(nhit) * cm;
       hit->y = rechit_y_->at(nhit) * cm;
-      hit->energy = rechit_energy_->at(nhit);
+      hit->energy = hit_energy;
 
       setHGCALHitColor(hit);
 
@@ -385,9 +389,18 @@ void DetectorConstruction::DefineCommands()
   ntupleAHCALPathCmd.SetDefaultValue("");
 
 
+
+  auto& energyThresholdCmd
+    = fMessenger->DeclareProperty("energyThreshold", energyThreshold);
+  G4String guidance = "minimum energy for visualisation in MIPs";
+  energyThresholdCmd.SetGuidance(guidance);
+  energyThresholdCmd.SetParameterName("energyThreshold", true);
+  energyThresholdCmd.SetDefaultValue("0");
+
+
   auto& timeCutCmd
     = fMessenger->DeclareProperty("timeCut", time_cut);
-  G4String guidance = "max time in terms of TOA";
+  guidance = "max time in terms of TOA";
   timeCutCmd.SetGuidance(guidance);
   timeCutCmd.SetParameterName("timeCut", true);
   timeCutCmd.SetDefaultValue("-1");
