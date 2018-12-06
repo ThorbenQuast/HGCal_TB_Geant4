@@ -333,7 +333,7 @@ void HGCalTBMaterials::defineHGCalBaseplates() {
 
 void HGCalTBMaterials::defineHGCalCases() {
   G4double Al_case_thickness = 2.6 * mm;
-  G4double Al_case_xy = 60 * cm;
+  G4double Al_case_xy = 40 * cm;
   G4Box* Al_case_solid = new G4Box("Al_case", 0.5 * Al_case_xy, 0.5 * Al_case_xy, 0.5 * Al_case_thickness);
   Al_case_logical = new G4LogicalVolume(Al_case_solid, mat_Al, "Al_case");
   thickness_map["Al_case"] = Al_case_thickness;
