@@ -60,7 +60,7 @@ void PrimaryGeneratorAction::DefineCommands() {
         "Gaussian beam spread in X");
   beamSpreadXCmd.SetParameterName("sigmaBeamX", true);
   beamSpreadXCmd.SetRange("sigmaBeamX>0.");                                
-  beamSpreadXCmd.SetDefaultValue(".5");
+  beamSpreadXCmd.SetDefaultValue(".001");
 
   // beam spread in y command
   auto& beamSpreadYCmd
@@ -68,7 +68,7 @@ void PrimaryGeneratorAction::DefineCommands() {
         "Gaussian beam spread in Y");
   beamSpreadYCmd.SetParameterName("sigmaBeamY", true);
   beamSpreadYCmd.SetRange("sigmaBeamY>0.");                                
-  beamSpreadYCmd.SetDefaultValue(".5");
+  beamSpreadYCmd.SetDefaultValue(".001");
 
   // beam position along beam line
   auto& beamZ0Cmd
