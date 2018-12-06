@@ -128,7 +128,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0., 0. ,1.));
   fParticleGun->SetParticleEnergy(fMomentum);  
   
-  G4double z0 = (beamZ0==-999) ? -worldDZ : beamZ0;
+  G4double z0 = (beamZ0==-999*m) ? -worldDZ : beamZ0;
   fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., sigmaBeamX),G4RandGauss::shoot(0., sigmaBeamY), z0)); 
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
