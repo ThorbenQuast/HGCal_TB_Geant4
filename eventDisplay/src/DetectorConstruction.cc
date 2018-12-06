@@ -1,6 +1,9 @@
 #include "DetectorConstruction.hh"
 
 #include "colors.hh"
+
+#include "config1_2_Summer2017.hh"
+#include "config3_September2017.hh"
 #include "config22_October2018_1.hh"
 #include "config23_October2018_2.hh"
 #include "config24_October2018_3.hh"
@@ -30,9 +33,9 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   HGCalLayerDistances.clear();
-  
+
   //definition of the materials
-  materials = new HGCalTBMaterials();
+  materials = new HGCalTBMaterials(); 
   materials->setEventDisplayColorScheme();
 
   /***** Definition of the world = beam line *****/
@@ -43,7 +46,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   logicWorld = new G4LogicalVolume(solidWorld, world_mat, "World");
 
   G4VPhysicalVolume* physWorld =
-    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "World", 0, false, 0, true); 
+    new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "World", 0, false, 0, true);
 
 
   fScoringVolume = logicWorld;
@@ -52,19 +55,9 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
 void DetectorConstruction::ConstructHGCal() {
-  std::vector<std::pair<std::string, G4double> > dz_map;
-
   G4double z0 = -BEAMLINELENGTH * m / 2.;
-  G4double viewpoint = 0;
-
-  if (_configuration == 22) defineConfig22_October2018_1(dz_map, viewpoint);
-  else if (_configuration == 23) defineConfig23_October2018_2(dz_map, viewpoint);
-  else if (_configuration == 24) defineConfig24_October2018_3(dz_map, viewpoint);
-  else {
-    std::cout << "Configuration " << _configuration << " not implemented --> return"; 
-    return;
-  }
   
+
   std::cout << "Constructing configuration " << _configuration << std::endl;
 
 
@@ -73,7 +66,6 @@ void DetectorConstruction::ConstructHGCal() {
     std::string item_type = dz_map[item_index].first;
     G4double dz = dz_map[item_index].second;
     z0 += dz;
-    
     //special for the event display
     if (item_type.find("Si_wafer") != std::string::npos) {
       HGCalLayerDistances.push_back(z0);
@@ -84,12 +76,12 @@ void DetectorConstruction::ConstructHGCal() {
     //places the item at inside the world at z0, z0 is incremented by the item's thickness
     materials->placeItemInLogicalVolume(item_type, z0, logicWorld);
   }
-  
+
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   UImanager->ApplyCommand("/vis/drawVolume");
-  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 "+std::to_string(default_viewpoint/m)+" m");
-  
+  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 " + std::to_string(default_viewpoint / m) + " m");
+
 }
 
 void DetectorConstruction::ConstructSDandField() {
@@ -179,7 +171,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
         VisHit* hit = new VisHit;
         hit->name = "AHCAL-Hit";
         hit->layer = ahc_hitK_[nhit];
-        hit->x = -(ahc_hitI_[nhit] - 12.) * materials->getAHCAL_SiPM_xy(); 
+        hit->x = -(ahc_hitI_[nhit] - 12.) * materials->getAHCAL_SiPM_xy();
         hit->y = (ahc_hitJ_[nhit] - 12.) * materials->getAHCAL_SiPM_xy();
         hit->energy = ahc_hitEnergy_[nhit];
 
@@ -193,7 +185,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       std::cout << "AHCAL file is not open!" << std::endl;
     }
   } else {
-    std::cout << "timing cut: " <<time_cut << " prevents AHCAL hits to be visualised" << std::endl;
+    std::cout << "timing cut: " << time_cut << " prevents AHCAL hits to be visualised" << std::endl;
   }
 
 
@@ -213,7 +205,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
   for (size_t nhit = 0; nhit < AHCALHitsForVisualisation.size(); nhit++) {
     VisHit* hit = AHCALHitsForVisualisation[nhit];
-    G4LogicalVolume* hit_logical = materials->newSiPMHitLogical(hit->name); 
+    G4LogicalVolume* hit_logical = materials->newSiPMHitLogical(hit->name);
     visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
     visAttributes->SetVisibility(true);
     hit_logical->SetVisAttributes(visAttributes);
@@ -334,11 +326,14 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   if (_configuration != -1) return;
 
   default_viewpoint = 0;
-  if (val == 22) defineConfig22_October2018_1(dz_map, default_viewpoint);
+  if (val == 1) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
+  else if (val == 2) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
+  else if (val == 3) defineConfig3_September2017(dz_map, default_viewpoint);
+  else if (val == 22) defineConfig22_October2018_1(dz_map, default_viewpoint);
   else if (val == 23) defineConfig23_October2018_2(dz_map, default_viewpoint);
   else if (val == 24) defineConfig24_October2018_3(dz_map, default_viewpoint);
   else {
-    std::cout << "Configuration " << val << " not implemented --> return" << std::endl;; 
+    std::cout << "Configuration " << val << " not implemented --> return";
     return;
   }
   _configuration = val;
