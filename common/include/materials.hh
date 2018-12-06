@@ -81,6 +81,8 @@ private:
 	G4LogicalVolume* Pb_absorber_EE_logical;
 	G4LogicalVolume* Cu_absorber_EE_logical;
 	G4LogicalVolume* W_absorber_EE_logical;
+	G4LogicalVolume* W_2mm_absorber_EE_DESY2018_logical;
+	G4LogicalVolume* W_4mm_absorber_EE_DESY2018_logical;
 	G4LogicalVolume* Cu_absorber_FH_logical;
 	G4LogicalVolume* Fe_absorber_FH_logical;
 	G4LogicalVolume* AHCAL_SiPM_logical;
@@ -92,6 +94,8 @@ private:
 	G4LogicalVolume* MCP_logical;
 	G4LogicalVolume* DWC_logical;
 	G4LogicalVolume* DWC_gas_logical;
+	G4LogicalVolume* DATURA_logical;
+	G4LogicalVolume* DATURA_chip_logical;
 
 	std::map<std::string, int> copy_counter_map;
 

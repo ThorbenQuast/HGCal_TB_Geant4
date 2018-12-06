@@ -118,6 +118,8 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
   visAttributes->SetVisibility(true);
   W_absorber_EE_logical->SetVisAttributes(visAttributes);
+  W_2mm_absorber_EE_DESY2018_logical->SetVisAttributes(visAttributes);
+  W_4mm_absorber_EE_DESY2018_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
   visAttributes->SetVisibility(true);
@@ -162,6 +164,14 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   visAttributes = new G4VisAttributes(G4Colour(0.05, 0.05, 0.05, 0.0));
   visAttributes->SetVisibility(false);
   DWC_gas_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.2));
+  visAttributes->SetVisibility(true);
+  DATURA_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 0.015));
+  visAttributes->SetVisibility(true);
+  DATURA_chip_logical->SetVisAttributes(visAttributes);
 }
 
 void HGCalTBMaterials::setSimulationColorScheme() {
@@ -208,6 +218,8 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
   visAttributes->SetVisibility(true);
   W_absorber_EE_logical->SetVisAttributes(visAttributes);
+  W_2mm_absorber_EE_DESY2018_logical->SetVisAttributes(visAttributes);
+  W_4mm_absorber_EE_DESY2018_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
   visAttributes->SetVisibility(true);
@@ -252,6 +264,14 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   visAttributes = new G4VisAttributes(G4Colour(0.05, 0.05, 0.05, 0.0));
   visAttributes->SetVisibility(true);
   DWC_gas_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.7));
+  visAttributes->SetVisibility(true);
+  DATURA_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 1.0));
+  visAttributes->SetVisibility(true);
+  DATURA_chip_logical->SetVisAttributes(visAttributes);
 }
 
 
@@ -369,6 +389,22 @@ void HGCalTBMaterials::defineHGCalEEAbsorbers() {
   W_absorber_EE_logical = new G4LogicalVolume(W_absorber_EE_solid, mat_W, "W_absorber_EE");
   thickness_map["W_absorber_EE"] = W_absorber_EE_thickness;
   logical_volume_map["W_absorber_EE"] = W_absorber_EE_logical;
+
+
+  G4double W_2mm_absorber_EE_DESY2018_thickness = 2. * mm;
+  G4double W_2mm_absorber_EE_DESY2018_xy = 15 * cm;
+  G4Box* W_2mm_absorber_EE_DESY2018_solid = new G4Box("W_2mm_absorber_EE_DESY2018", 0.5 * W_2mm_absorber_EE_DESY2018_xy, 0.5 * W_2mm_absorber_EE_DESY2018_xy, 0.5 * W_2mm_absorber_EE_DESY2018_thickness);
+  W_2mm_absorber_EE_DESY2018_logical = new G4LogicalVolume(W_2mm_absorber_EE_DESY2018_solid, mat_W, "W_2mm_absorber_EE_DESY2018");
+  thickness_map["W_2mm_absorber_EE_DESY2018"] = W_2mm_absorber_EE_DESY2018_thickness;
+  logical_volume_map["W_2mm_absorber_EE_DESY2018"] = W_2mm_absorber_EE_DESY2018_logical;
+
+
+  G4double W_4mm_absorber_EE_DESY2018_thickness = 4. * mm;
+  G4double W_4mm_absorber_EE_DESY2018_xy = 15 * cm;
+  G4Box* W_4mm_absorber_EE_DESY2018_solid = new G4Box("W_4mm_absorber_EE_DESY2018", 0.5 * W_4mm_absorber_EE_DESY2018_xy, 0.5 * W_4mm_absorber_EE_DESY2018_xy, 0.5 * W_4mm_absorber_EE_DESY2018_thickness);
+  W_4mm_absorber_EE_DESY2018_logical = new G4LogicalVolume(W_4mm_absorber_EE_DESY2018_solid, mat_W, "W_4mm_absorber_EE_DESY2018");
+  thickness_map["W_4mm_absorber_EE_DESY2018"] = W_4mm_absorber_EE_DESY2018_thickness;
+  logical_volume_map["W_4mm_absorber_EE_DESY2018"] = W_4mm_absorber_EE_DESY2018_logical;
 }
 
 void HGCalTBMaterials::defineHGCalFHAbsorbers() {
@@ -465,6 +501,25 @@ void HGCalTBMaterials::defineBeamLineElements() {
   DWC_gas_logical = new G4LogicalVolume(DWC_gas_solid, mat_Ar, "DWC_gas");
 
   new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), DWC_gas_logical, "DWC_gas", DWC_logical, false, 0, true);
+
+
+  //DESY DATURA beam telescope
+  G4double DATURA_thickness = 15 * mm;
+  G4double DATURA_xy = 10 * cm;
+  G4double DATURA_window_x = 2 * cm;
+  G4double DATURA_window_y = 1 * cm;
+  G4double DATURA_chip_thickness = 0.1 * mm;
+  G4Box* DATURA_full_solid = new G4Box("DATURA_full", 0.5 * DATURA_xy, 0.5 * DATURA_xy, 0.5 * DATURA_thickness);
+  G4Box* DATURA_cut_solid = new G4Box("DATURA_cut", 0.5 * DATURA_window_x, 0.5 * DATURA_window_y, 0.6 * DATURA_thickness);
+  G4SubtractionSolid* DATURA_solid = new G4SubtractionSolid("DATURA", DATURA_full_solid, DATURA_cut_solid, 0, G4ThreeVector(0, 0, 0.));
+  DATURA_logical = new G4LogicalVolume(DATURA_solid, mat_Al, "DATURA");
+  G4Box* DATURA_chip = new G4Box("DATURA_chip", 0.5 * DATURA_window_x, 0.5 * DATURA_window_y, 0.5 * DATURA_chip_thickness);
+  DATURA_chip_logical = new G4LogicalVolume(DATURA_chip, mat_Si, "DATURA_chip");
+  new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), DATURA_chip_logical, "DATURA_chip", DATURA_logical, false, 0, true);
+
+  thickness_map["DATURA"] = DATURA_thickness;
+  logical_volume_map["DATURA"] = DATURA_logical;
+
 }
 
 
@@ -496,6 +551,13 @@ void HGCalTBMaterials::placeItemInLogicalVolume(std::string item_type, G4double 
       if (nC <= 0) continue;
       new G4PVPlacement(0, G4ThreeVector(-dy_ * (0 - nRows_[nC] / 2. + 0.5) , +nC * dx_ / 2 , z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
     }
+    z0 += thickness_map[item_type];
+  } else if (item_type.find("_rot30") != std::string::npos) {
+    item_type.resize(item_type.find("_rot30"));
+    if (copy_counter_map.find(item_type) == copy_counter_map.end()) copy_counter_map[item_type] = 0;
+    G4RotationMatrix* rot = new G4RotationMatrix;
+    rot->rotateZ(30 * deg);
+    new G4PVPlacement(rot, G4ThreeVector(0, 0, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
     z0 += thickness_map[item_type];
   } else {
     if (copy_counter_map.find(item_type) == copy_counter_map.end()) copy_counter_map[item_type] = 0;

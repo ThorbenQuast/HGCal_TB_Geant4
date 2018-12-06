@@ -4,6 +4,8 @@
 
 #include "config1_2_Summer2017.hh"
 #include "config3_September2017.hh"
+
+#include "config_DESY2018_42.hh"
 #include "configs17To21_June2018.hh"
 #include "config22_October2018_1.hh"
 #include "config23_October2018_2.hh"
@@ -334,6 +336,7 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   if (val == 1) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
   else if (val == 2) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
   else if (val == 3) defineConfig3_September2017(dz_map, default_viewpoint);
+  else if (val == 15) defineDESY2018_Config42(dz_map, default_viewpoint);
   else if (val == 17) defineConfigs17To21_June2018(dz_map, default_viewpoint);
   else if (val == 18) defineConfigs17To21_June2018(dz_map, default_viewpoint);
   else if (val == 19) defineConfigs17To21_June2018(dz_map, default_viewpoint);
