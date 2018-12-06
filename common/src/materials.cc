@@ -179,7 +179,7 @@ void HGCalTBMaterials::setSimulationColorScheme() {
 
   visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.3));
   visAttributes->SetVisibility(true);
-  Cu_baseplate_logical->SetVisAttributes(visAttributes);  
+  Cu_baseplate_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(.0, 1., 0.0, 0.3));
   visAttributes->SetVisibility(true);
@@ -207,7 +207,7 @@ void HGCalTBMaterials::setSimulationColorScheme() {
 
   visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
   visAttributes->SetVisibility(true);
-  W_absorber_EE_logical->SetVisAttributes(visAttributes);  
+  W_absorber_EE_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(.1, 0.2, 0.5, 0.1));
   visAttributes->SetVisibility(true);
@@ -223,7 +223,7 @@ void HGCalTBMaterials::setSimulationColorScheme() {
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
   visAttributes->SetVisibility(true);
-  AHCAL_SiPM_2x2HUB_logical->SetVisAttributes(visAttributes);  
+  AHCAL_SiPM_2x2HUB_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
   visAttributes->SetVisibility(true);
@@ -235,7 +235,7 @@ void HGCalTBMaterials::setSimulationColorScheme() {
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.1));
   visAttributes->SetVisibility(true);
-  Fe_absorber_AHCAL_logical->SetVisAttributes(visAttributes);  
+  Fe_absorber_AHCAL_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.5));
   visAttributes->SetVisibility(true);
@@ -250,7 +250,7 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   DWC_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.05, 0.05, 0.05, 0.0));
-  visAttributes->SetVisibility(true);  
+  visAttributes->SetVisibility(true);
   DWC_gas_logical->SetVisAttributes(visAttributes);
 }
 
@@ -483,6 +483,18 @@ void HGCalTBMaterials::placeItemInLogicalVolume(std::string item_type, G4double 
         if (nC <= 0) continue;
         new G4PVPlacement(0, G4ThreeVector(dy_ * (middle_index - nRows_[nC] / 2. + 0.5) , +nC * dx_ / 2 , z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
       }
+    }
+    z0 += thickness_map[item_type];
+  } else if (item_type.find("_SUMMER2017TRIPLET") != std::string::npos) {
+    item_type.resize(item_type.find("_SUMMER2017TRIPLET"));
+    if (copy_counter_map.find(item_type) == copy_counter_map.end()) copy_counter_map[item_type] = 0;
+    double dx_ = 2 * sin(alpha) * 11 * Si_pixel_sideLength;
+    double dy_ = 11 * Si_pixel_sideLength * (2. + 2 * cos(alpha));
+    int nRows_[2] = {1, 2};
+    for (int nC = 0; nC < 2; nC++) {
+      new G4PVPlacement(0, G4ThreeVector(-dy_ * (0 - nRows_[nC] / 2. + 0.5) , -nC * dx_ / 2 , z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
+      if (nC <= 0) continue;
+      new G4PVPlacement(0, G4ThreeVector(-dy_ * (0 - nRows_[nC] / 2. + 0.5) , +nC * dx_ / 2 , z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
     }
     z0 += thickness_map[item_type];
   } else {
