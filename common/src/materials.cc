@@ -72,6 +72,25 @@ void HGCalTBMaterials::DefineMaterials() {
   mat_CuW->AddMaterial(mat_Cu, Cu_frac_in_CuW);
   mat_CuW->AddMaterial(mat_W, 1 - Cu_frac_in_CuW);
 
+
+  //LYSO implementation from here: https://github.com/cacunas/ParG4_cluster/blob/master/LYSO/src/LYSOGeometry.cc
+  G4Element* Oxigen   = nist->FindOrBuildElement("O");
+  G4Element* Lutetium = nist->FindOrBuildElement("Lu");
+  G4Element* Yttrium  = nist->FindOrBuildElement("Y");
+  //Lutetium Oxide Lu2O3
+  G4Material* LutetiumOxide = new G4Material("LutetiumOxide", 9.41 * g / cm3, 2);
+  LutetiumOxide->AddElement(Lutetium, 2);
+  LutetiumOxide->AddElement(Oxigen, 3);
+  //Yttrium Oxide Y2O3
+  G4Material* YttriumOxide = new G4Material("YttriumOxide", 5.01 * g / cm3, 2);
+  YttriumOxide->AddElement(Yttrium, 2);
+  YttriumOxide->AddElement(Oxigen, 3);
+  //Build LYSO Material
+  mat_LYSO = new G4Material("LYSO", 7.1 * g / cm3, 3);
+  mat_LYSO->AddMaterial(LutetiumOxide,  81 * perCent);
+  mat_LYSO->AddMaterial(mat_Quartz, 14 * perCent);
+  mat_LYSO->AddMaterial(YttriumOxide,    5 * perCent);
+
 }
 
 void HGCalTBMaterials::setEventDisplayColorScheme() {
@@ -172,6 +191,12 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 0.015));
   visAttributes->SetVisibility(true);
   DATURA_chip_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
+  visAttributes->SetVisibility(false);
+  HERD_calorimeter_logical->SetVisAttributes(visAttributes);  
+  visAttributes->SetVisibility(true);
+  HERD_calorimeter_slab_logical->SetVisAttributes(visAttributes);  
 }
 
 void HGCalTBMaterials::setSimulationColorScheme() {
@@ -272,6 +297,12 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 1.0));
   visAttributes->SetVisibility(true);
   DATURA_chip_logical->SetVisAttributes(visAttributes);
+
+  visAttributes = new G4VisAttributes(G4Colour(0.1, 0.1, 0.1, 0.3));
+  visAttributes->SetVisibility(false);
+  HERD_calorimeter_logical->SetVisAttributes(visAttributes);  
+  visAttributes->SetVisibility(true);
+  HERD_calorimeter_slab_logical->SetVisAttributes(visAttributes);  
 }
 
 
@@ -286,6 +317,7 @@ HGCalTBMaterials::HGCalTBMaterials() {
   defineAHCALSiPM();
   defineAHCALAbsorbers();
   defineBeamLineElements();
+  defineHERDCalorimeter();
 
 };
 
@@ -522,6 +554,31 @@ void HGCalTBMaterials::defineBeamLineElements() {
 
 }
 
+
+void HGCalTBMaterials::defineHERDCalorimeter(){ 
+
+  //details about HERD's calorimeter: 
+  //http://herd.ihep.ac.cn, 07 December 2018
+   
+  G4double HERD_calorimeter_thickness = 3 * cm;
+  G4double HERD_calorimeter_xy = 3 * cm;
+  G4Box* HERD_calorimeter_solid = new G4Box("HERD_calorimeter", 0.5 * HERD_calorimeter_xy, 0.5 * HERD_calorimeter_xy, 0.5 * HERD_calorimeter_thickness);
+  HERD_calorimeter_logical = new G4LogicalVolume(HERD_calorimeter_solid, mat_LYSO, "HERD_calorimeter");
+  thickness_map["HERD_calorimeter"] = HERD_calorimeter_thickness;
+  logical_volume_map["HERD_calorimeter"] = HERD_calorimeter_logical;
+
+
+  G4double HERD_calorimeter_slab_xy = 21 * HERD_calorimeter_xy + 0.01 * mm;
+  G4double HERD_calorimeter_slab_thickness = HERD_calorimeter_thickness + 0.0001 * mm;
+  G4Box* HERD_calorimeter_slab_solid = new G4Box("HERD_calorimeter_slab", 0.5 * HERD_calorimeter_slab_xy, 0.5 * HERD_calorimeter_slab_xy, 0.5 * HERD_calorimeter_slab_thickness);
+  HERD_calorimeter_slab_logical = new G4LogicalVolume(HERD_calorimeter_slab_solid, mat_AIR, "HERD_calorimeter_slab");
+  thickness_map["HERD_calorimeter_slab"] = HERD_calorimeter_slab_thickness;
+  logical_volume_map["HERD_calorimeter_slab"] = HERD_calorimeter_slab_logical;
+  int copy_counter = 0;
+  for (float _dx = -10.0; _dx <= 10.0; _dx = _dx + 1.) for (float _dy = -10.0; _dy <= 10.0; _dy = _dy + 1.) {
+      new G4PVPlacement(0, G4ThreeVector(_dx * HERD_calorimeter_xy, _dy * HERD_calorimeter_xy, 0), HERD_calorimeter_logical, "HERD_calorimeter_slab", HERD_calorimeter_slab_logical, false, copy_counter++, true);  
+  }
+}
 
 
 

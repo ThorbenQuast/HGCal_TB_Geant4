@@ -37,6 +37,7 @@ private:
 	void defineAHCALSiPM();
 	void defineAHCALAbsorbers();
 	void defineBeamLineElements();
+	void defineHERDCalorimeter();
 
 	G4VisAttributes* visAttributes;
 
@@ -69,6 +70,7 @@ private:
 	G4Material* mat_Quartz;
 	G4Material* mat_Polystyrene;
 	G4Material* mat_CuW;
+	G4Material* mat_LYSO;
 
 	G4LogicalVolume* Si_pixel_logical;
 	G4LogicalVolume* Si_wafer_logical;
@@ -96,6 +98,8 @@ private:
 	G4LogicalVolume* DWC_gas_logical;
 	G4LogicalVolume* DATURA_logical;
 	G4LogicalVolume* DATURA_chip_logical;
+	G4LogicalVolume* HERD_calorimeter_logical;
+	G4LogicalVolume* HERD_calorimeter_slab_logical;
 
 	std::map<std::string, int> copy_counter_map;
 
