@@ -37,6 +37,8 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   HGCalLayerDistances.clear();
+  HGCalLayerRotation.clear();
+  AHCALLayerDistances.clear();
 
   //definition of the materials
   materials = new HGCalTBMaterials(); 
@@ -73,6 +75,10 @@ void DetectorConstruction::ConstructHGCal() {
     //special for the event display
     if (item_type.find("Si_wafer") != std::string::npos) {
       HGCalLayerDistances.push_back(z0);
+      G4RotationMatrix* rot = new G4RotationMatrix;
+      if (item_type.find("_rot30") != std::string::npos) rot->rotateZ(30 * deg);
+      else rot->rotateZ(0);
+      HGCalLayerRotation.push_back(rot);
     }
     if (item_type.find("AHCAL_SiPM") != std::string::npos) {
       AHCALLayerDistances.push_back(z0);
@@ -206,7 +212,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     visAttributes->SetVisibility(true);
     hit_logical->SetVisAttributes(visAttributes);
     //std::cout << "Placing HGCal hit: " << hit->layer << "  " << hit->x << "  " << hit->y << std::endl;
-    hit->physicalVolume = new G4PVPlacement(0, G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
+    hit->physicalVolume = new G4PVPlacement(HGCalLayerRotation[hit->layer - 1], G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
   }
 
 

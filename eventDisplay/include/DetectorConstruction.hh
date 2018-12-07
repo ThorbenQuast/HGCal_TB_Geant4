@@ -70,6 +70,7 @@ private:
 
 //ntuple readout
     std::vector<G4double> HGCalLayerDistances;
+    std::vector<G4RotationMatrix*> HGCalLayerRotation;
     std::vector<VisHit*> HGCalHitsForVisualisation;
 
     TFile* m_inputFileHGCal;
