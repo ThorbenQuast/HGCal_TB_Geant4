@@ -3,13 +3,13 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "G4RunManager.hh"
-#include "G4UIManager.hh"
 #include "globals.hh"
 #include "G4LogicalVolume.hh"
-#include "G4GenericMessenger.hh"
 #include "SiliconPixelSD.hh"
 #include "SiPMSD.hh"
 #include <vector>
+#include "G4GenericMessenger.hh"
+#include "G4UImanager.hh"
 
 #include "materials.hh"
 
