@@ -97,7 +97,6 @@ private:
 	G4LogicalVolume* DWC_logical;
 	G4LogicalVolume* DWC_gas_logical;
 	G4LogicalVolume* DATURA_logical;
-	G4LogicalVolume* DATURA_chip_logical;
 	G4LogicalVolume* HERD_calorimeter_logical;
 	G4LogicalVolume* HERD_calorimeter_slab_logical;
 

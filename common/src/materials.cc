@@ -188,10 +188,6 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   visAttributes->SetVisibility(true);
   DATURA_logical->SetVisAttributes(visAttributes);
 
-  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 0.015));
-  visAttributes->SetVisibility(true);
-  DATURA_chip_logical->SetVisAttributes(visAttributes);
-
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
   visAttributes->SetVisibility(false);
   HERD_calorimeter_logical->SetVisAttributes(visAttributes);  
@@ -293,10 +289,6 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.7));
   visAttributes->SetVisibility(true);
   DATURA_logical->SetVisAttributes(visAttributes);
-
-  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 1.0));
-  visAttributes->SetVisibility(true);
-  DATURA_chip_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.1, 0.1, 0.1, 0.3));
   visAttributes->SetVisibility(false);
@@ -540,14 +532,10 @@ void HGCalTBMaterials::defineBeamLineElements() {
   G4double DATURA_xy = 10 * cm;
   G4double DATURA_window_x = 2 * cm;
   G4double DATURA_window_y = 1 * cm;
-  G4double DATURA_chip_thickness = 0.1 * mm;
   G4Box* DATURA_full_solid = new G4Box("DATURA_full", 0.5 * DATURA_xy, 0.5 * DATURA_xy, 0.5 * DATURA_thickness);
-  G4Box* DATURA_cut_solid = new G4Box("DATURA_cut", 0.5 * DATURA_window_x, 0.5 * DATURA_window_y, 0.6 * DATURA_thickness);
+  G4Box* DATURA_cut_solid = new G4Box("DATURA_cut", 0.5 * DATURA_window_x, 0.5 * DATURA_window_y, 0.5 * DATURA_thickness);
   G4SubtractionSolid* DATURA_solid = new G4SubtractionSolid("DATURA", DATURA_full_solid, DATURA_cut_solid, 0, G4ThreeVector(0, 0, 0.));
   DATURA_logical = new G4LogicalVolume(DATURA_solid, mat_Al, "DATURA");
-  G4Box* DATURA_chip = new G4Box("DATURA_chip", 0.5 * DATURA_window_x, 0.5 * DATURA_window_y, 0.5 * DATURA_chip_thickness);
-  DATURA_chip_logical = new G4LogicalVolume(DATURA_chip, mat_Si, "DATURA_chip");
-  new G4PVPlacement(0, G4ThreeVector(0, 0., 0.), DATURA_chip_logical, "DATURA_chip", DATURA_logical, false, 0, true);
 
   thickness_map["DATURA"] = DATURA_thickness;
   logical_volume_map["DATURA"] = DATURA_logical;
