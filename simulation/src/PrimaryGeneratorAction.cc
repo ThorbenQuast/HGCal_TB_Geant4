@@ -57,7 +57,7 @@ void PrimaryGeneratorAction::DefineCommands() {
   // beam spread in x command
   auto& beamSpreadXCmd
     = fMessenger->DeclarePropertyWithUnit("sigmaBeamX", "cm", sigmaBeamX, 
-        "Gaussian beam spread in X");
+        "Gaussian beam spread in X, half-side range in X for flat gun");
   beamSpreadXCmd.SetParameterName("sigmaBeamX", true);
   beamSpreadXCmd.SetRange("sigmaBeamX>0.");                                
   beamSpreadXCmd.SetDefaultValue(".001");
@@ -65,10 +65,15 @@ void PrimaryGeneratorAction::DefineCommands() {
   // beam spread in y command
   auto& beamSpreadYCmd
     = fMessenger->DeclarePropertyWithUnit("sigmaBeamY", "cm", sigmaBeamY, 
-        "Gaussian beam spread in Y");
+        "Gaussian beam spread in Y, half-side range in > for flat gun");
   beamSpreadYCmd.SetParameterName("sigmaBeamY", true);
   beamSpreadYCmd.SetRange("sigmaBeamY>0.");                                
   beamSpreadYCmd.SetDefaultValue(".001");
+
+  auto& gunSpreadCmd
+    = fMessenger->DeclareProperty("GaussianBeam", beamTypeGaussian);
+  gunSpreadCmd.SetParameterName("GaussianBeam", true);
+  gunSpreadCmd.SetDefaultValue("false");
 
   // beam position along beam line
   auto& beamZ0Cmd
@@ -129,7 +134,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   fParticleGun->SetParticleEnergy(fMomentum);  
   
   G4double z0 = (beamZ0==-999*m) ? -worldDZ : beamZ0;
-  fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., sigmaBeamX),G4RandGauss::shoot(0., sigmaBeamY), z0)); 
+  if (beamTypeGaussian) fParticleGun->SetParticlePosition(G4ThreeVector(G4RandGauss::shoot(0., sigmaBeamX),G4RandGauss::shoot(0., sigmaBeamY), z0)); 
+  else fParticleGun->SetParticlePosition(G4ThreeVector(G4RandFlat::shoot(-sigmaBeamX, sigmaBeamX),G4RandFlat::shoot(-sigmaBeamY, sigmaBeamY), z0)); 
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 }
