@@ -36,6 +36,7 @@ class PrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
     G4double fMomentum;
     G4String fparticleDef;
 
+    G4bool beamTypeGaussian;
     G4double sigmaBeamX;
     G4double sigmaBeamY;
     G4double beamZ0;
