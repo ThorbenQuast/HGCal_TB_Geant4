@@ -617,6 +617,11 @@ void HGCalTBMaterials::placeItemInLogicalVolume(std::string item_type, G4double 
   }
 }
 
+G4LogicalVolume* HGCalTBMaterials::newSiPixelHitFrameLogical(std::string name, G4double frame_thickness) {
+  G4SubtractionSolid* geometry = new G4SubtractionSolid(name, HexagonPhysical(name+"_1", Si_wafer_thickness+1*mm, Si_pixel_sideLength+frame_thickness), HexagonPhysical(name+"_2", Si_wafer_thickness+1.1*mm, Si_pixel_sideLength), 0, G4ThreeVector(0, 0, 0));
+  return new G4LogicalVolume(geometry, mat_Vacuum, name); 
+}
+
 G4LogicalVolume* HGCalTBMaterials::newSiPixelHitLogical(std::string name) {
   return HexagonLogical(name, Si_wafer_thickness, Si_pixel_sideLength, mat_Vacuum);
 };

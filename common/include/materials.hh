@@ -112,6 +112,7 @@ public:
 
 	void placeItemInLogicalVolume(std::string, G4double&, G4LogicalVolume*);
 	G4LogicalVolume* newSiPixelHitLogical(std::string name);
+	G4LogicalVolume* newSiPixelHitFrameLogical(std::string name, G4double frame_thickness);
 	G4LogicalVolume* newSiPMHitLogical(std::string name);
 
 	G4LogicalVolume* getSi_pixel_logical(){return this->Si_pixel_logical;}

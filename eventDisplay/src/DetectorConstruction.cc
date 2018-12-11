@@ -41,7 +41,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   AHCALLayerDistances.clear();
 
   //definition of the materials
-  materials = new HGCalTBMaterials(); 
+  materials = new HGCalTBMaterials();
   materials->setEventDisplayColorScheme();
 
   /***** Definition of the world = beam line *****/
@@ -62,7 +62,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 void DetectorConstruction::ConstructHGCal() {
   G4double z0 = -BEAMLINELENGTH * m / 2.;
-  
+
 
   std::cout << "Constructing configuration " << _configuration << std::endl;
 
@@ -119,6 +119,15 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     delete hit;
   }
   AHCALHitsForVisualisation.clear();
+
+  for (size_t nframe = 0; nframe < TrackingFramesForVisualisation.size(); nframe++) {
+    VisHit* hit = TrackingFramesForVisualisation[nframe];
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
+    delete hit;
+  }
+  TrackingFramesForVisualisation.clear();
+  TrackingFrame_IDs.clear();
 
 
   //HGCal hits
@@ -202,16 +211,44 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
   }
 
 
+  //Tracking frames
+  if (time_cut < 0) {
+    if ((m_inputTreeTracking != NULL) && (m_inputFileTracking->IsOpen())) {
+      //loop over all tracks
+      for (unsigned int i = 0; i < m_inputTreeTracking->GetEntries(); i++) {
+        m_inputTreeTracking->GetEntry(i);
+        if (Tracking_eventID != eventIndex) continue;
+        for (int ncluster = 0; ncluster < cluster_layer->size(); ncluster++) {
+          int clusterID = 1000 * cluster_module->at(ncluster) + 100 * cluster_chip->at(ncluster) + cluster_channel->at(ncluster);
+          if (std::find(TrackingFrame_IDs.begin(), TrackingFrame_IDs.end(), clusterID) != TrackingFrame_IDs.end()) continue;
+
+          VisHit* frame = new VisHit;
+          frame->name = "Tracking-Frame";
+          frame->layer = cluster_layer->at(ncluster);
+          frame->x = cluster_x->at(ncluster) * cm;
+          frame->y = cluster_y->at(ncluster) * cm;
+          frame->energy = 0;
+          setTrackingFrameColor(frame);
+
+          TrackingFramesForVisualisation.push_back(frame);
+          TrackingFrame_IDs.push_back(clusterID);
+        }
+      }
+      std::cout << "Number of unqiue tracking frames in file: " << TrackingFrame_IDs.size() << std::endl;
+    }
+  } else {
+    std::cout << "timing cut: " << time_cut << " prevents tracking frames to be visualised" << std::endl;
+  }
 
 
-  /*****    START GENERIC PLACEMENT ALGORITHM  FOR THE SETUP  *****/
+
+  /*****    START GENERIC HIT PLACEMENT ALGORITHM FOR THE SETUP  *****/
   for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
     VisHit* hit = HGCalHitsForVisualisation[nhit];
     G4LogicalVolume* hit_logical = materials->newSiPixelHitLogical(hit->name);
     visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
     visAttributes->SetVisibility(true);
     hit_logical->SetVisAttributes(visAttributes);
-    //std::cout << "Placing HGCal hit: " << hit->layer << "  " << hit->x << "  " << hit->y << std::endl;
     hit->physicalVolume = new G4PVPlacement(HGCalLayerRotation[hit->layer - 1], G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
   }
 
@@ -226,11 +263,18 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
   }
 
 
+  for (size_t nframe = 0; nframe < TrackingFramesForVisualisation.size(); nframe++) {
+    VisHit* hit = TrackingFramesForVisualisation[nframe];
+    G4LogicalVolume* hit_logical = materials->newSiPixelHitFrameLogical(hit->name, 1*mm);
+    visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
+    visAttributes->SetVisibility(true);
+    hit_logical->SetVisAttributes(visAttributes);
+    hit->physicalVolume = new G4PVPlacement(0, G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
+  }
+
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   UImanager->ApplyCommand("/vis/drawVolume");
-  //UImanager->ApplyCommand("/vis/viewer/set/viewpointThetaPhi 115 20");
-  //UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 12.3 m");
 
 }
 
@@ -333,6 +377,42 @@ void DetectorConstruction::OpenAHCALNtuple(G4String path) {
 
 }
 
+void DetectorConstruction::OpenTrackingNtuple(G4String path) {
+  //reading from the file
+  if (path == "") {
+    return;
+  } else {
+
+  }
+  if (m_inputFileTracking == NULL) {
+    m_inputFileTracking = new TFile(path.c_str(), "READ");
+    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get("corryvreckan/HGCalMIPTracking/HGCalTracking_Tracks");
+
+    trackingBranches["eventID"] = new TBranch;
+    trackingBranches["cluster_layer"] = new TBranch;
+    trackingBranches["cluster_x"] = new TBranch;
+    trackingBranches["cluster_y"] = new TBranch;
+    trackingBranches["cluster_module"] = new TBranch;
+    trackingBranches["cluster_chip"] = new TBranch;
+    trackingBranches["cluster_channel"] = new TBranch;
+  } else {
+    std::cout << "Closing " << ntupleTrackingpath << std::endl;
+    m_inputFileTracking->Close();
+    m_inputFileTracking = new TFile(path.c_str(), "READ");
+    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get("corryvreckan/HGCalMIPTracking/HGCalTracking_Tracks");
+  }
+  ntupleTrackingpath = path;
+  std::cout << "Opened " << ntupleTrackingpath << std::endl;
+  m_inputTreeTracking->SetBranchAddress("eventID", &Tracking_eventID, &trackingBranches["eventID"]);
+  m_inputTreeTracking->SetBranchAddress("cluster_layer", &cluster_layer, &trackingBranches["cluster_layer"]);
+  m_inputTreeTracking->SetBranchAddress("cluster_x", &cluster_x, &trackingBranches["cluster_x"]);
+  m_inputTreeTracking->SetBranchAddress("cluster_y", &cluster_y, &trackingBranches["cluster_y"]);
+  m_inputTreeTracking->SetBranchAddress("cluster_module", &cluster_module, &trackingBranches["cluster_module"]);
+  m_inputTreeTracking->SetBranchAddress("cluster_chip", &cluster_chip, &trackingBranches["cluster_chip"]);
+  m_inputTreeTracking->SetBranchAddress("cluster_channel", &cluster_channel, &trackingBranches["cluster_channel"]);
+
+
+}
 
 void DetectorConstruction::SelectConfiguration(G4int val) {
 
@@ -402,6 +482,12 @@ void DetectorConstruction::DefineCommands()
                                 "Path to the AHCAL ntuple");
   ntupleAHCALPathCmd.SetDefaultValue("");
 
+
+  auto& ntupleTrackingPathCmd
+    = fMessenger->DeclareMethod("pathTracking",
+                                &DetectorConstruction::OpenTrackingNtuple,
+                                "Path to the Tracking ntuple");
+  ntupleTrackingPathCmd.SetDefaultValue("");
 
 
   auto& energyThresholdCmd

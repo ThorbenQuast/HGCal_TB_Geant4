@@ -60,6 +60,8 @@ private:
     G4String ntuplepath;
     void OpenAHCALNtuple(G4String);
     G4String ntupleAHCALpath;
+    void OpenTrackingNtuple(G4String);
+    G4String ntupleTrackingpath;
 
     void ReadNtupleEvent(G4int);
 
@@ -94,9 +96,13 @@ private:
     std::vector<VisHit*> AHCALHitsForVisualisation;
     int ahcalOffset;
 
+    std::vector<VisHit*> TrackingFramesForVisualisation;
+    std::vector<int> TrackingFrame_IDs;
+
     float energyThreshold;
     float time_cut;
 
+    //AHCAL readout
     TFile* m_inputFileAHCAL;
     TTree* m_inputTreeAHCAL;
     std::map<std::string, TBranch*> ahcalBranches;
@@ -108,6 +114,23 @@ private:
     int ahc_hitK_[24*24*40];
     float ahc_hitEnergy_[24*24*40];
 
+
+    //Tracking file readout
+    TFile* m_inputFileTracking;
+    TTree* m_inputTreeTracking;
+    std::map<std::string, TBranch*> trackingBranches;
+
+    unsigned int Tracking_eventID;
+    std::vector<unsigned int>* cluster_layer;
+    std::vector<float>* cluster_x;
+    std::vector<float>* cluster_y;
+    std::vector<float>* cluster_module;
+    std::vector<float>* cluster_chip;
+    std::vector<float>* cluster_channel;
+    
+    
+    
+    
 
 //alignment correction
     std::vector<std::pair<float, float> > transverse_alignment_HGCal;    

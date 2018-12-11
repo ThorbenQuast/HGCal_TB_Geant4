@@ -50,3 +50,10 @@ void setAHCALHitColor (VisHit* hit) {
       hit->green = upper_index!=lower_index ? (AHCAL_green[upper_index]-AHCAL_green[lower_index])/(AHCAL_energies[upper_index]-AHCAL_energies[lower_index]) * (hit_energy-AHCAL_energies[lower_index])+AHCAL_green[lower_index] : AHCAL_green[lower_index];
       hit->blue = upper_index!=lower_index ? (AHCAL_blue[upper_index]-AHCAL_blue[lower_index])/(AHCAL_energies[upper_index]-AHCAL_energies[lower_index]) * (hit_energy-AHCAL_energies[lower_index])+AHCAL_blue[lower_index] : AHCAL_blue[lower_index];
 }
+
+
+void setTrackingFrameColor (VisHit* hit) {
+      hit->red = 1;
+      hit->green = 0;
+      hit->blue = 0;
+}
