@@ -1,6 +1,7 @@
 #include "materials.hh"
 
-G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double cellSideLength, G4Material* material) {
+
+G4SubtractionSolid* HexagonPhysical(G4String name, G4double cellThickness, G4double cellSideLength) {
   G4double full_cellX = (2.) * cellSideLength;
   G4double full_cellY = sqrt(3.) * cellSideLength;
   G4Box* solidFullcell = new G4Box(name,                       //its name
@@ -30,7 +31,12 @@ G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double 
   }
   delete rot;
 
-  return new G4LogicalVolume(subtracted[3],          //its solid
+  return subtracted[3];
+
+}
+
+G4LogicalVolume* HexagonLogical(G4String name, G4double cellThickness, G4double cellSideLength, G4Material* material) {
+  return new G4LogicalVolume(HexagonPhysical(name, cellThickness, cellSideLength),          //its solid
                              material,           //its material
                              name);            //its name
 
