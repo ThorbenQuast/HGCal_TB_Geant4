@@ -118,6 +118,7 @@ private:
     //Tracking file readout
     TFile* m_inputFileTracking;
     TTree* m_inputTreeTracking;
+    G4String m_trackingMethod;
     std::map<std::string, TBranch*> trackingBranches;
 
     unsigned int Tracking_eventID;

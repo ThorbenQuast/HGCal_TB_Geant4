@@ -25,6 +25,13 @@ DetectorConstruction::DetectorConstruction()
   time_cut = -1;
   m_inputFileHGCal = NULL;
   m_inputTreeHGCal = NULL;
+ 
+  m_inputFileAHCAL = NULL;
+  m_inputTreeAHCAL = NULL; 
+
+  m_inputFileTracking = NULL;
+  m_inputTreeTracking = NULL; 
+  m_trackingMethod = "HGCalMIPTracking";
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -265,7 +272,7 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
 
   for (size_t nframe = 0; nframe < TrackingFramesForVisualisation.size(); nframe++) {
     VisHit* hit = TrackingFramesForVisualisation[nframe];
-    G4LogicalVolume* hit_logical = materials->newSiPixelHitFrameLogical(hit->name, 1*mm);
+    G4LogicalVolume* hit_logical = materials->newSiPixelHitFrameLogical(hit->name, 1 * mm);
     visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
     visAttributes->SetVisibility(true);
     hit_logical->SetVisAttributes(visAttributes);
@@ -311,6 +318,7 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
     m_inputTreeHGCal = (TTree*)m_inputFileHGCal->Get("rechitntupler/hits");
   }
   ntuplepath = path;
+  if (m_inputFileHGCal->IsOpen()) {
   std::cout << "Opened " << ntuplepath << std::endl;
   m_inputTreeHGCal->SetBranchAddress("event", &eventID, &hgcalBranches["eventID"]);
   m_inputTreeHGCal->SetBranchAddress("NRechits", &Nhits, &hgcalBranches["Nhits"]);
@@ -336,7 +344,10 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
   rechit_x_ = 0;
   rechit_y_ = 0;
   rechit_z_ = 0;
-
+} else {
+    m_inputFileHGCal = NULL;
+    std::cout << "HGCAl file: " << ntuplepath << " not opened..." << std::endl;
+}
 
 }
 
@@ -365,15 +376,20 @@ void DetectorConstruction::OpenAHCALNtuple(G4String path) {
     m_inputTreeAHCAL = (TTree*)m_inputFileAHCAL->Get("bigtree");
   }
   ntupleAHCALpath = path;
-  std::cout << "Opened " << ntupleAHCALpath << std::endl;
-  m_inputTreeAHCAL->SetBranchAddress("eventNumber", &AHCAL_eventID, &ahcalBranches["eventNumber"]);
-  m_inputTreeAHCAL->SetBranchAddress("ahc_nHits", &AHCAL_Nhits, &ahcalBranches["ahc_nHits"]);
-  m_inputTreeAHCAL->SetBranchAddress("ahc_hitI", ahc_hitI_, &ahcalBranches["ahc_hitI"]);
-  m_inputTreeAHCAL->SetBranchAddress("ahc_hitJ", ahc_hitJ_, &ahcalBranches["ahc_hitJ"]);
-  m_inputTreeAHCAL->SetBranchAddress("ahc_hitK", ahc_hitK_, &ahcalBranches["ahc_hitK"]);
-  m_inputTreeAHCAL->SetBranchAddress("ahc_hitEnergy", ahc_hitEnergy_, &ahcalBranches["ahc_hitEnergy"]);
+  if (m_inputFileAHCAL->IsOpen()) {
+    std::cout << "Opened " << ntupleAHCALpath << std::endl;
+    m_inputTreeAHCAL->SetBranchAddress("eventNumber", &AHCAL_eventID, &ahcalBranches["eventNumber"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_nHits", &AHCAL_Nhits, &ahcalBranches["ahc_nHits"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitI", ahc_hitI_, &ahcalBranches["ahc_hitI"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitJ", ahc_hitJ_, &ahcalBranches["ahc_hitJ"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitK", ahc_hitK_, &ahcalBranches["ahc_hitK"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitEnergy", ahc_hitEnergy_, &ahcalBranches["ahc_hitEnergy"]);
+    AHCAL_eventID = AHCAL_Nhits = 0;
+  } else {
+    m_inputFileAHCAL = NULL;
+    std::cout << "AHCAL file: " << ntupleAHCALpath << " not opened..." << std::endl;
+  }
 
-  AHCAL_eventID = AHCAL_Nhits = 0;
 
 }
 
@@ -386,7 +402,7 @@ void DetectorConstruction::OpenTrackingNtuple(G4String path) {
   }
   if (m_inputFileTracking == NULL) {
     m_inputFileTracking = new TFile(path.c_str(), "READ");
-    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get("corryvreckan/HGCalMIPTracking/HGCalTracking_Tracks");
+    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get(("corryvreckan/"+m_trackingMethod+"/HGCalTracking_Tracks").c_str());
 
     trackingBranches["eventID"] = new TBranch;
     trackingBranches["cluster_layer"] = new TBranch;
@@ -399,18 +415,22 @@ void DetectorConstruction::OpenTrackingNtuple(G4String path) {
     std::cout << "Closing " << ntupleTrackingpath << std::endl;
     m_inputFileTracking->Close();
     m_inputFileTracking = new TFile(path.c_str(), "READ");
-    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get("corryvreckan/HGCalMIPTracking/HGCalTracking_Tracks");
+    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get(("corryvreckan/"+m_trackingMethod+"/HGCalTracking_Tracks").c_str());
   }
   ntupleTrackingpath = path;
-  std::cout << "Opened " << ntupleTrackingpath << std::endl;
-  m_inputTreeTracking->SetBranchAddress("eventID", &Tracking_eventID, &trackingBranches["eventID"]);
-  m_inputTreeTracking->SetBranchAddress("cluster_layer", &cluster_layer, &trackingBranches["cluster_layer"]);
-  m_inputTreeTracking->SetBranchAddress("cluster_x", &cluster_x, &trackingBranches["cluster_x"]);
-  m_inputTreeTracking->SetBranchAddress("cluster_y", &cluster_y, &trackingBranches["cluster_y"]);
-  m_inputTreeTracking->SetBranchAddress("cluster_module", &cluster_module, &trackingBranches["cluster_module"]);
-  m_inputTreeTracking->SetBranchAddress("cluster_chip", &cluster_chip, &trackingBranches["cluster_chip"]);
-  m_inputTreeTracking->SetBranchAddress("cluster_channel", &cluster_channel, &trackingBranches["cluster_channel"]);
-
+  if (m_inputFileTracking->IsOpen()) {
+    std::cout << "Opened " << ntupleTrackingpath << std::endl;
+    m_inputTreeTracking->SetBranchAddress("eventID", &Tracking_eventID, &trackingBranches["eventID"]);
+    m_inputTreeTracking->SetBranchAddress("cluster_layer", &cluster_layer, &trackingBranches["cluster_layer"]);
+    m_inputTreeTracking->SetBranchAddress("cluster_x", &cluster_x, &trackingBranches["cluster_x"]);
+    m_inputTreeTracking->SetBranchAddress("cluster_y", &cluster_y, &trackingBranches["cluster_y"]);
+    m_inputTreeTracking->SetBranchAddress("cluster_module", &cluster_module, &trackingBranches["cluster_module"]);
+    m_inputTreeTracking->SetBranchAddress("cluster_chip", &cluster_chip, &trackingBranches["cluster_chip"]);
+    m_inputTreeTracking->SetBranchAddress("cluster_channel", &cluster_channel, &trackingBranches["cluster_channel"]);
+  } else {
+    m_inputFileTracking = NULL;
+    std::cout << "Tracking file: " << ntupleTrackingpath << " not opened..." << std::endl;
+  }
 
 }
 
@@ -488,6 +508,11 @@ void DetectorConstruction::DefineCommands()
                                 &DetectorConstruction::OpenTrackingNtuple,
                                 "Path to the Tracking ntuple");
   ntupleTrackingPathCmd.SetDefaultValue("");
+
+  auto& TrackingMethodCmd
+    = fMessenger->DeclareProperty("TrackingMethod", m_trackingMethod);
+  TrackingMethodCmd.SetParameterName("TrackingMethod", true);
+  TrackingMethodCmd.SetDefaultValue("HGCalMIPTracking");
 
 
   auto& energyThresholdCmd
