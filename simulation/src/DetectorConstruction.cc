@@ -1,5 +1,7 @@
 #include "DetectorConstruction.hh"
 
+#include "test_configs.hh"
+
 #include "config1_2_Summer2017.hh"
 #include "config3_September2017.hh"
 
@@ -108,6 +110,7 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   else if (val == 23) defineConfig23_October2018_2(dz_map, default_viewpoint);
   else if (val == 24) defineConfig24_October2018_3(dz_map, default_viewpoint);
   else if (val == 25) defineConfig25_October2018_3_parasitic(dz_map, default_viewpoint);
+  else if (val == 100) defineTestConfig100(dz_map, default_viewpoint);
   else {
     std::cout << "Configuration " << val << " not implemented --> return" << std::endl;; 
     return;
