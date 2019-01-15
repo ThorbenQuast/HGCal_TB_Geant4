@@ -10,6 +10,7 @@
 #include "config22_October2018_1.hh"
 #include "config23_October2018_2.hh"
 #include "config24_October2018_3.hh"
+#include "config25_October2018_3_parasitic.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -421,12 +422,12 @@ void DetectorConstruction::OpenTrackingNtuple(G4String path) {
   if (m_inputFileTracking->IsOpen()) {
     std::cout << "Opened " << ntupleTrackingpath << std::endl;
     m_inputTreeTracking->SetBranchAddress("eventID", &Tracking_eventID, &trackingBranches["eventID"]);
-    m_inputTreeTracking->SetBranchAddress("cluster_layer", &cluster_layer, &trackingBranches["cluster_layer"]);
-    m_inputTreeTracking->SetBranchAddress("cluster_x", &cluster_x, &trackingBranches["cluster_x"]);
-    m_inputTreeTracking->SetBranchAddress("cluster_y", &cluster_y, &trackingBranches["cluster_y"]);
-    m_inputTreeTracking->SetBranchAddress("cluster_module", &cluster_module, &trackingBranches["cluster_module"]);
-    m_inputTreeTracking->SetBranchAddress("cluster_chip", &cluster_chip, &trackingBranches["cluster_chip"]);
-    m_inputTreeTracking->SetBranchAddress("cluster_channel", &cluster_channel, &trackingBranches["cluster_channel"]);
+    m_inputTreeTracking->SetBranchAddress("associated_cluster_layer", &cluster_layer, &trackingBranches["cluster_layer"]);
+    m_inputTreeTracking->SetBranchAddress("associated_cluster_x", &cluster_x, &trackingBranches["cluster_x"]);
+    m_inputTreeTracking->SetBranchAddress("associated_cluster_y", &cluster_y, &trackingBranches["cluster_y"]);
+    m_inputTreeTracking->SetBranchAddress("associated_cluster_module", &cluster_module, &trackingBranches["cluster_module"]);
+    m_inputTreeTracking->SetBranchAddress("associated_cluster_chip", &cluster_chip, &trackingBranches["cluster_chip"]);
+    m_inputTreeTracking->SetBranchAddress("associated_cluster_channel", &cluster_channel, &trackingBranches["cluster_channel"]);
   } else {
     m_inputFileTracking = NULL;
     std::cout << "Tracking file: " << ntupleTrackingpath << " not opened..." << std::endl;
@@ -450,6 +451,7 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   else if (val == 22) defineConfig22_October2018_1(dz_map, default_viewpoint);
   else if (val == 23) defineConfig23_October2018_2(dz_map, default_viewpoint);
   else if (val == 24) defineConfig24_October2018_3(dz_map, default_viewpoint);
+  else if (val == 25) defineConfig25_October2018_3_parasitic(dz_map, default_viewpoint);
   else {
     std::cout << "Configuration " << val << " not implemented --> return";
     return;
