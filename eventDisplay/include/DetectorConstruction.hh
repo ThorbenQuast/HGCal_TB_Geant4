@@ -63,6 +63,8 @@ private:
     void OpenTrackingNtuple(G4String);
     G4String ntupleTrackingpath;
 
+    void VisualiseMIPMPV(G4String);
+
     void ReadNtupleEvent(G4int);
 
     HGCalTBMaterials* materials;
@@ -130,8 +132,12 @@ private:
     std::vector<float>* cluster_channel;
     
     
+    //MPV visualisation
+    std::vector<VisHit*> MIPMPVsForVisualisation;
     
     
+    void DrawHits();
+    void ClearHits();
 
 //alignment correction
     std::vector<std::pair<float, float> > transverse_alignment_HGCal;    

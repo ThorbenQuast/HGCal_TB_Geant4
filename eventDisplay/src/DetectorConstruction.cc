@@ -26,12 +26,12 @@ DetectorConstruction::DetectorConstruction()
   time_cut = -1;
   m_inputFileHGCal = NULL;
   m_inputTreeHGCal = NULL;
- 
+
   m_inputFileAHCAL = NULL;
-  m_inputTreeAHCAL = NULL; 
+  m_inputTreeAHCAL = NULL;
 
   m_inputFileTracking = NULL;
-  m_inputTreeTracking = NULL; 
+  m_inputTreeTracking = NULL;
   m_trackingMethod = "HGCalMIPTracking";
 }
 
@@ -108,34 +108,8 @@ void DetectorConstruction::ConstructSDandField() {
 
 
 void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
-  //cleanup
-  G4VisAttributes* visAttributes = new G4VisAttributes(G4Colour(1, 1, 1, 0.));
-  visAttributes->SetVisibility(false);
 
-  for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
-    VisHit* hit = HGCalHitsForVisualisation[nhit];
-    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
-    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
-    delete hit;
-  }
-  HGCalHitsForVisualisation.clear();
-
-  for (size_t nhit = 0; nhit < AHCALHitsForVisualisation.size(); nhit++) {
-    VisHit* hit = AHCALHitsForVisualisation[nhit];
-    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
-    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
-    delete hit;
-  }
-  AHCALHitsForVisualisation.clear();
-
-  for (size_t nframe = 0; nframe < TrackingFramesForVisualisation.size(); nframe++) {
-    VisHit* hit = TrackingFramesForVisualisation[nframe];
-    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
-    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
-    delete hit;
-  }
-  TrackingFramesForVisualisation.clear();
-  TrackingFrame_IDs.clear();
+  ClearHits();
 
 
   //HGCal hits
@@ -248,8 +222,51 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     std::cout << "timing cut: " << time_cut << " prevents tracking frames to be visualised" << std::endl;
   }
 
+  DrawHits();
+}
 
+void DetectorConstruction::ClearHits() {
+  //cleanup
+  G4VisAttributes* visAttributes = new G4VisAttributes(G4Colour(1, 1, 1, 0.));
+  visAttributes->SetVisibility(false);
 
+  for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
+    VisHit* hit = HGCalHitsForVisualisation[nhit];
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
+    delete hit;
+  }
+  HGCalHitsForVisualisation.clear();
+
+  for (size_t nhit = 0; nhit < AHCALHitsForVisualisation.size(); nhit++) {
+    VisHit* hit = AHCALHitsForVisualisation[nhit];
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
+    delete hit;
+  }
+  AHCALHitsForVisualisation.clear();
+
+  for (size_t nframe = 0; nframe < TrackingFramesForVisualisation.size(); nframe++) {
+    VisHit* hit = TrackingFramesForVisualisation[nframe];
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
+    delete hit;
+  }
+  TrackingFramesForVisualisation.clear();
+  TrackingFrame_IDs.clear();
+
+  for (size_t nhit = 0; nhit < MIPMPVsForVisualisation.size(); nhit++) {
+    VisHit* hit = MIPMPVsForVisualisation[nhit];
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
+    delete hit;
+  }
+  MIPMPVsForVisualisation.clear();
+}
+
+void DetectorConstruction::DrawHits() {
+  G4VisAttributes* visAttributes = new G4VisAttributes(G4Colour(1, 1, 1, 0.));
+  visAttributes->SetVisibility(false);
   /*****    START GENERIC HIT PLACEMENT ALGORITHM FOR THE SETUP  *****/
   for (size_t nhit = 0; nhit < HGCalHitsForVisualisation.size(); nhit++) {
     VisHit* hit = HGCalHitsForVisualisation[nhit];
@@ -278,6 +295,16 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     visAttributes->SetVisibility(true);
     hit_logical->SetVisAttributes(visAttributes);
     hit->physicalVolume = new G4PVPlacement(0, G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
+  }
+
+
+  for (size_t nhit = 0; nhit < MIPMPVsForVisualisation.size(); nhit++) {
+    VisHit* hit = MIPMPVsForVisualisation[nhit];
+    G4LogicalVolume* hit_logical = materials->newSiPixelHitLogical(hit->name);
+    visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
+    visAttributes->SetVisibility(true);
+    hit_logical->SetVisAttributes(visAttributes);
+    hit->physicalVolume = new G4PVPlacement(HGCalLayerRotation[hit->layer - 1], G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
   }
 
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
@@ -320,35 +347,35 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
   }
   ntuplepath = path;
   if (m_inputFileHGCal->IsOpen()) {
-  std::cout << "Opened " << ntuplepath << std::endl;
-  m_inputTreeHGCal->SetBranchAddress("event", &eventID, &hgcalBranches["eventID"]);
-  m_inputTreeHGCal->SetBranchAddress("NRechits", &Nhits, &hgcalBranches["Nhits"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_layer", &rechit_layer_, &hgcalBranches["rechit_layer_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_module", &rechit_module_, &hgcalBranches["rechit_module_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_chip", &rechit_chip_, &hgcalBranches["rechit_chip_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_channel", &rechit_channel_, &hgcalBranches["rechit_channel_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_type", &rechit_type_, &hgcalBranches["rechit_type_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_energy", &rechit_energy_, &hgcalBranches["rechit_energy_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_toaRise", &rechit_toa_, &hgcalBranches["rechit_toa_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_x", &rechit_x_, &hgcalBranches["rechit_x_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_y", &rechit_y_, &hgcalBranches["rechit_y_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_z", &rechit_z_, &hgcalBranches["rechit_z_"]);
-  m_inputTreeHGCal->SetBranchAddress("rechit_noise_flag", &rechit_noise_flag_, &hgcalBranches["rechit_noise_flag"]);
+    std::cout << "Opened " << ntuplepath << std::endl;
+    m_inputTreeHGCal->SetBranchAddress("event", &eventID, &hgcalBranches["eventID"]);
+    m_inputTreeHGCal->SetBranchAddress("NRechits", &Nhits, &hgcalBranches["Nhits"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_layer", &rechit_layer_, &hgcalBranches["rechit_layer_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_module", &rechit_module_, &hgcalBranches["rechit_module_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_chip", &rechit_chip_, &hgcalBranches["rechit_chip_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_channel", &rechit_channel_, &hgcalBranches["rechit_channel_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_type", &rechit_type_, &hgcalBranches["rechit_type_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_energy", &rechit_energy_, &hgcalBranches["rechit_energy_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_toaRise", &rechit_toa_, &hgcalBranches["rechit_toa_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_x", &rechit_x_, &hgcalBranches["rechit_x_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_y", &rechit_y_, &hgcalBranches["rechit_y_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_z", &rechit_z_, &hgcalBranches["rechit_z_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_noise_flag", &rechit_noise_flag_, &hgcalBranches["rechit_noise_flag"]);
 
-  eventID = Nhits = 0;
-  rechit_layer_ = 0;
-  rechit_module_ = 0;
-  rechit_chip_ = 0;
-  rechit_channel_ = 0;
-  rechit_type_ = 0;
-  rechit_energy_ = 0;
-  rechit_x_ = 0;
-  rechit_y_ = 0;
-  rechit_z_ = 0;
-} else {
+    eventID = Nhits = 0;
+    rechit_layer_ = 0;
+    rechit_module_ = 0;
+    rechit_chip_ = 0;
+    rechit_channel_ = 0;
+    rechit_type_ = 0;
+    rechit_energy_ = 0;
+    rechit_x_ = 0;
+    rechit_y_ = 0;
+    rechit_z_ = 0;
+  } else {
     m_inputFileHGCal = NULL;
     std::cout << "HGCAl file: " << ntuplepath << " not opened..." << std::endl;
-}
+  }
 
 }
 
@@ -403,7 +430,7 @@ void DetectorConstruction::OpenTrackingNtuple(G4String path) {
   }
   if (m_inputFileTracking == NULL) {
     m_inputFileTracking = new TFile(path.c_str(), "READ");
-    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get(("corryvreckan/"+m_trackingMethod+"/HGCalTracking_Tracks").c_str());
+    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get(("corryvreckan/" + m_trackingMethod + "/HGCalTracking_Tracks").c_str());
 
     trackingBranches["eventID"] = new TBranch;
     trackingBranches["cluster_layer"] = new TBranch;
@@ -416,7 +443,7 @@ void DetectorConstruction::OpenTrackingNtuple(G4String path) {
     std::cout << "Closing " << ntupleTrackingpath << std::endl;
     m_inputFileTracking->Close();
     m_inputFileTracking = new TFile(path.c_str(), "READ");
-    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get(("corryvreckan/"+m_trackingMethod+"/HGCalTracking_Tracks").c_str());
+    m_inputTreeTracking = (TTree*)m_inputFileTracking->Get(("corryvreckan/" + m_trackingMethod + "/HGCalTracking_Tracks").c_str());
   }
   ntupleTrackingpath = path;
   if (m_inputFileTracking->IsOpen()) {
@@ -434,6 +461,72 @@ void DetectorConstruction::OpenTrackingNtuple(G4String path) {
   }
 
 }
+
+
+void DetectorConstruction::VisualiseMIPMPV(G4String path) {
+  //reading from the file
+  if (path == "") {
+    return;
+  }
+
+
+  TFile* m_inputFileMIPMPV = new TFile(path.c_str(), "READ");
+  if (m_inputFileMIPMPV->IsOpen()) {
+    std::cout << "Opened " << path << std::endl;
+    TTree* m_inputTreeMIPMPV = (TTree*)m_inputFileMIPMPV->Get("tree");
+    ClearHits();
+
+    trackingBranches["calib_layer"] = new TBranch;
+    trackingBranches["calib_module"] = new TBranch;
+    trackingBranches["calib_chip"] = new TBranch;
+    trackingBranches["calib_channel"] = new TBranch;
+    trackingBranches["calib_MPV"] = new TBranch;
+    trackingBranches["calib_x"] = new TBranch;
+    trackingBranches["calib_y"] = new TBranch;
+    trackingBranches["calib_z"] = new TBranch;
+
+    int calib_layer;
+    int calib_module;
+    int calib_chip;
+    int calib_channel;
+    float calib_MPV;
+    float calib_x;
+    float calib_y;
+    float calib_z;
+
+    m_inputTreeMIPMPV->SetBranchAddress("calib_layer", &calib_layer, &trackingBranches["calib_layer"]);
+    m_inputTreeMIPMPV->SetBranchAddress("calib_module", &calib_module, &trackingBranches["calib_module"]);
+    m_inputTreeMIPMPV->SetBranchAddress("calib_chip", &calib_chip, &trackingBranches["calib_chip"]);
+    m_inputTreeMIPMPV->SetBranchAddress("calib_channel", &calib_channel, &trackingBranches["calib_channel"]);
+    m_inputTreeMIPMPV->SetBranchAddress("calib_MPV", &calib_MPV, &trackingBranches["calib_MPV"]);
+    m_inputTreeMIPMPV->SetBranchAddress("calib_x", &calib_x, &trackingBranches["calib_x"]);
+    m_inputTreeMIPMPV->SetBranchAddress("calib_y", &calib_y, &trackingBranches["calib_y"]);
+    m_inputTreeMIPMPV->SetBranchAddress("calib_z", &calib_z, &trackingBranches["calib_z"]);
+
+    std::cout << "Number of entries: " << m_inputTreeMIPMPV->GetEntries() << std::endl;
+    for (unsigned int i = 0; i < m_inputTreeMIPMPV->GetEntries(); i++) {
+      m_inputTreeMIPMPV->GetEntry(i);
+      VisHit* hit = new VisHit;
+      hit->name = "MIP-MPV";
+      hit->layer = calib_layer;
+      hit->x = calib_x * cm;
+      hit->y = calib_y * cm;
+      hit->energy = calib_MPV;
+
+      setMIPMPVColor(hit);
+
+      MIPMPVsForVisualisation.push_back(hit);
+    }
+
+    m_inputFileMIPMPV->Close();
+    delete m_inputFileMIPMPV;
+
+    DrawHits();
+  } else {
+    std::cout << "Cannot find " << path << std::endl;
+  }
+
+};
 
 void DetectorConstruction::SelectConfiguration(G4int val) {
 
@@ -480,6 +573,13 @@ void DetectorConstruction::DefineCommands()
   configCmd.SetParameterName("index", true);
   configCmd.SetDefaultValue("22");
 
+  auto& visualiseMIPMPVCmd
+    = fMessenger->DeclareMethod("VisualiseMIPMPV",
+                                &DetectorConstruction::VisualiseMIPMPV,
+                                "Path to the ntuple file with MIP MPVs");
+  visualiseMIPMPVCmd.SetDefaultValue("");
+
+
 
   fMessenger = new G4GenericMessenger(this,
                                       "/EventDisplay/ntuple/",
@@ -515,6 +615,7 @@ void DetectorConstruction::DefineCommands()
     = fMessenger->DeclareProperty("TrackingMethod", m_trackingMethod);
   TrackingMethodCmd.SetParameterName("TrackingMethod", true);
   TrackingMethodCmd.SetDefaultValue("HGCalMIPTracking");
+
 
 
   auto& energyThresholdCmd
