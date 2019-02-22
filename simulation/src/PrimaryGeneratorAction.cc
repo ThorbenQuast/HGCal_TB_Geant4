@@ -24,8 +24,8 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   G4int n_particle = 1;
   fParticleGun  = new G4ParticleGun(n_particle);
 
-  sigmaBeamX = .5 * cm;
-  sigmaBeamY = .5 * cm;
+  sigmaBeamX = .1 * mm;
+  sigmaBeamY = .1 * mm;
   beamZ0 = -999 * m;
 
   DefineCommands();
