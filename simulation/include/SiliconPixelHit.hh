@@ -31,6 +31,7 @@ class SiliconPixelHit : public G4VHit {
 		G4double GetEdep() const {return eDep_digi;}
 		G4double GetEdepNonIonizing() const {return edep_nonIonizing_digi;}
 		G4double GetTOA() const {return timeOfArrival_digi;}
+		G4double GetLastTOA() const {return timeOfArrival_last_digi;}
 
 	private:
 		G4String vol_name;
@@ -48,6 +49,7 @@ class SiliconPixelHit : public G4VHit {
 		G4double eDep_digi;
 		G4double edep_nonIonizing_digi;
 		G4double timeOfArrival_digi;
+		G4double timeOfArrival_last_digi;
 };
 
 typedef G4THitsCollection<SiliconPixelHit> SiliconPixelHitCollection;

@@ -34,6 +34,7 @@ void EventAction::BeginOfEventAction(const G4Event* EventAction)
 	hits_Edep.clear();
 	hits_EdepNonIonising.clear();
 	hits_TOA.clear();
+	hits_TOA_last.clear();
 	hits_type.clear();
 }
 
@@ -71,6 +72,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 			hits_Edep.push_back(hit->GetEdep());
 			hits_EdepNonIonising.push_back(hit->GetEdepNonIonizing());
 			hits_TOA.push_back(hit->GetTOA());
+			hits_TOA_last.push_back(hit->GetLastTOA());
 			hits_type.push_back(0);
 
 			Nhits_HGCAL++;
@@ -80,9 +82,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
 	}
 	if (esum_HGCAL > 0) cogz_HGCAL /= esum_HGCAL;
 
-	analysisManager->FillNtupleDColumn(12, esum_HGCAL);
-	analysisManager->FillNtupleDColumn(13, cogz_HGCAL);
-	analysisManager->FillNtupleIColumn(14, Nhits_HGCAL);
+	analysisManager->FillNtupleDColumn(13, esum_HGCAL);
+	analysisManager->FillNtupleDColumn(14, cogz_HGCAL);
+	analysisManager->FillNtupleIColumn(15, Nhits_HGCAL);
 
 
 	//AHCAL 
@@ -111,9 +113,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
 	}
 	if (esum_AHCAL > 0) cogz_AHCAL /= esum_AHCAL;
 
-	analysisManager->FillNtupleDColumn(15, esum_AHCAL);
-	analysisManager->FillNtupleDColumn(16, cogz_AHCAL);
-	analysisManager->FillNtupleIColumn(17, Nhits_AHCAL);
+	analysisManager->FillNtupleDColumn(16, esum_AHCAL);
+	analysisManager->FillNtupleDColumn(17, cogz_AHCAL);
+	analysisManager->FillNtupleIColumn(18, Nhits_AHCAL);
 
 
 

@@ -13,6 +13,7 @@ SiliconPixelHit::SiliconPixelHit(G4String vol_name, G4int copy_no_sensor, G4int 
 	this->eDep_digi = -1;
 	this->edep_nonIonizing_digi = -1;
 	this->timeOfArrival_digi = -1;
+	this->timeOfArrival_last_digi = -1;
 	this->_isValidHit = false;;
 
 }
@@ -37,11 +38,14 @@ void SiliconPixelHit::Digitise(const G4double timeWindow, const G4double toaThre
 #ifdef DEBUG		
 		else std::cout<<"Rejecting hit ("<<eDep[i].first<<" keV)  at time "<<eDep[i].second<< "(start: "<<firstHitTime<<")"<<std::endl;
 #endif		
-		if ((timeOfArrival_digi == -1)&&(eDep_digi>toaThreshold)) timeOfArrival_digi = eDep[i].second;
+		if (eDep_digi>toaThreshold) {
+			if (timeOfArrival_digi == -1) timeOfArrival_digi = eDep[i].second;
+			timeOfArrival_last_digi = eDep[i].second;
+		}
 	}
 	_isValidHit = (eDep_digi > 0);
 #ifdef DEBUG		
-	std::cout<<timeOfArrival_digi<<"  vs  energy: "<<eDep_digi<<std::endl;
+	std::cout<<timeOfArrival_digi<<" to "<<timeOfArrival_last_digi<<"  vs  energy: "<<eDep_digi<<std::endl;
 #endif		
 
 
