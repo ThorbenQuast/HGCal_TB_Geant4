@@ -140,8 +140,10 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       ID = 5 : merged cell
       */
 
-      unsigned short hit_tot = rechit_toa_->at(nhit);
-      if ((time_cut >= 0) && (hit_tot < time_cut)) continue;
+      float hit_toa = rechit_toa_->at(nhit);
+      if ((time_cut >= 0) && (hit_toa > time_cut)) continue;
+      if ((time_cut >= 0) && (hit_toa < 0)) continue;
+      std::cout<<hit_toa<<std::endl;
 
       VisHit* hit = new VisHit;
       hit->name = "HGCAL-Hit";
@@ -356,7 +358,7 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
     m_inputTreeHGCal->SetBranchAddress("rechit_channel", &rechit_channel_, &hgcalBranches["rechit_channel_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_type", &rechit_type_, &hgcalBranches["rechit_type_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_energy", &rechit_energy_, &hgcalBranches["rechit_energy_"]);
-    m_inputTreeHGCal->SetBranchAddress("rechit_toaRise", &rechit_toa_, &hgcalBranches["rechit_toa_"]);
+    m_inputTreeHGCal->SetBranchAddress("rechit_toaRise_time", &rechit_toa_, &hgcalBranches["rechit_toa_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_x", &rechit_x_, &hgcalBranches["rechit_x_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_y", &rechit_y_, &hgcalBranches["rechit_y_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_z", &rechit_z_, &hgcalBranches["rechit_z_"]);

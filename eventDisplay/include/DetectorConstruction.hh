@@ -88,7 +88,7 @@ private:
     std::vector<unsigned int>* rechit_channel_;
     std::vector<unsigned int>* rechit_type_;
     std::vector<Float16_t>* rechit_energy_;
-    std::vector<unsigned short>* rechit_toa_;
+    std::vector<Float16_t>* rechit_toa_;
     std::vector<Float16_t>* rechit_x_;
     std::vector<Float16_t>* rechit_y_;
     std::vector<Float16_t>* rechit_z_;
