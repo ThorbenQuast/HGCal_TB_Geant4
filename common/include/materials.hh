@@ -79,6 +79,7 @@ private:
 	G4LogicalVolume* PCB_baseplate_logical;
 	G4LogicalVolume* Kapton_layer_logical;
 	G4LogicalVolume* Al_case_logical;
+	G4LogicalVolume* Al_chip_logical;
 	G4LogicalVolume* Steel_case_logical;
 	G4LogicalVolume* Pb_absorber_EE_logical;
 	G4LogicalVolume* Cu_absorber_EE_logical;

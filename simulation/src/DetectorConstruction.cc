@@ -112,6 +112,7 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   else if (val == 25) defineConfig25_October2018_3_parasitic(dz_map, default_viewpoint);
   else if (val == 100) defineTestConfig100(dz_map, default_viewpoint);
   else if (val == 101) defineTestConfig101(dz_map, default_viewpoint);
+  else if (val == 102) defineTestConfig102(dz_map, default_viewpoint);
   else {
     std::cout << "Configuration " << val << " not implemented --> return" << std::endl;; 
     return;

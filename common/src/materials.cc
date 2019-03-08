@@ -198,7 +198,12 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   visAttributes->SetVisibility(false);
   HERD_calorimeter_logical->SetVisAttributes(visAttributes);  
   visAttributes->SetVisibility(true);
-  HERD_calorimeter_slab_logical->SetVisAttributes(visAttributes);  
+  HERD_calorimeter_slab_logical->SetVisAttributes(visAttributes); 
+
+  visAttributes = new G4VisAttributes(G4Colour(0.05, 0.05, 0.05, 0.0));
+  visAttributes->SetVisibility(false);
+  Al_chip_logical->SetVisAttributes(visAttributes);
+
 }
 
 void HGCalTBMaterials::setSimulationColorScheme() {
@@ -301,6 +306,11 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   HERD_calorimeter_logical->SetVisAttributes(visAttributes);  
   visAttributes->SetVisibility(true);
   HERD_calorimeter_slab_logical->SetVisAttributes(visAttributes);  
+
+  visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.7));
+  visAttributes->SetVisibility(true);
+  Al_chip_logical->SetVisAttributes(visAttributes);  
+
 }
 
 
@@ -515,6 +525,14 @@ void HGCalTBMaterials::defineBeamLineElements() {
   MCP_logical = new G4LogicalVolume(MCP_solid, mat_Quartz, "MCP");
   thickness_map["MCP"] = MCP_thickness;
   logical_volume_map["MCP"] = MCP_logical;
+
+  //Aluminium circle for testing of chip impact
+  G4double Al_chip_xy = 1 * cm;
+  G4double Al_chip_thickness = 2*mm;
+  G4Box* Al_chip_solid = new G4Box("Al_chip", 0.5 * Al_chip_xy, 0.5 * Al_chip_xy, 0.5 * Al_chip_thickness);
+  Al_chip_logical = new G4LogicalVolume(Al_chip_solid, mat_Al, "Al_chip");
+  thickness_map["Al_chip"] = Al_chip_thickness;
+  logical_volume_map["Al_chip"] = Al_chip_logical;
 
 
   //DWC related material
