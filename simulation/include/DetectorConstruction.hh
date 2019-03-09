@@ -10,6 +10,7 @@
 #include <vector>
 #include "G4GenericMessenger.hh"
 #include "G4UImanager.hh"
+#include "G4UserLimits.hh"
 
 #include "materials.hh"
 
@@ -42,6 +43,7 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     void DefineCommands();
     G4GenericMessenger* fMessenger;
     void SelectConfiguration(G4int val);
+    void SetStepSizeSilicon(G4double val);
     G4int _configuration;
 
     HGCalTBMaterials* materials;

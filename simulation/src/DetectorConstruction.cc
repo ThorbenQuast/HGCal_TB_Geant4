@@ -71,6 +71,7 @@ void DetectorConstruction::ConstructHGCal() {
     materials->placeItemInLogicalVolume(item_type, z0, logicWorld);
   }
 
+
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   UImanager->ApplyCommand("/vis/drawVolume");
@@ -122,6 +123,12 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   ConstructHGCal();
 }
 
+void DetectorConstruction::SetStepSizeSilicon(G4double val) {
+  //setting the step size in silicon:
+  G4double maxTrackLength = val*0.001*mm;
+  materials->getSi_pixel_logical()->SetUserLimits(new G4UserLimits(0,maxTrackLength));
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorConstruction::DefineCommands()
@@ -138,6 +145,14 @@ void DetectorConstruction::DefineCommands()
                                 "Select the configuration (22-24)");
   configCmd.SetParameterName("index", true);
   configCmd.SetDefaultValue("22");
+
+
+  auto& SiStepSizeCmd
+    = fMessenger->DeclareMethod("stepSilicon",
+                                &DetectorConstruction::SetStepSizeSilicon,
+                                "Maximum step size in silicon pixels, unit: microns");
+  SiStepSizeCmd.SetParameterName("size", true);
+  SiStepSizeCmd.SetDefaultValue("50.");  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
