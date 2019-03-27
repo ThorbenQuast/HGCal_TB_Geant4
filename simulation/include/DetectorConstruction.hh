@@ -11,6 +11,7 @@
 #include "G4GenericMessenger.hh"
 #include "G4UImanager.hh"
 #include "G4UserLimits.hh"
+#include "G4ProductionCuts.hh"
 
 #include "materials.hh"
 

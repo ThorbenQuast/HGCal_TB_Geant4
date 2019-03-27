@@ -55,10 +55,10 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
 
 void DetectorConstruction::ConstructHGCal() {
-  
+
 
   G4double z0 = -BEAMLINELENGTH * m / 2.;
-  
+
   std::cout << "Constructing configuration " << _configuration << std::endl;
 
   /*****    START GENERIC PLACEMENT ALGORITHM  FOR THE SETUP  *****/
@@ -66,7 +66,7 @@ void DetectorConstruction::ConstructHGCal() {
     std::string item_type = dz_map[item_index].first;
     G4double dz = dz_map[item_index].second;
     z0 += dz;
-    
+
     //places the item at inside the world at z0, z0 is incremented by the item's thickness
     materials->placeItemInLogicalVolume(item_type, z0, logicWorld);
   }
@@ -75,7 +75,7 @@ void DetectorConstruction::ConstructHGCal() {
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
   UImanager->ApplyCommand("/vis/drawVolume");
-  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 "+std::to_string(default_viewpoint/m)+" m");
+  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 " + std::to_string(default_viewpoint / m) + " m");
   UImanager->ApplyCommand("/vis/scene/add/trajectories smooth");
   UImanager->ApplyCommand("/vis/scene/add/hits");
 
@@ -99,14 +99,14 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   if (_configuration != -1) return;
 
   default_viewpoint = 0;
-  if (val==1) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
-  else if (val==2) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
-  else if (val==3) defineConfig3_September2017(dz_map, default_viewpoint);
-  else if (val==15) defineDESY2018_Config42(dz_map, default_viewpoint);
+  if (val == 1) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
+  else if (val == 2) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
+  else if (val == 3) defineConfig3_September2017(dz_map, default_viewpoint);
+  else if (val == 15) defineDESY2018_Config42(dz_map, default_viewpoint);
   else if (val == 17) defineConfigs17To21_June2018(dz_map, default_viewpoint);
   else if (val == 18) defineConfigs17To21_June2018(dz_map, default_viewpoint);
   else if (val == 19) defineConfigs17To21_June2018(dz_map, default_viewpoint);
-  else if (val == 21) defineConfigs17To21_June2018(dz_map, default_viewpoint);  
+  else if (val == 21) defineConfigs17To21_June2018(dz_map, default_viewpoint);
   else if (val == 22) defineConfig22_October2018_1(dz_map, default_viewpoint);
   else if (val == 23) defineConfig23_October2018_2(dz_map, default_viewpoint);
   else if (val == 24) defineConfig24_October2018_3(dz_map, default_viewpoint);
@@ -115,7 +115,7 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   else if (val == 101) defineTestConfig101(dz_map, default_viewpoint);
   else if (val == 102) defineTestConfig102(dz_map, default_viewpoint);
   else {
-    std::cout << "Configuration " << val << " not implemented --> return" << std::endl;; 
+    std::cout << "Configuration " << val << " not implemented --> return" << std::endl;;
     return;
   }
   _configuration = val;
@@ -125,8 +125,15 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
 
 void DetectorConstruction::SetStepSizeSilicon(G4double val) {
   //setting the step size in silicon:
-  G4double maxTrackLength = val*0.001*mm;
-  materials->getSi_pixel_logical()->SetUserLimits(new G4UserLimits(0,maxTrackLength));
+  G4double maxTrackLength = val * 0.001 * mm;
+  materials->getSi_pixel_logical()->SetUserLimits(new G4UserLimits(0, maxTrackLength));
+ 
+
+  G4Region* reg = materials->getSi_pixel_logical()->GetRegion();
+  G4ProductionCuts* cuts = new G4ProductionCuts;
+  cuts->SetProductionCut(maxTrackLength);
+  reg->SetProductionCuts(cuts);
+ 
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -152,7 +159,7 @@ void DetectorConstruction::DefineCommands()
                                 &DetectorConstruction::SetStepSizeSilicon,
                                 "Maximum step size in silicon pixels, unit: microns");
   SiStepSizeCmd.SetParameterName("size", true);
-  SiStepSizeCmd.SetDefaultValue("50.");  
+  SiStepSizeCmd.SetDefaultValue("50.");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
