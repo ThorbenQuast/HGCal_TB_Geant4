@@ -111,10 +111,10 @@ private:
 
     int AHCAL_eventID;
     int AHCAL_Nhits;
-    int ahc_hitI_[24*24*40];
-    int ahc_hitJ_[24*24*40];
-    int ahc_hitK_[24*24*40];
-    float ahc_hitEnergy_[24*24*40];
+    std::vector<int>* ahc_hitI_;
+    std::vector<int>* ahc_hitJ_;
+    std::vector<int>* ahc_hitK_;
+    std::vector<Float_t>* ahc_hitEnergy_;
 
 
     //Tracking file readout

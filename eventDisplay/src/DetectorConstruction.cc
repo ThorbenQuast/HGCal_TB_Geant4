@@ -175,10 +175,10 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       for (int nhit = 0; nhit < AHCAL_Nhits; nhit++) {
         VisHit* hit = new VisHit;
         hit->name = "AHCAL-Hit";
-        hit->layer = ahc_hitK_[nhit];
-        hit->x = -(ahc_hitI_[nhit] - 12.) * materials->getAHCAL_SiPM_xy();
-        hit->y = (ahc_hitJ_[nhit] - 12.) * materials->getAHCAL_SiPM_xy();
-        hit->energy = ahc_hitEnergy_[nhit];
+        hit->layer = ahc_hitK_->at(nhit);
+        hit->x = -(ahc_hitI_->at(nhit) - 12.) * materials->getAHCAL_SiPM_xy();
+        hit->y = (ahc_hitJ_->at(nhit) - 12.) * materials->getAHCAL_SiPM_xy();
+        hit->energy = ahc_hitEnergy_->at(nhit);
 
         setAHCALHitColor(hit);
 
@@ -409,10 +409,10 @@ void DetectorConstruction::OpenAHCALNtuple(G4String path) {
     std::cout << "Opened " << ntupleAHCALpath << std::endl;
     m_inputTreeAHCAL->SetBranchAddress("eventNumber", &AHCAL_eventID, &ahcalBranches["eventNumber"]);
     m_inputTreeAHCAL->SetBranchAddress("ahc_nHits", &AHCAL_Nhits, &ahcalBranches["ahc_nHits"]);
-    m_inputTreeAHCAL->SetBranchAddress("ahc_hitI", ahc_hitI_, &ahcalBranches["ahc_hitI"]);
-    m_inputTreeAHCAL->SetBranchAddress("ahc_hitJ", ahc_hitJ_, &ahcalBranches["ahc_hitJ"]);
-    m_inputTreeAHCAL->SetBranchAddress("ahc_hitK", ahc_hitK_, &ahcalBranches["ahc_hitK"]);
-    m_inputTreeAHCAL->SetBranchAddress("ahc_hitEnergy", ahc_hitEnergy_, &ahcalBranches["ahc_hitEnergy"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitI", &ahc_hitI_, &ahcalBranches["ahc_hitI"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitJ", &ahc_hitJ_, &ahcalBranches["ahc_hitJ"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitK", &ahc_hitK_, &ahcalBranches["ahc_hitK"]);
+    m_inputTreeAHCAL->SetBranchAddress("ahc_hitEnergy", &ahc_hitEnergy_, &ahcalBranches["ahc_hitEnergy"]);
     AHCAL_eventID = AHCAL_Nhits = 0;
   } else {
     m_inputFileAHCAL = NULL;
