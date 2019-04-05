@@ -96,3 +96,8 @@
 
 #change the limits
 /vis/ogl/set/displayListLimit 500000
+
+/Simulation/setup/configuration 22
+/Simulation/output/file HGCalTB_October2018_config22_pi+_150GeV.root
+/Simulation/generator/momentum 150 GeV
+/Simulation/generator/particle pi+

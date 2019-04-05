@@ -11,9 +11,67 @@
 # Initialize kernel
 /run/initialize
 
-/Simulation/setup/configuration 22
+/Simulation/setup/configuration 101
+/Simulation/generator/sigmaBeamX 0.001 mm
+/Simulation/generator/sigmaBeamY 0.001 mm
 
-/Simulation/output/file HGCalTB_October2018_config22_e+_150GeV.root
-/Simulation/generator/momentum 150 GeV
+#muons
+/Simulation/generator/momentum 200 GeV
+/Simulation/generator/particle mu+
+
+
+/Simulation/setup/stepSilicon 200
+/Simulation/output/file config101_mu+_200GeV_step200.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 100
+/Simulation/output/file config101_mu+_200GeV_step100.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 50
+/Simulation/output/file config101_mu+_200GeV_step50.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 20
+/Simulation/output/file config101_mu+_200GeV_step20.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 10
+/Simulation/output/file config101_mu+_200GeV_step10.root
+/run/beamOn 10000
+
+
+
+#electrons
+
+/Simulation/generator/momentum 50 GeV
 /Simulation/generator/particle e+
-/run/beamOn 1000
+
+
+/Simulation/setup/stepSilicon 200
+/Simulation/output/file config101_e+_50GeV_step200.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 100
+/Simulation/output/file config101_e+_50GeV_step100.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 50
+/Simulation/output/file config101_e+_50GeV_step50.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 20
+/Simulation/output/file config101_e+_50GeV_step20.root
+/run/beamOn 10000
+
+
+/Simulation/setup/stepSilicon 10
+/Simulation/output/file config101_e+_50GeV_step10.root
+/run/beamOn 10000
