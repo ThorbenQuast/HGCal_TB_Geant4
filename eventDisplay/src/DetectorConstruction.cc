@@ -143,7 +143,6 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       float hit_toa = rechit_toa_->at(nhit);
       if ((time_cut >= 0) && (hit_toa > time_cut)) continue;
       if ((time_cut >= 0) && (hit_toa < 0)) continue;
-      std::cout<<hit_toa<<std::endl;
 
       VisHit* hit = new VisHit;
       hit->name = "HGCAL-Hit";
