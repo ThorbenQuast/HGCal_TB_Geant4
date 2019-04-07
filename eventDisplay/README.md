@@ -17,9 +17,9 @@ Alternatively, a dedicated steering file can be passed as command line argument 
 * ```/EventDisplay/ntuple/path <string>```: Path to the reconstructed HGC ntuple files. These ntuples must be reconstructed with the October2018_v12 software tag, or newer. 
 * ```/EventDisplay/ntuple/pathAHCAL <string>```: Path to the reconstructed AHCAL ntuple files. v2 reconstruction of the data accumulated in October 2018 is supported.
 * ```/EventDisplay/ntuple/pathAHCAL <string>```: Path to the reconstructed AHCAL ntuple files. v2 reconstruction of the data accumulated in October 2018 is supported.
-* ```/EventDisplay/ntuple/AHCALOffset <int>```: Applies an offset to the event number in the AHCAL ntuples. 
-* ```/EventDisplay/ntuple/energyThreshold <float>```: Only deposits above this energy threshold are visualised (Unit: MIPs).
-* ```/EventDisplay/ntuple/timeCut <float>```: Only deposits with time of arrival below this value are visualised (Unit: nanoseconds). For any positive timeCut, only HGCal hits are displayed.
+* ```/EventDisplay/ntuple/AHCALOffset <int>```: Applies an offset to the event number as they are stored in the AHCAL ntuples which are matched to the HGCal's. ```Default: 0```.
+* ```/EventDisplay/ntuple/energyThreshold <float>```: Only deposits above this energy threshold are visualised (Unit: MIPs). ```Default: 0```.
+* ```/EventDisplay/ntuple/timeCut <float>```: Only deposits with time of arrival below this value are visualised (Unit: nanoseconds). For any positive timeCut, only HGCal hits are displayed. Any negative values renders this cut ineffective. ```Default: -1```.
 * ```/EventDisplay/ntuple/showEvent <int>```: Reads the specified event number and visualises the hits.
 
 ### Color schemes
