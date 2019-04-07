@@ -14,9 +14,11 @@ These two programs were developed and are tested with the following software:
 * QT5 or OpenGL (recommended, for visualisation of the geometry and the particle showering)
 
 ## Event Display
+![data_October2018_run517_ev5](img/data_October2018_run517_ev5.png)
 See ```eventDisplay/README.md``` for installation & running instructions.
 
 ## Standalone Simulation
+![sim_config22_150GeV_pion](img/sim_config22_150GeV_pion.png)
 See ```simulation/README.md``` for installation & running instructions.
 
 ## Implemented Geometries
