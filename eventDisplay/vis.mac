@@ -58,7 +58,7 @@
 /vis/ogl/set/displayListLimit 500000
 /EventDisplay/ntuple/energyThreshold 0.5
 /EventDisplay/setup/configuration 22
-/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/October2018/ntuple_517.root
-/EventDisplay/ntuple/pathAHCAL /Users/tquast/Desktop/eventDisplaysOctober/October2018/Run_AHCAL_517.root
+/EventDisplay/ntuple/path //eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_october/offline_analysis/ntuples/v12/ntuple_517.root
+/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_october/offline_analysis/AHCAL_ntuples/v2/Run_AHCAL_517.root
 
 
