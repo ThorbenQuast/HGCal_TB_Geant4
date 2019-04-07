@@ -1,10 +1,11 @@
 # HGCal Beam Tests 2017-18: Geant4 Based Event Display & Standalone Simulation
 
 ## Scope
-This repository contains the source code for two programs, namely one for event visualisation and one for standalone simulation of CMS High Granularity Calorimeter prototypes as they were tested with paricle beam in 2017-18. The programs are based on libraries and functionalities provided by the Geant4 framework.
-Implemented geometries are intended to only resemble the prototpye configurations like they were tested in reality. An accurate correspondence between the real and implemented configuration is not guaranteed.
-##Software requirements
-These programs were developed and are tested with the following software:
+This repository contains the source code for two programs, namely one for **event visualisation** and one for **standalone simulation of CMS High Granularity Calorimeter prototypes** as they were tested with paricle beam in 2017-18. The programs are based on libraries and functionalities provided by the **Geant4 framework**.
+Implemented geometries are intended to only resemble the prototpye configurations like they were tested in reality. An **accurate correspondence between the real and implemented configuration is not guaranteed**.
+
+## Software requirements
+These two programs were developed and are tested with the following software:
 
 * GEANT4 10.4 (mandatory for compilation and execution)
 * ROOT 6.14 (mandatory for compilation and execution)
@@ -136,9 +137,11 @@ Exceptions to this linear stacking are possible using the following postfixes:
 * "\_SUMMER2017TRIPLET": This arranges the geometry in a manner identical to how the silicon modules in the FH layers during the July 2017 beam tests were placed. Only "SiWafers" are supported.
 * "_rot30": A global rotation of the geometry in x-y by 30 deg. is applied.
 
-#### !Important Disclaimer!
-Geometries defined below are motivated by the tested HGC calorimeter geometries in the years 2017-18. However, nothing more than a resemblance is guaranteed at this point. A detailed comparison of results from this simulation to data is highly deprecated!
 
+#### !Important Disclaimer!
+**Geometries defined below are motivated by the tested HGC calorimeter geometries in the years 2017-18. However, nothing more than a resemblance is guaranteed at this point. A detailed comparison of results from this simulation to data is highly deprecated!**
+
+  
 #### Summer/Fall 2017 (CERN, H2)
 * Indexes 1 and 2 - ```/common/src/config1_2_Summer2017.cc```: 2 silicon layers in EE, 4 silicon layers in FH.
 * Index 3 - ```/common/src/config3_September2017.cc```: 7 silicon layers in EE, 10 silicon layers in FH.
