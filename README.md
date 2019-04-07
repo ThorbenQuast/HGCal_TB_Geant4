@@ -1,6 +1,6 @@
-#HGCal Beam Tests 2017-18: Geant4 Based Event Display & Standalone Simulation
+# HGCal Beam Tests 2017-18: Geant4 Based Event Display & Standalone Simulation
 
-##Scope
+## Scope
 This repository contains the source code for two programs, namely one for event visualisation and one for standalone simulation of CMS High Granularity Calorimeter prototypes as they were tested with paricle beam in 2017-18. The programs are based on libraries and functionalities provided by the Geant4 framework.
 Implemented geometries are intended to only resemble the prototpye configurations like they were tested in reality. An accurate correspondence between the real and implemented configuration is not guaranteed.
 ##Software requirements
@@ -11,8 +11,8 @@ These programs were developed and are tested with the following software:
 * cmake 3.4 (mandatory for compilation)
 * QT5 (recommended, for visualisation of the geometry and the particle showering)
 
-##Event Display
-###Installation
+## Event Display
+### Installation
 * ```cd /simulation```
 * ```mkdir build; cd build```
 * ```cmake ..``` 
@@ -20,11 +20,11 @@ These programs were developed and are tested with the following software:
 
 In case of successful compilation, an executable called ```EventDisplay``` should be added to the ```build``` directory.
 
-###Running the display
+### Running the display
 The default command to initialise the display executed from the ```build``` directory is simply: ```./Simulation```.
 Alternatively, a dedicated steering file can be passed as command line argument to the program. If none is specified, ```init_vis.mac``` is taken. This file starts the visualisation tool and loads more detailed settings from ```vis.mac```. As example, the configuration is set to 22, an energy threshold is defined and both reconstructed data from HGCal and AHCAL are linked to the program in this file.
 
-###Commands
+### Commands
 * ```EventDisplay/setup/configuration <index>```: Load the defined geometry. Ineffective if set index is not implemented. This command can only be run per session, i.e. only one geometry can be defined instance of the program.
 * ```EventDisplay/ntuple/path <string>```: Path to the reconstructed HGC ntuple files. These ntuples must be reconstructed with the October2018_v12 software tag, or newer. 
 * ```EventDisplay/ntuple/pathAHCAL <string>```: Path to the reconstructed AHCAL ntuple files. v2 reconstruction of the data accumulated in October 2018 is supported.
@@ -34,11 +34,11 @@ Alternatively, a dedicated steering file can be passed as command line argument 
 * ```EventDisplay/ntuple/timeCut <float>```: Only deposits with time of arrival below this value are visualised (Unit=nano seconds). For any positive timeCut, only HGCal hits are displayed.
 * ```EventDisplay/ntuple/showEvent <int>```: Reads the specified event number and visualises the hits.
 
-###Color schemes
+### Color schemes
 The event display makes use of a hard coded version of the ROOT rainbow color scheme with the energy scale ranging from 0 to 500 MIPs. Modifications can be implemented in ```/simulation/include/colors.hh```.
 
-##Standalone Simulation
-###Installation
+## Standalone Simulation
+### Installation
 * ```cd /simulation```
 * ```mkdir build; cd build```
 * ```cmake ..``` 
@@ -46,21 +46,21 @@ The event display makes use of a hard coded version of the ROOT rainbow color sc
 
 In case of successful compilation, an executable called ```Simulation``` should be added to the ```build``` directory.
 
-###Running the simulation
-####With visualisation
-####Without visualisation
+### Running the simulation
+#### With visualisation
+#### Without visualisation
 
-###Output file
+### Output file
 
-###Commands
+### Commands
 
-##Implemented Geometries
+## Implemented Geometries
 Geometries and the corresponding material are commonly implemented for both the event display and the standalone simulation. The source code is located in ```/common/``` and it is compiled together with either program.
 
-###Implemented material
+### Implemented material
 All materials are defined globally and their visualisation attributes are set in ```/common/src/materials.cc```. Pointers to the logical volumes are stored within an ```std::map<std::string, G4LogicalVolume*>``` map which is available to both programs. 
 
-####Sensitive material
+#### Sensitive material
 Geant4 steps within the volume of placed sensitive material are tracked and serve as input for the computation of calorimeter hits. For that, ionizing and non-ionizing energy contributions within each sensitive volume are summed and written to a file for each shower. The following materials are defined as sensitive.
 ##### Hexagoal HGC silicon diodes
 Defined in ```void HGCalTBMaterials::defineSiWaferAndCells()```.
@@ -74,7 +74,7 @@ Defined in ```void HGCalTBMaterials::defineAHCALSiPM()```.
 * "AHCAL_SiPM": Rectangular box with x-y length of 3 cm and thickness of 5.4 mm filled with Polystyrene. This is the model for a CALICE AHCAL scintillator tile.
 * "AHCAL\_SiPM\_2x2HUB": Rectangular box with x-y length of 24x3 cm and thickness of 5.4 mm filled with air. "AHCAL_SiPM" volumes are placed into the hub making a full sensitive layer of the CALICE AHCAL technical prototype (2018).
 
-####Passive material
+#### Passive material
 Passive material contributes to the shower evolution but any information on deposited energy therein is not tracked.
 ##### HGCal baseplates
 Defined in ```void HGCalTBMaterials::defineHGCalBaseplates()```.
@@ -125,43 +125,44 @@ Defined in ```void HGCalTBMaterials::defineBeamLineElements()```.
 In October 2018, the HGCal prototype was tested with parasitic beam during a test of the HERD collaboration in the same beam line. A simplied model of its calorimeter is defined in ```void HGCalTBMaterials::defineHERDCalorimeter()```.
 
 
-###Configurations
+### Configurations
 The subsequent sequence of placement of the geometries is defined for different calorimeter configurations.
 Within the event display and the standalone simulation, defined materials are stacked such that their origin is positioned on the beam axis and their coordinate system is aligned with the global one. Shifts or rotations with respect to that coordinate system are not supported at this point.
-####Special arrangements
-Exceptions to this linear stacking are provided using the following postfixes:
+
+#### Special arrangements
+Exceptions to this linear stacking are possible using the following postfixes:
 
 * "\_DAISY": This arranges the geometry in a manner identical to how the silicon modules in the FH layers during the October 2018 beam tests were placed. Only "SiWafers" are supported.
 * "\_SUMMER2017TRIPLET": This arranges the geometry in a manner identical to how the silicon modules in the FH layers during the July 2017 beam tests were placed. Only "SiWafers" are supported.
 * "_rot30": A global rotation of the geometry in x-y by 30 deg. is applied.
 
-####Important Disclaimer
+#### !Important Disclaimer!
 Geometries defined below are motivated by the tested HGC calorimeter geometries in the years 2017-18. However, nothing more than a resemblance is guaranteed at this point. A detailed comparison of results from this simulation to data is highly deprecated!
 
-####Summer/Fall 2017 (CERN, H2)
+#### Summer/Fall 2017 (CERN, H2)
 * Indexes 1 and 2 - ```/common/src/config1_2_Summer2017.cc```: 2 silicon layers in EE, 4 silicon layers in FH.
 * Index 3 - ```/common/src/config3_September2017.cc```: 7 silicon layers in EE, 10 silicon layers in FH.
 
-####March 2018 (DESY, T21)
+#### March 2018 (DESY, T21)
 * Index 15 - ```/common/src/config_DESY2018_42.cc```: 1 silicon module in between the DATURA arms, 2 silicon modules behind 4x 4mm tungsten plates downstream.
 
-####June 2018 (CERN, H2)
+#### June 2018 (CERN, H2)
 * Indexes 17 to 21 -```/common/src/configs17To21_June2018.cc``` - indexes 17-21: 28-layer fully equipped EE HGC prototype.
 
-####October 2018 (CERN, H2)
+#### October 2018 (CERN, H2)
 * Index 22 - ```/common/src/config22_October2018_1.cc```: 28 silicon layers in EE, 12 layers in FH with first nine including daisy configurations of the silicon modules. 
 * Index 23 - ```/common/src/config23_October2018_2.cc```: 28 silicon layers in EE, 11 layers in FH with last nine including daisy configurations of the silicon modules. 
 * Index 24 - ```/common/src/config24_October2018_3.cc```: 8 silicon layers in EE, 12 layers in FH with all including daisy configurations of the silicon modules. 
 * Index 25 - ```/common/src/config24_October2018_3_parasitic.cc```: 8 silicon layers in EE, 12 layers in FH with all including daisy configurations of the silicon modules. The HERD calorimeter model is placed upstream in the beam line with respect to the HGC calorimeter prototype model.
 
-####Test configurations
+#### Test configurations
 A few extra configuratons are defined which may serve as reference on how to define further geometries. The implementation can be found in: ```/common/src/test_configs.cc```.
 
 * Index 100: One layer of silicon.
 * Index 101: EE with 14 cassettes a 2 silicon modules per cassettes. These are spaced with equal distance with respect to each other
 * Index 102: One layer of silicon placed behind 3x 4mm of tungsten. In addition, an alumnium chip is placed directly in front of the silicon module PCB.
 
-###Adding a new geometry to the simulation
+### Adding a new geometry to the simulation
 A few steps need to be followed in order to add a new custom-defined geometry to the framework.
 
 * In ```/common/src/test_configs.cc```and ```/common/include/test_configs.hh``` define a new function with the same signature as the already existing ones.
@@ -170,5 +171,5 @@ A few steps need to be followed in order to add a new custom-defined geometry to
 * Add a call referring to the new function in the ```void DetectorConstruction::SelectConfiguration(G4int val)``` member of the ```DetectorConstruction.cc``` found in the ```/simulation/src``` directory. Ensure that there is no double definition of indices.
 
 
-##Bugs and Feature Requests
+## Bugs and Feature Requests
 Please use the issue tracking or contact the main developer: thorben.quast@cern.ch
