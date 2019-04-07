@@ -26,14 +26,15 @@ The default command to initialise the display executed from the ```build``` dire
 Alternatively, a dedicated steering file can be passed as command line argument to the program. If none is specified, ```init_vis.mac``` is taken. This file starts the visualisation tool and loads more detailed settings from ```vis.mac```. As example, the configuration is set to 22, an energy threshold is defined and both reconstructed data from HGCal and AHCAL are linked to the program in this file.
 
 ### Commands
-* ```EventDisplay/setup/configuration <index>```: Load the defined geometry. Ineffective if set index is not implemented. This command can only be run per session, i.e. only one geometry can be defined instance of the program.
-* ```EventDisplay/ntuple/path <string>```: Path to the reconstructed HGC ntuple files. These ntuples must be reconstructed with the October2018_v12 software tag, or newer. 
-* ```EventDisplay/ntuple/pathAHCAL <string>```: Path to the reconstructed AHCAL ntuple files. v2 reconstruction of the data accumulated in October 2018 is supported.
-* ```EventDisplay/ntuple/pathAHCAL <string>```: Path to the reconstructed AHCAL ntuple files. v2 reconstruction of the data accumulated in October 2018 is supported.
-* ```EventDisplay/ntuple/AHCALOffset <int>```: Applies an offset to the event number in the AHCAL ntuples. 
-* ```EventDisplay/ntuple/energyThreshold <float>```: Only deposits above this energy threshold are visualised (Unit: MIPs).
-* ```EventDisplay/ntuple/timeCut <float>```: Only deposits with time of arrival below this value are visualised (Unit: nano seconds). For any positive timeCut, only HGCal hits are displayed.
-* ```EventDisplay/ntuple/showEvent <int>```: Reads the specified event number and visualises the hits.
+* ```/EventDisplay/setup/configuration <index>```: Load the defined geometry. Ineffective if set index is not implemented. This command can only be run per session, i.e. only one geometry can be defined instance of the program.
+ 
+* ```/EventDisplay/ntuple/path <string>```: Path to the reconstructed HGC ntuple files. These ntuples must be reconstructed with the October2018_v12 software tag, or newer. 
+* ```/EventDisplay/ntuple/pathAHCAL <string>```: Path to the reconstructed AHCAL ntuple files. v2 reconstruction of the data accumulated in October 2018 is supported.
+* ```/EventDisplay/ntuple/pathAHCAL <string>```: Path to the reconstructed AHCAL ntuple files. v2 reconstruction of the data accumulated in October 2018 is supported.
+* ```/EventDisplay/ntuple/AHCALOffset <int>```: Applies an offset to the event number in the AHCAL ntuples. 
+* ```/EventDisplay/ntuple/energyThreshold <float>```: Only deposits above this energy threshold are visualised (Unit: MIPs).
+* ```/EventDisplay/ntuple/timeCut <float>```: Only deposits with time of arrival below this value are visualised (Unit: nanoseconds). For any positive timeCut, only HGCal hits are displayed.
+* ```/EventDisplay/ntuple/showEvent <int>```: Reads the specified event number and visualises the hits.
 
 ### Color schemes
 The event display makes use of a hard coded version of the ROOT rainbow color scheme for colorisation of calorimeter hits. The energy scale ranges from 0 to 500 MIPs. Modifications can be implemented in ```/simulation/include/colors.hh```.
@@ -78,9 +79,20 @@ In addition, three typical calorimeter observables are computed.
 * ```NHits_HGCAL(AHCAL)_MeV```: Number of all hits within the HGCal (AHCAL) prototypes.
 
 ### Commands
+* ```/Simulation/setup/configuration <index>```: Load the defined geometry. Ineffective if set index is not implemented. This command can only be run per session, i.e. only one geometry can be defined instance of the program.
+* ```/Simulation/setup/stepSilicon <float>``` Sets the maximum step size in the sensitive silicon (unit: micrometer). ```Default: 50 (micrometer)```.
+
+* ```/Simulation/output/file <string>```: Define the path of the output file. ```Default: sim_HGCalTB_G4Standalone.root```.
+
+* ```/Simulation/generator/GaussianBeam <bool>``` Use a gaussian beam profile? If not a flat profile is assumed. ```Default: false```.
+* ```/Simulation/generator/sigmaBeamX(Y) <float> <unit>``` Define the width of the beam profile (sigma for gaussian, half-range for a flat profile). ```Default: 0.001cm```.
+* ```/Simulation/generator/momentum <float> <unit>``` Configure the momentum of the beam particles. ```Default: 10 GeV```.
+* ```/Simulation/generator/particle <type>``` Configure the type of the beam particles (examples: mu+, pi-, e+, n). ```Default: e+```.
+
+* ```/run/beamOn <int>```: Run the simulation of the set number of particles.
 
 ## Implemented Geometries
-Geometries and the corresponding material are commonly implemented for both the event display and the standalone simulation. The source code is located in ```/common/``` and it is compiled together with either program.
+Geometries and the corresponding material are common for both the event display and the standalone simulation. The source code is located in ```/common/``` and it is compiled together with either program.
 
 ### Implemented material
 All materials are defined globally and their visualisation attributes are set in ```/common/src/materials.cc```. Pointers to the logical volumes are stored within an ```std::map<std::string, G4LogicalVolume*>``` map which is available to both programs. 
@@ -199,4 +211,4 @@ A few steps need to be followed in order to add a new custom-defined geometry to
 
 
 ## Bugs and Feature Requests
-Please use the github's issue tracking or contact the main developer: thorben.quast@cern.ch
+Please use the issue tracking or contact the main developer: thorben.quast@cern.ch
