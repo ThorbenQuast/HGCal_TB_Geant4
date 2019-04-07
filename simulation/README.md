@@ -1,4 +1,6 @@
 # Standalone Simulation
+![sim_config22_150GeV_pion](../img/sim_config22_150GeV_pion.png)
+
 ## Installation
 * ```cd /simulation```
 * ```mkdir build; cd build```
