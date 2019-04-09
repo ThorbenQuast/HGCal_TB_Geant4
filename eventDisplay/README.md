@@ -1,7 +1,7 @@
 # Event Display
 ![data_October2018_run517_ev5](../img/data_October2018_run517_ev5.png)
 ## Installation
-* ```cd /simulation```
+* ```cd eventDisplay```
 * ```mkdir build; cd build```
 * ```cmake ..``` 
 * ```make install```, warnings can be ignored.
