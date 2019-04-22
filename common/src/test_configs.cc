@@ -29,121 +29,378 @@ void defineTestConfig101(std::vector<std::pair<std::string, G4double> > &dz_map,
 	viewpoint = -19.8 * m;
 
 	//EE1
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE2
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE3
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE4
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE5
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE6
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE7
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE8
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE9
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE10
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE11
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE12
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE13
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 
 	//EE14
-	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0.5*cm));
-	dz_map.push_back(std::make_pair("Si_wafer", 0.5*cm));
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
 	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
 	dz_map.push_back(std::make_pair("Si_wafer", 0.));	
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("PCB", 2*mm));
 }
 
 
-
 void defineTestConfig102(std::vector<std::pair<std::string, G4double> > &dz_map, G4double &viewpoint) {
+	viewpoint = -19.8 * m;
+
+	//EE1
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE2
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE3
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE4
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE5
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE6
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE7
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE8
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE9
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE10
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE11
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE12
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE13
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+	//EE14
+	dz_map.push_back(std::make_pair("Pb_absorber_EE", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Cu_absorber_EE", 0.));
+	dz_map.push_back(std::make_pair("CuW_baseplate", 0.));
+	dz_map.push_back(std::make_pair("Si_wafer", 0.));	
+	dz_map.push_back(std::make_pair("PCB", 0));
+	dz_map.push_back(std::make_pair("Al_chip", 0));
+	dz_map.push_back(std::make_pair("PCB", 0));
+
+}
+
+
+void defineTestConfig103(std::vector<std::pair<std::string, G4double> > &dz_map, G4double &viewpoint) {
 	viewpoint = -19.8 * m;
 	//EE1
 	dz_map.push_back(std::make_pair("W_4mm_absorber_EE_DESY2018", 0.5 * cm));
