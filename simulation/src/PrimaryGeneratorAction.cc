@@ -27,6 +27,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction()
   sigmaBeamX = .1 * mm;
   sigmaBeamY = .1 * mm;
   beamZ0 = -999 * m;
+  beamTypeGaussian = false;
 
   DefineCommands();
 }
