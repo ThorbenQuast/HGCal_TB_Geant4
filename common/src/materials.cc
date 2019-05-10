@@ -376,7 +376,7 @@ void HGCalTBMaterials::defineHGCalBaseplates() {
   logical_volume_map["Cu_baseplate"] = Cu_baseplate_logical;
 
   //PCB
-  G4double PCB_baseplate_thickness = 1.2 * mm;
+  G4double PCB_baseplate_thickness = 1.9 * mm;      //1.9mm C ~ 1% X0
   G4double PCB_baseplate_sideLength = 11 * Si_pixel_sideLength;
   PCB_baseplate_logical = HexagonLogical("PCB", PCB_baseplate_thickness, PCB_baseplate_sideLength, mat_PCB);
   thickness_map["PCB"] = PCB_baseplate_thickness;
@@ -528,7 +528,7 @@ void HGCalTBMaterials::defineBeamLineElements() {
 
   //Aluminium circle for testing of chip impact
   G4double Al_chip_xy = 1 * cm;
-  G4double Al_chip_thickness = 2*mm;
+  G4double Al_chip_thickness = 0.89*mm;   //corresponds to 1% X0
   G4Box* Al_chip_solid = new G4Box("Al_chip", 0.5 * Al_chip_xy, 0.5 * Al_chip_xy, 0.5 * Al_chip_thickness);
   Al_chip_logical = new G4LogicalVolume(Al_chip_solid, mat_Al, "Al_chip");
   thickness_map["Al_chip"] = Al_chip_thickness;
