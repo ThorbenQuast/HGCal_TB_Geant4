@@ -24,7 +24,6 @@
 #
 #
 # Specify view angle:
-/vis/viewer/set/viewpointVector -1 0 0
 /vis/viewer/set/lightsVector -1 0 0
 
 #
@@ -44,7 +43,6 @@
 /vis/geometry/set/colour Envelope 0 0 0 1 .3
 /vis/viewer/set/style surface
 /vis/viewer/set/hiddenMarker true
-/vis/viewer/set/viewpointThetaPhi 115 20
 /vis/viewer/zoom 15
 #
 # Re-establish auto refreshing and verbosity:
@@ -58,7 +56,11 @@
 /vis/ogl/set/displayListLimit 500000
 /EventDisplay/ntuple/energyThreshold 0.5
 /EventDisplay/setup/configuration 22
-/EventDisplay/ntuple/path //eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_october/offline_analysis/ntuples/v12/ntuple_517.root
-/eos/cms/store/group/dpg_hgcal/tb_hgcal/2018/cern_h2_october/offline_analysis/AHCAL_ntuples/v2/Run_AHCAL_517.root
+#/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/October2018/ntuple_572.root
+/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/October2018/ntuple_664.root
+/vis/viewer/set/viewpointThetaPhi 120 150
+/vis/viewer/zoom 0.4
+/vis/viewer/set/targetPoint 0 0 9.5 m
+
 
 
