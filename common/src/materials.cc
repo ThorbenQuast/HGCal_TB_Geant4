@@ -104,7 +104,7 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   visAttributes->SetVisibility(false);
   Si_wafer_logical->SetVisAttributes(visAttributes);
 
-  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 0.015));
+  visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 0.02));
   visAttributes->SetVisibility(true);
   Si_pixel_logical->SetVisAttributes(visAttributes);
 
@@ -125,7 +125,7 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   Kapton_layer_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   Al_case_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
@@ -133,25 +133,25 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   Steel_case_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   Pb_absorber_EE_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   Cu_absorber_EE_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   W_absorber_EE_logical->SetVisAttributes(visAttributes);
   W_2mm_absorber_EE_DESY2018_logical->SetVisAttributes(visAttributes);
   W_4mm_absorber_EE_DESY2018_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   Cu_absorber_FH_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   Fe_absorber_FH_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
@@ -159,11 +159,11 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   AHCAL_SiPM_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   AHCAL_SiPM_2x2HUB_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   Al_absorber_AHCAL_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
@@ -191,13 +191,13 @@ void HGCalTBMaterials::setEventDisplayColorScheme() {
   DWC_gas_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.2));
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   DATURA_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.01));
   visAttributes->SetVisibility(false);
   HERD_calorimeter_logical->SetVisAttributes(visAttributes);  
-  visAttributes->SetVisibility(true);
+  visAttributes->SetVisibility(false);
   HERD_calorimeter_slab_logical->SetVisAttributes(visAttributes); 
 
   visAttributes = new G4VisAttributes(G4Colour(0.05, 0.05, 0.05, 0.0));
