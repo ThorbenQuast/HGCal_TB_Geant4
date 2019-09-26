@@ -115,7 +115,9 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
   //HGCal hits
   if ((m_inputTreeHGCal != NULL) && (m_inputFileHGCal->IsOpen())) {
     for (unsigned int i = 0; i < m_inputTreeHGCal->GetEntries(); i++) {
+      std::cout<<"Getting event id"<<std::endl;
       m_inputTreeHGCal->GetEntry(i);
+      std::cout<<eventID<<std::endl;
       if (eventID == eventIndex) break;
     }
     if (eventID != eventIndex) std::cout << "[WARNING] loaded HGCAL event " << eventID << " !=" << eventIndex << std::endl;
@@ -140,7 +142,8 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
       ID = 5 : merged cell
       */
 
-      float hit_toa = rechit_toa_->at(nhit);
+      //float hit_toa = rechit_toa_->at(nhit);
+      float hit_toa = -1;
       if ((time_cut >= 0) && (hit_toa > time_cut)) continue;
       if ((time_cut >= 0) && (hit_toa < 0)) continue;
 
@@ -223,6 +226,43 @@ void DetectorConstruction::ReadNtupleEvent(G4int eventIndex) {
     std::cout << "timing cut: " << time_cut << " prevents tracking frames to be visualised" << std::endl;
   }
 
+  //standalone hits
+  if ((m_inputTreeStandalone != NULL) && (m_inputFileStandalone->IsOpen())) {
+    for (unsigned int i = 0; i < m_inputTreeStandalone->GetEntries(); i++) {
+      std::cout<<"Getting event id"<<std::endl;
+      m_inputTreeStandalone->GetEntry(i);
+      std::cout<<standalone_EventID<<std::endl;
+      if (standalone_EventID == eventIndex) break;
+    }
+    if (standalone_EventID != eventIndex) std::cout << "[WARNING] loaded standalone event " << standalone_EventID << " !=" << eventIndex << std::endl;
+
+    for (unsigned int nhit = 0; nhit < standalone_x->size(); nhit++) {
+
+      Float16_t hit_energy = standalone_E->at(nhit) / (85.);
+      if (hit_energy < energyThreshold) continue;
+
+      float hit_toa = standalone_TOA->at(nhit);      
+      if ((time_cut >= 0) && (hit_toa > time_cut)) continue;
+      if ((time_cut >= 0) && (hit_toa < 0)) continue;
+
+      VisHit* hit = new VisHit;
+      hit->name = "Standalone-Hit";
+      hit->layer = -1;
+      hit->x = standalone_x->at(nhit) * cm;
+      hit->y = standalone_y->at(nhit) * cm;
+      hit->z = standalone_z->at(nhit) * cm;
+      hit->energy = hit_energy;
+
+      setHGCALHitColor(hit);
+
+      StandaloneHitsForVisualisation.push_back(hit);
+    }
+    std::cout << "Number of hits in standalone file: " << standalone_x->size() << std::endl;
+    std::cout << "Number of hits for visualisation: " << StandaloneHitsForVisualisation.size() << std::endl;
+  } else {
+    std::cout << "standalone file is not open!" << std::endl;
+  }
+
   DrawHits();
 }
 
@@ -263,6 +303,15 @@ void DetectorConstruction::ClearHits() {
     delete hit;
   }
   MIPMPVsForVisualisation.clear();
+
+  for (size_t nhit = 0; nhit < StandaloneHitsForVisualisation.size(); nhit++) {
+    VisHit* hit = StandaloneHitsForVisualisation[nhit];
+    hit->physicalVolume->SetTranslation(G4ThreeVector(0, 0., -BEAMLINELENGTH / 2));
+    hit->physicalVolume->GetLogicalVolume()->SetVisAttributes(visAttributes);
+    delete hit;
+  }
+  StandaloneHitsForVisualisation.clear();
+
 }
 
 void DetectorConstruction::DrawHits() {
@@ -307,6 +356,16 @@ void DetectorConstruction::DrawHits() {
     hit_logical->SetVisAttributes(visAttributes);
     hit->physicalVolume = new G4PVPlacement(HGCalLayerRotation[hit->layer - 1], G4ThreeVector(hit->x, hit->y, HGCalLayerDistances[hit->layer - 1]), hit_logical, hit->name, logicWorld, false, 0, false);
   }
+
+  for (size_t nhit = 0; nhit < StandaloneHitsForVisualisation.size(); nhit++) {
+    VisHit* hit = StandaloneHitsForVisualisation[nhit];
+    G4LogicalVolume* hit_logical = materials->newSiPixelHitLogical(hit->name);
+    visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
+    visAttributes->SetVisibility(true);
+    hit_logical->SetVisAttributes(visAttributes);
+    hit->physicalVolume = new G4PVPlacement(HGCalLayerRotation[0], G4ThreeVector(hit->x, hit->y, hit->z), hit_logical, hit->name, logicWorld, false, 0, false);
+  }
+
 
   G4RunManager::GetRunManager()->GeometryHasBeenModified();
   G4UImanager* UImanager = G4UImanager::GetUIpointer();
@@ -357,12 +416,13 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
     m_inputTreeHGCal->SetBranchAddress("rechit_channel", &rechit_channel_, &hgcalBranches["rechit_channel_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_type", &rechit_type_, &hgcalBranches["rechit_type_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_energy", &rechit_energy_, &hgcalBranches["rechit_energy_"]);
-    m_inputTreeHGCal->SetBranchAddress("rechit_toaRise_time", &rechit_toa_, &hgcalBranches["rechit_toa_"]);
+    //m_inputTreeHGCal->SetBranchAddress("rechit_toaRise_time", &rechit_toa_, &hgcalBranches["rechit_toa_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_x", &rechit_x_, &hgcalBranches["rechit_x_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_y", &rechit_y_, &hgcalBranches["rechit_y_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_z", &rechit_z_, &hgcalBranches["rechit_z_"]);
     m_inputTreeHGCal->SetBranchAddress("rechit_noise_flag", &rechit_noise_flag_, &hgcalBranches["rechit_noise_flag"]);
 
+    
     eventID = Nhits = 0;
     rechit_layer_ = 0;
     rechit_module_ = 0;
@@ -373,6 +433,7 @@ void DetectorConstruction::OpenHGCALNtuple(G4String path) {
     rechit_x_ = 0;
     rechit_y_ = 0;
     rechit_z_ = 0;
+    
   } else {
     m_inputFileHGCal = NULL;
     std::cout << "HGCAl file: " << ntuplepath << " not opened..." << std::endl;
@@ -459,6 +520,48 @@ void DetectorConstruction::OpenTrackingNtuple(G4String path) {
   } else {
     m_inputFileTracking = NULL;
     std::cout << "Tracking file: " << ntupleTrackingpath << " not opened..." << std::endl;
+  }
+
+}
+
+
+void DetectorConstruction::OpenStandaloneNtuple(G4String path) {
+  //reading from the file
+  if (path == "") {
+    return;
+  } else {
+  }
+
+
+  if (m_inputFileStandalone == NULL) {
+    m_inputFileStandalone = new TFile(path.c_str(), "READ");
+    m_inputTreeStandalone = (TTree*)m_inputFileStandalone->Get("CaloHits");
+
+    standaloneBranches["eventID"] = new TBranch;
+    standaloneBranches["x_cm"] = new TBranch;
+    standaloneBranches["y_cm"] = new TBranch;
+    standaloneBranches["z_cm"] = new TBranch;
+    standaloneBranches["Edep_keV"] = new TBranch;
+    standaloneBranches["TOA_ns"] = new TBranch;
+  } else {
+    std::cout << "Closing " << ntupleStandalonepath << std::endl;
+    m_inputFileStandalone->Close();
+    m_inputFileStandalone = new TFile(path.c_str(), "READ");
+    m_inputTreeStandalone = (TTree*)m_inputFileStandalone->Get("CaloHits");
+  }
+  ntupleStandalonepath = path;
+  if (m_inputFileStandalone->IsOpen()) {
+    m_inputTreeStandalone->SetBranchAddress("eventID", &standalone_EventID, &standaloneBranches["eventID"]);
+    m_inputTreeStandalone->SetBranchAddress("x_cm", &standalone_x, &standaloneBranches["x_cm"]);
+    m_inputTreeStandalone->SetBranchAddress("y_cm", &standalone_y, &standaloneBranches["y_cm"]);
+    m_inputTreeStandalone->SetBranchAddress("z_cm", &standalone_z, &standaloneBranches["z_cm"]);
+    m_inputTreeStandalone->SetBranchAddress("Edep_keV", &standalone_E, &standaloneBranches["Edep_keV"]);
+    m_inputTreeStandalone->SetBranchAddress("TOA_ns", &standalone_TOA, &standaloneBranches["TOA_ns"]);
+    standalone_EventID = 0;
+    std::cout << "Opened " << ntupleStandalonepath << std::endl;
+  } else {
+    m_inputFileStandalone = NULL;
+    std::cout << "Standalone file: " << ntupleStandalonepath << " not opened..." << std::endl;
   }
 
 }
@@ -611,6 +714,14 @@ void DetectorConstruction::DefineCommands()
                                 &DetectorConstruction::OpenTrackingNtuple,
                                 "Path to the Tracking ntuple");
   ntupleTrackingPathCmd.SetDefaultValue("");
+
+
+  auto& ntupleStandalonePathCmd
+    = fMessenger->DeclareMethod("pathStandalone",
+                                &DetectorConstruction::OpenStandaloneNtuple,
+                                "Path to the standalone simulated ntuple");
+  ntupleStandalonePathCmd.SetDefaultValue("");
+
 
   auto& TrackingMethodCmd
     = fMessenger->DeclareProperty("TrackingMethod", m_trackingMethod);

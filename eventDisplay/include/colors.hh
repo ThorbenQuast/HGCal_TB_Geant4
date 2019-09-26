@@ -16,9 +16,9 @@ std::vector<float> AHCAL_blue = {1.00, 0.5, 0.51, 1.00, 0.12, 0.00, 0.00};
 
 
 std::vector<float> MIPMPV_scales = {0.0, 10.5, 30.0, 35.0, 40.0, 50., 60.};            //must start at 0 and must have at least two entries
-std::vector<float> MIPMPV_red = {1.00, 0.5, 0.00, 0.10, 0.87, 1.00, 0.51};
-std::vector<float> MIPMPV_green = {1.00, 0.5, 1.00, 0.1, 1.00, 0.0, 0.50};
-std::vector<float> MIPMPV_blue = {1.00, 0.5, 0.01, 1.00, 0.12, 0.00, 0.50};
+std::vector<float> MIPMPV_red = {1.00, 0.5, 0.00, 0.0, 0.87, 1.00, 0.51};
+std::vector<float> MIPMPV_green = {1.00, 0.5, 0.00, 1., 1.00, 0.0, 0.50};
+std::vector<float> MIPMPV_blue = {1.00, 0.5, 1.0, 0., 0.12, 0.00, 0.50};
 
 void setHGCALHitColor (VisHit* hit) {
       float hit_energy = hit->energy;
