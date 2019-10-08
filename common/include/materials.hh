@@ -39,6 +39,8 @@ private:
 	void defineBeamLineElements();
 	void defineHERDCalorimeter();
 
+	void defineColorbar();
+
 	G4VisAttributes* visAttributes;
 
 	double alpha;	//rotation angle of Si hexagons
@@ -100,6 +102,7 @@ private:
 	G4LogicalVolume* DATURA_logical;
 	G4LogicalVolume* HERD_calorimeter_logical;
 	G4LogicalVolume* HERD_calorimeter_slab_logical;
+	
 
 	std::map<std::string, int> copy_counter_map;
 
@@ -115,7 +118,10 @@ public:
 	G4LogicalVolume* newSiPixelHitLogical(std::string name);
 	G4LogicalVolume* newSiPixelHitFrameLogical(std::string name, G4double frame_thickness);
 	G4LogicalVolume* newSiPMHitLogical(std::string name);
+	G4LogicalVolume* computeColorbarElement();
+	G4LogicalVolume* newColorBarElement(){return this->computeColorbarElement();}
 
 	G4LogicalVolume* getSi_pixel_logical(){return this->Si_pixel_logical;}
 	G4LogicalVolume* getAHCAL_SiPM_logical(){return this->AHCAL_SiPM_logical;}
+
 };

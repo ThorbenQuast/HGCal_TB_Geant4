@@ -73,6 +73,7 @@ private:
     HGCalTBMaterials* materials;
 
     void ConstructHGCal();
+    void ConstructColorBar();
 
 
 //ntuple readout

@@ -102,6 +102,30 @@ void DetectorConstruction::ConstructHGCal() {
 
 }
 
+void DetectorConstruction::ConstructColorBar() {
+
+  int drawindex = 0;
+  for (float e=-0.7; e<=log(500); e=e+0.01){
+
+    VisHit* hit = new VisHit;
+    hit->name = "colourBar";
+    hit->energy = exp(1.*e);
+    setHGCALHitColor(hit);
+    G4LogicalVolume* bar_element = materials->newColorBarElement();
+    G4VisAttributes* visAttributes = new G4VisAttributes(G4Colour(hit->red, hit->green, hit->blue, 1.));
+    visAttributes->SetVisibility(true);
+    bar_element->SetVisAttributes(visAttributes);
+    new G4PVPlacement(0, G4ThreeVector(0, 0, drawindex*2.*mm), bar_element, hit->name, logicWorld, false, 0, false);
+    drawindex++;
+  }
+
+  G4RunManager::GetRunManager()->GeometryHasBeenModified();
+  G4UImanager* UImanager = G4UImanager::GetUIpointer();
+  UImanager->ApplyCommand("/vis/drawVolume");
+  UImanager->ApplyCommand("/vis/viewer/set/targetPoint 0 0 0");
+
+}
+
 void DetectorConstruction::ConstructSDandField() {
 
 }
@@ -637,7 +661,8 @@ void DetectorConstruction::SelectConfiguration(G4int val) {
   if (_configuration != -1) return;
 
   default_viewpoint = 0;
-  if (val == 1) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
+  if (val==0) {ConstructColorBar();return;}
+  else if (val == 1) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
   else if (val == 2) defineConfigs1_2_Summer2017(dz_map, default_viewpoint);
   else if (val == 3) defineConfig3_September2017(dz_map, default_viewpoint);
   else if (val == 15) defineDESY2018_Config42(dz_map, default_viewpoint);

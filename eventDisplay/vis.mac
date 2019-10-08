@@ -54,13 +54,13 @@
 
 #change the limits
 /vis/ogl/set/displayListLimit 500000
-/EventDisplay/ntuple/energyThreshold 0.5
-/EventDisplay/setup/configuration 22
+#/EventDisplay/ntuple/energyThreshold 0.5
+/EventDisplay/setup/configuration 0
 #/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/October2018/ntuple_572.root
-/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/October2018/ntuple_664.root
-/vis/viewer/set/viewpointThetaPhi 120 150
-/vis/viewer/zoom 0.4
-/vis/viewer/set/targetPoint 0 0 9.5 m
+#/EventDisplay/ntuple/path /Users/tquast/Desktop/eventDisplaysOctober/October2018/ntuple_664.root
+/vis/viewer/set/viewpointThetaPhi 90 180
+#/vis/viewer/zoom 0.4
+#/vis/viewer/set/targetPoint 0 0 9.5 m
 
 
 
