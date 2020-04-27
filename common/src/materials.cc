@@ -262,7 +262,7 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   Fe_absorber_FH_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(.3, 0.3, 0.3, 1.0));
-  visAttributes->SetVisibility(false);
+  visAttributes->SetVisibility(true);
   AHCAL_SiPM_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.5));
@@ -278,7 +278,7 @@ void HGCalTBMaterials::setSimulationColorScheme() {
   PCB_AHCAL_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(0.4, 0.4, 0.4, 0.1));
-  visAttributes->SetVisibility(false);
+  visAttributes->SetVisibility(true);
   Fe_absorber_AHCAL_logical->SetVisAttributes(visAttributes);
 
   visAttributes = new G4VisAttributes(G4Colour(1.0, 1.0, 1.0, 0.5));
@@ -640,6 +640,28 @@ void HGCalTBMaterials::placeItemInLogicalVolume(std::string item_type, G4double 
     new G4PVPlacement(0, G4ThreeVector(0, 0, z0 + 0.5 * thickness_map[item_type]), logical_volume_map[item_type], item_type, logicWorld, false, copy_counter_map[item_type]++, true);
     z0 += thickness_map[item_type];
   }
+}
+
+void HGCalTBMaterials::setBField(G4FieldManager* mgr){
+  Si_pixel_logical->SetFieldManager(mgr, true);
+  Si_wafer_logical->SetFieldManager(mgr, true);
+  CuW_baseplate_logical->SetFieldManager(mgr, true);
+  Cu_baseplate_logical->SetFieldManager(mgr, true);
+  PCB_baseplate_logical->SetFieldManager(mgr, true);
+  Kapton_layer_logical->SetFieldManager(mgr, true);
+  Al_case_logical->SetFieldManager(mgr, true);
+  Al_chip_logical->SetFieldManager(mgr, true);
+  Steel_case_logical->SetFieldManager(mgr, true);
+  Pb_absorber_EE_logical->SetFieldManager(mgr, true);
+  Cu_absorber_EE_logical->SetFieldManager(mgr, true);
+  W_absorber_EE_logical->SetFieldManager(mgr, true);
+  Cu_absorber_FH_logical->SetFieldManager(mgr, true);
+  Fe_absorber_FH_logical->SetFieldManager(mgr, true);
+  AHCAL_SiPM_logical->SetFieldManager(mgr, true);
+  AHCAL_SiPM_2x2HUB_logical->SetFieldManager(mgr, true);
+  Al_absorber_AHCAL_logical->SetFieldManager(mgr, true);
+  PCB_AHCAL_logical->SetFieldManager(mgr, true);
+  Fe_absorber_AHCAL_logical->SetFieldManager(mgr, true);
 }
 
 G4LogicalVolume* HGCalTBMaterials::newSiPixelHitFrameLogical(std::string name, G4double frame_thickness) {

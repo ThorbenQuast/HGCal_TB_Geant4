@@ -98,6 +98,9 @@
 /vis/ogl/set/displayListLimit 500000
 
 /Simulation/setup/configuration 101
-#/Simulation/output/file HGCalTB_October2018_config22_pi+_150GeV.root
-#/Simulation/generator/momentum 150 GeV
-#/Simulation/generator/particle pi+
+/Simulation/setup/BField 4
+/Simulation/output/file HGCalTB_October2018_config101_e+_100GeV_4Tesla.root
+/Simulation/generator/momentum 100 GeV
+/Simulation/generator/particle e+
+/Simulation/generator/sigmaBeamX 0.01 mm
+/Simulation/generator/sigmaBeamY 0.01 mm

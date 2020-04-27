@@ -12,6 +12,9 @@
 #include "G4UImanager.hh"
 #include "G4UserLimits.hh"
 #include "G4ProductionCuts.hh"
+#include "G4UniformMagField.hh"
+#include "G4FieldManager.hh"
+#include "G4TransportationManager.hh"
 
 #include "materials.hh"
 
@@ -45,8 +48,10 @@ class DetectorConstruction : public G4VUserDetectorConstruction
     G4GenericMessenger* fMessenger;
     void SelectConfiguration(G4int val);
     void SetStepSizeSilicon(G4double val);
+    void SetMagneticFieldStrength(G4double val);
     G4int _configuration;
 
+    G4MagneticField* magField;
     HGCalTBMaterials* materials;
 
     void ConstructHGCal();

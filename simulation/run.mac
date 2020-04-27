@@ -6,27 +6,40 @@
 #/run/verbose 2
 #
 # Change the default number of threads (in multi-threaded mode)
-/run/numberOfThreads 4
+/run/numberOfThreads 1
 #
 # Initialize kernel
 /run/initialize
 
-/Simulation/setup/configuration 102
-/Simulation/generator/sigmaBeamX 1.5 cm
-/Simulation/generator/sigmaBeamY 1.5 cm
-/Simulation/setup/stepSilicon 20
+/Simulation/setup/configuration 101
+/Simulation/generator/sigmaBeamX 0.1 mm
+/Simulation/generator/sigmaBeamY 0.1 mm
 
 #muons
-/Simulation/generator/momentum 200 GeV
+/Simulation/generator/momentum 100 GeV
 /Simulation/generator/particle mu+
-/Simulation/output/file config102_mu+_200GeV_step20.root
+/Simulation/output/file config101_mu+_100GeV_noBfield.root
 /run/beamOn 10000
-
-
-
 
 #electrons
 /Simulation/generator/momentum 100 GeV
 /Simulation/generator/particle e+
-/Simulation/output/file config102_e+_100GeV_step20.root
-/run/beamOn 1000000
+/Simulation/output/file config101_e+_100GeV_noBfield.root
+/run/beamOn 1000
+
+
+
+#turn on B-Fieldof 4 Tesla
+/Simulation/setup/BField 4
+
+#muons
+/Simulation/generator/momentum 100 GeV
+/Simulation/generator/particle mu+
+/Simulation/output/file config101_mu+_100GeV_4Tesla.root
+/run/beamOn 10000
+
+#electrons
+/Simulation/generator/momentum 100 GeV
+/Simulation/generator/particle e+
+/Simulation/output/file config101_e+_100GeV_4Tesla.root
+/run/beamOn 1000

@@ -18,6 +18,7 @@
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
 
+#include "G4FieldManager.hh"
 
 #define BEAMLINELENGTH 40		//length of the beam line in m
 #define BEAMLINEXY 4 			//transversal dimension of the beam line
@@ -120,6 +121,8 @@ public:
 	G4LogicalVolume* newSiPMHitLogical(std::string name);
 	G4LogicalVolume* computeColorbarElement();
 	G4LogicalVolume* newColorBarElement(){return this->computeColorbarElement();}
+
+	void setBField(G4FieldManager*);
 
 	G4LogicalVolume* getSi_pixel_logical(){return this->Si_pixel_logical;}
 	G4LogicalVolume* getAHCAL_SiPM_logical(){return this->AHCAL_SiPM_logical;}

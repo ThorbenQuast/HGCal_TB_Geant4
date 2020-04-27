@@ -137,6 +137,16 @@ void DetectorConstruction::SetStepSizeSilicon(G4double val) {
  
 }
 
+void DetectorConstruction::SetMagneticFieldStrength(G4double val) {
+  magField = new G4UniformMagField(G4ThreeVector(0.0, val*tesla, 0.0) );
+
+  G4FieldManager* localFieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+  localFieldMgr->SetDetectorField(magField);
+  localFieldMgr->CreateChordFinder(magField);
+  materials->setBField(localFieldMgr);
+ 
+}
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void DetectorConstruction::DefineCommands()
@@ -161,6 +171,14 @@ void DetectorConstruction::DefineCommands()
                                 "Maximum step size in silicon pixels, unit: microns");
   SiStepSizeCmd.SetParameterName("size", true);
   SiStepSizeCmd.SetDefaultValue("50.");
+
+
+  auto& MagneticFieldCmd
+    = fMessenger->DeclareMethod("BField",
+                                &DetectorConstruction::SetMagneticFieldStrength,
+                                "Magnetic field strength, unit: Tesla");
+  MagneticFieldCmd.SetParameterName("strength", true);
+  MagneticFieldCmd.SetDefaultValue("4");
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
