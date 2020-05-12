@@ -28,6 +28,9 @@ public:
     std::vector<G4double>     hits_TOA;
     std::vector<G4double>     hits_TOA_last;
     std::vector<G4int>        hits_type;
+
+    G4double firstHadInteractionDepth;
+    G4double firstHadInteractionTime;
 private:
     void DefineCommands();
     G4GenericMessenger* fMessenger;

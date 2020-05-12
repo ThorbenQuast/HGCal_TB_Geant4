@@ -15,6 +15,8 @@ EventAction::EventAction()
 {
 	hitTimeCut = -1;
 	toaThreshold = 0;
+	firstHadInteractionDepth = -999 * CLHEP::m;
+	firstHadInteractionTime = 1000 * CLHEP::s;
 	DefineCommands();
 }
 
@@ -36,6 +38,9 @@ void EventAction::BeginOfEventAction(const G4Event* EventAction)
 	hits_TOA.clear();
 	hits_TOA_last.clear();
 	hits_type.clear();
+
+	firstHadInteractionDepth = -999 * CLHEP::m;
+	firstHadInteractionTime = 1000 * CLHEP::s;	
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -116,6 +121,9 @@ void EventAction::EndOfEventAction(const G4Event* event)
 	analysisManager->FillNtupleDColumn(16, esum_AHCAL);
 	analysisManager->FillNtupleDColumn(17, cogz_AHCAL);
 	analysisManager->FillNtupleIColumn(18, Nhits_AHCAL);
+	
+	//add the first hadronic interaction depth
+	analysisManager->FillNtupleIColumn(19, firstHadInteractionDepth / CLHEP::cm);
 
 
 

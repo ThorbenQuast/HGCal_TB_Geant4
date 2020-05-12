@@ -87,6 +87,8 @@ void RunAction::BeginOfRunAction(const G4Run*) {
     analysisManager->CreateNtupleDColumn("signalSum_AHCAL_MeV");    // column Id = 16
     analysisManager->CreateNtupleDColumn("COGZ_AHCAL_cm");    // column Id = 17
     analysisManager->CreateNtupleIColumn("NHits_AHCAL");    // column Id = 18  
+    
+    analysisManager->CreateNtupleIColumn("FirstHadInteractionDepth");    // column Id = 19  
     analysisManager->FinishNtuple();
   }
 

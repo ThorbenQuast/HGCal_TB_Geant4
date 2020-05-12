@@ -11,35 +11,12 @@
 # Initialize kernel
 /run/initialize
 
-/Simulation/setup/configuration 101
+/Simulation/setup/configuration 22
 /Simulation/generator/sigmaBeamX 0.1 mm
 /Simulation/generator/sigmaBeamY 0.1 mm
 
-#muons
-/Simulation/generator/momentum 100 GeV
-/Simulation/generator/particle mu+
-/Simulation/output/file config101_mu+_100GeV_noBfield.root
-/run/beamOn 10000
-
 #electrons
-/Simulation/generator/momentum 100 GeV
-/Simulation/generator/particle e+
-/Simulation/output/file config101_e+_100GeV_noBfield.root
-/run/beamOn 1000
-
-
-
-#turn on B-Fieldof 4 Tesla
-/Simulation/setup/BField 4
-
-#muons
-/Simulation/generator/momentum 100 GeV
-/Simulation/generator/particle mu+
-/Simulation/output/file config101_mu+_100GeV_4Tesla.root
-/run/beamOn 10000
-
-#electrons
-/Simulation/generator/momentum 100 GeV
-/Simulation/generator/particle e+
-/Simulation/output/file config101_e+_100GeV_4Tesla.root
+/Simulation/generator/momentum 10 GeV
+/Simulation/generator/particle pi+
+/Simulation/output/file config22_pi+_10GeV_noBfield.root
 /run/beamOn 1000
