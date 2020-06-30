@@ -15,14 +15,14 @@ These two programs were developed and are tested with the following software:
 
 ## Event Display
 ![data_October2018_run517_ev5](img/data_October2018_run517_ev5.png)
-See ```eventDisplay/README.md``` for installation & running instructions.
+See [eventDisplay/README.md](eventDisplay/README.md) for installation & running instructions.
 
 ## Standalone Simulation
 ![sim_config22_150GeV_pion](img/sim_config22_150GeV_pion.png)
-See ```simulation/README.md``` for installation & running instructions.
+See [simulation/README.md](simulation/README.md) for installation & running instructions.
 
 ## Implemented Geometries
-See ```common/README.md``` for overview on implemented materials and geometries.
+See [common/README.md](common/README.md) for overview on implemented materials and geometries.
 
 ## Bugs and Feature Requests
 Please use the issue tracking or contact the main developer: thorben.quast@cern.ch
