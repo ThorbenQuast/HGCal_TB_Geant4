@@ -1,9 +1,10 @@
-# $Id: CMakeLists.txt tquast 18 July 2018 $
-
 #----------------------------------------------------------------------------
 # Setup the project
-cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
-project(SIMULATION)
+cmake_minimum_required(VERSION 3.8...3.18)
+if(${CMAKE_VERSION} VERSION_LESS 3.12)
+  cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+endif()
+project(SIM)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -22,13 +23,13 @@ endif()
 # Setup include directory for this project
 #
 include(${Geant4_USE_FILE})
-include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/../common/include ${ROOT_INCLUDE_DIRS})
-
 
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
 # NB: headers are included so they will show up in IDEs
 #
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include
+                    ${Geant4_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/../common/include ${ROOT_INCLUDE_DIRS})
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc ${PROJECT_SOURCE_DIR}/../common/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh ${PROJECT_SOURCE_DIR}/../common/include/*.hh)
 
@@ -40,16 +41,16 @@ target_link_libraries(Simulation ${Geant4_LIBRARIES})
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
-# build B1. This is so that we can run the executable directly because it
+# build B5. This is so that we can run the executable directly because it
 # relies on these scripts being in the current working directory.
 #
-set(EXAMPLEB1_SCRIPTS
+set(SIM_SCRIPTS
   init_vis.mac
   run.mac
   vis.mac
   )
 
-foreach(_script ${EXAMPLEB1_SCRIPTS})
+foreach(_script ${SIM_SCRIPTS})
   configure_file(
     ${PROJECT_SOURCE_DIR}/${_script}
     ${PROJECT_BINARY_DIR}/${_script}
@@ -58,14 +59,13 @@ foreach(_script ${EXAMPLEB1_SCRIPTS})
 endforeach()
 
 #----------------------------------------------------------------------------
-# For internal Geant4 use - but has no effect if you build this
-# example standalone
+# Add program to the project targets
+# (this avoids the need of typing the program name after make)
 #
-add_custom_target(SIMULATION DEPENDS Simulation)
+add_custom_target(SIM DEPENDS Simulation)
 
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
 install(TARGETS Simulation DESTINATION bin)
-
 
